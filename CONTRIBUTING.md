@@ -1,0 +1,48 @@
+# Contributing
+
+Thanks for your interest in contributing to QuickSuite Exporter.
+
+## Getting Started
+
+1. Fork the repo
+2. Clone your fork and install dependencies:
+   ```bash
+   npm install
+   ```
+3. Create a branch for your change:
+   ```bash
+   git checkout -b my-feature
+   ```
+4. Make your changes
+5. Run the linter:
+   ```bash
+   npm run lint
+   ```
+6. Build to verify types:
+   ```bash
+   npm run build
+   ```
+7. Open a pull request
+
+## Guidelines
+
+- Keep PRs focused — one feature or fix per PR
+- Follow the existing code style (Prettier + ESLint handle most of it)
+- Add types for any new data structures
+- Update the README if you add new features or change setup steps
+
+## Adding a New AI Provider
+
+The AI integration is isolated in `server/proxy.ts`. To add a new provider:
+
+1. Add a `callYourProvider(req: ProxyRequest)` function
+2. Wire it into the `PROVIDER` switch at the bottom
+3. Document the required env vars in the README
+
+## Reporting Issues
+
+Open an issue with:
+- What you expected to happen
+- What actually happened
+- Steps to reproduce
+- Browser/OS info if relevant
