@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for your interest in contributing to QuickSuite Exporter.
+Thanks for your interest in contributing to Quick Flow Exporter.
 
 ## Getting Started
 
@@ -14,15 +14,20 @@ Thanks for your interest in contributing to QuickSuite Exporter.
    git checkout -b my-feature
    ```
 4. Make your changes
-5. Run the linter:
+5. Run the tests:
+   ```bash
+   npx vitest run
+   ```
+6. Run the linter:
    ```bash
    npm run lint
    ```
-6. Build to verify types:
+7. Type-check both frontend and server:
    ```bash
-   npm run build
+   npx tsc -p tsconfig.json --noEmit
+   npx tsc -p tsconfig.server.json --noEmit
    ```
-7. Open a pull request
+8. Open a pull request
 
 ## Guidelines
 

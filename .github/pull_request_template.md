@@ -8,6 +8,8 @@ Steps to verify the change works.
 
 ## Checklist
 
+- [ ] `npx vitest run` passes
 - [ ] `npm run lint` passes
-- [ ] `npm run build` passes
+- [ ] `npx tsc -p tsconfig.json --noEmit` passes
+- [ ] `npx tsc -p tsconfig.server.json --noEmit` passes
 - [ ] README updated (if applicable)
