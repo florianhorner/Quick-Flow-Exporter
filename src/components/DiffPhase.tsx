@@ -1,7 +1,7 @@
 import { useState, useMemo, useCallback, useEffect } from "react";
 import type { Flow } from "../types";
 import { parseFlow } from "../lib/parser";
-import { diffFlows, wordDiffHtml, type FlowDiffResult } from "../lib/diff";
+import { diffFlows, wordDiffSegments, type FlowDiffResult } from "../lib/diff";
 
 interface DiffPhaseProps {
   currentFlow: Flow | null;
@@ -222,10 +222,17 @@ export default function DiffPhase({ currentFlow, onBack }: DiffPhaseProps) {
                 {/* Expanded word-level diff for prompts */}
                 {expanded && change.type === "modified" && change.leftValue && change.rightValue && (
                   <div className="px-4 pb-3">
-                    <div
-                      className="text-sm font-mono bg-gray-50 rounded-lg p-3 border whitespace-pre-wrap leading-relaxed"
-                      dangerouslySetInnerHTML={{ __html: wordDiffHtml(change.leftValue, change.rightValue) }}
-                    />
+                    <div className="text-sm font-mono bg-gray-50 rounded-lg p-3 border whitespace-pre-wrap leading-relaxed">
+                      {wordDiffSegments(change.leftValue, change.rightValue).map((seg, i) =>
+                        seg.op === "delete" ? (
+                          <span key={i} className="bg-red-200 text-red-900 line-through">{seg.text}</span>
+                        ) : seg.op === "insert" ? (
+                          <span key={i} className="bg-green-200 text-green-900">{seg.text}</span>
+                        ) : (
+                          <span key={i}>{seg.text}</span>
+                        )
+                      )}
+                    </div>
                   </div>
                 )}
 

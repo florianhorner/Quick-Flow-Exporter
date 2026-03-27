@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { diffFlows, wordDiffHtml } from "../diff";
+import { diffFlows, wordDiffSegments } from "../diff";
 import { createEmptyFlow, createEmptyStep, createEmptyGroup } from "../flow";
 
 describe("diffFlows", () => {
@@ -138,29 +138,60 @@ describe("diffFlows", () => {
     const result = diffFlows(left, right);
     expect(result.changes.some((c) => c.label === "Shared")).toBe(true);
   });
+
+  it("handles duplicate step titles without dropping steps", () => {
+    const left = createEmptyFlow();
+    const stepA1 = createEmptyStep();
+    stepA1.title = "Analyze Data";
+    stepA1.prompt = "First analysis";
+    const stepA2 = createEmptyStep();
+    stepA2.title = "Analyze Data";
+    stepA2.prompt = "Second analysis";
+    left.items = [stepA1, stepA2];
+
+    const right = createEmptyFlow();
+    const stepB1 = createEmptyStep();
+    stepB1.title = "Analyze Data";
+    stepB1.prompt = "First analysis modified";
+    const stepB2 = createEmptyStep();
+    stepB2.title = "Analyze Data";
+    stepB2.prompt = "Second analysis";
+    right.items = [stepB1, stepB2];
+
+    const result = diffFlows(left, right);
+    // Should detect the modified prompt on the first "Analyze Data", not drop it
+    expect(result.summary.modified).toBeGreaterThanOrEqual(1);
+    expect(result.summary.removed).toBe(0);
+    expect(result.summary.added).toBe(0);
+  });
 });
 
-describe("wordDiffHtml", () => {
-  it("returns plain text for identical strings", () => {
-    const html = wordDiffHtml("hello world", "hello world");
-    expect(html).toBe("hello world");
+describe("wordDiffSegments", () => {
+  it("returns equal segments for identical strings", () => {
+    const segments = wordDiffSegments("hello world", "hello world");
+    expect(segments).toHaveLength(1);
+    expect(segments[0]!.op).toBe("equal");
+    expect(segments[0]!.text).toBe("hello world");
   });
 
-  it("marks additions in green", () => {
-    const html = wordDiffHtml("hello", "hello world");
-    expect(html).toContain("bg-green-200");
-    expect(html).toContain("world");
+  it("marks additions as insert", () => {
+    const segments = wordDiffSegments("hello", "hello world");
+    expect(segments.some((s) => s.op === "insert" && s.text.includes("world"))).toBe(true);
   });
 
-  it("marks removals in red with line-through", () => {
-    const html = wordDiffHtml("hello world", "hello");
-    expect(html).toContain("bg-red-200");
-    expect(html).toContain("line-through");
+  it("marks removals as delete", () => {
+    const segments = wordDiffSegments("hello world", "hello");
+    expect(segments.some((s) => s.op === "delete")).toBe(true);
   });
 
-  it("escapes HTML entities", () => {
-    const html = wordDiffHtml("<script>", "<script>");
-    expect(html).toContain("&lt;script&gt;");
-    expect(html).not.toContain("<script>");
+  it("returns raw text segments without HTML escaping", () => {
+    // Input contains HTML-like characters
+    const segments = wordDiffSegments("<div>old</div>", "<div>new</div>");
+    // Segments should contain the raw text — no HTML entity encoding
+    // (React will handle escaping when rendering these as text nodes)
+    const allText = segments.map((s) => s.text).join("");
+    expect(allText).toContain("<div>");
+    expect(allText).not.toContain("&lt;"); // no HTML escaping in segments
+    segments.forEach((s) => expect(["equal", "insert", "delete"]).toContain(s.op));
   });
 });
