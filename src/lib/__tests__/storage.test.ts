@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import type { HistoryEntry } from "../../types";
 import { loadHistory, saveHistory } from "../storage";
 
 beforeEach(() => {
@@ -76,7 +77,7 @@ describe("saveHistory", () => {
   it("strips invalid entries before saving", async () => {
     const entries = [
       { title: "Good", date: "2025-01-01", stepCount: 1 },
-      { title: 999, date: null, stepCount: "bad" } as any,
+      { title: 999, date: null, stepCount: "bad" } as unknown as HistoryEntry,
     ];
     await saveHistory(entries);
     const stored = JSON.parse(localStorage.getItem("qs-export-history")!);

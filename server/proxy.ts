@@ -109,7 +109,6 @@ async function callAnthropic(req: ProxyRequest): Promise<string> {
 
 async function callBedrock(req: ProxyRequest): Promise<string> {
   // Optional dependency — install with: npm install @aws-sdk/client-bedrock-runtime
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const mod = await (import("@aws-sdk/client-bedrock-runtime" as string) as Promise<{ BedrockRuntimeClient: new (config: { region: string }) => { send: (cmd: unknown) => Promise<{ body: Uint8Array }> }; InvokeModelCommand: new (input: { modelId: string; contentType: string; accept: string; body: Uint8Array }) => unknown }>);
   const { BedrockRuntimeClient, InvokeModelCommand } = mod;
 

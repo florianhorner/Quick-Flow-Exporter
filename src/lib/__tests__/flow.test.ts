@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import type { Step, Group } from "../../types";
 import {
   createEmptyStep,
   createEmptyGroup,
@@ -54,9 +55,9 @@ describe("hydrateItems", () => {
     expect(items).toHaveLength(1);
     const step = items[0]!;
     expect(step.isGroup).toBeUndefined();
-    expect((step as any).title).toBe("My Step");
-    expect((step as any).source).toBe("General knowledge");
-    expect((step as any).id).toBeTruthy();
+    expect((step as Step).title).toBe("My Step");
+    expect((step as Step).source).toBe("General knowledge");
+    expect((step as Step).id).toBeTruthy();
   });
 
   it("hydrates groups and their child steps", () => {
@@ -64,26 +65,26 @@ describe("hydrateItems", () => {
       {
         isGroup: true,
         title: "My Group",
-        steps: [{ title: "Child", type: "web_search" } as any],
-      } as any,
+        steps: [{ title: "Child", type: "web_search" } as Partial<Step>],
+      } as Partial<Group>,
     ]);
     expect(items).toHaveLength(1);
-    const group = items[0]! as any;
+    const group = items[0]! as Group;
     expect(group.isGroup).toBe(true);
     expect(group.steps).toHaveLength(1);
-    expect(group.steps[0].type).toBe("web_search");
-    expect(group.steps[0].id).toBeTruthy();
+    expect(group.steps[0]!.type).toBe("web_search");
+    expect(group.steps[0]!.id).toBeTruthy();
   });
 
   it("assigns fresh UUIDs to all items", () => {
     const items = hydrateItems([
       { title: "A" },
-      { isGroup: true, title: "G", steps: [{ title: "B" }] } as any,
+      { isGroup: true, title: "G", steps: [{ title: "B" }] } as Partial<Group>,
     ]);
     const ids = [
-      (items[0] as any).id,
-      (items[1] as any).id,
-      (items[1] as any).steps[0].id,
+      (items[0] as Step).id,
+      (items[1] as Group).id,
+      (items[1] as Group).steps[0]!.id,
     ];
     expect(new Set(ids).size).toBe(3);
   });
