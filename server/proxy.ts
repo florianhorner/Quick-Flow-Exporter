@@ -108,9 +108,9 @@ async function callAnthropic(req: ProxyRequest): Promise<string> {
 // ── AWS Bedrock provider ─────────────────────────────────────────────────────
 
 async function callBedrock(req: ProxyRequest): Promise<string> {
-  const { BedrockRuntimeClient, InvokeModelCommand } = await import(
-    "@aws-sdk/client-bedrock-runtime"
-  );
+  // Optional dependency — install with: npm install @aws-sdk/client-bedrock-runtime
+  const mod = await (import("@aws-sdk/client-bedrock-runtime" as string) as Promise<{ BedrockRuntimeClient: new (config: { region: string }) => { send: (cmd: unknown) => Promise<{ body: Uint8Array }> }; InvokeModelCommand: new (input: { modelId: string; contentType: string; accept: string; body: Uint8Array }) => unknown }>);
+  const { BedrockRuntimeClient, InvokeModelCommand } = mod;
 
   const client = new BedrockRuntimeClient({
     region: process.env.AWS_REGION ?? "us-east-1",
@@ -153,17 +153,30 @@ function json(res: http.ServerResponse, status: number, data: unknown) {
 function readBody(req: http.IncomingMessage): Promise<string> {
   return new Promise((resolve, reject) => {
     let size = 0;
+    let settled = false;
     const chunks: Buffer[] = [];
     req.on("data", (chunk: Buffer) => {
+      if (settled) return;
       size += chunk.length;
       if (size > MAX_BODY_BYTES) {
-        req.destroy();
-        reject(new Error("Request body too large"));
+        settled = true;
+        req.destroy(new Error("Request body too large"));
+        return;
       }
       chunks.push(chunk);
     });
-    req.on("end", () => resolve(Buffer.concat(chunks).toString("utf-8")));
-    req.on("error", reject);
+    req.on("end", () => {
+      if (!settled) {
+        settled = true;
+        resolve(Buffer.concat(chunks).toString("utf-8"));
+      }
+    });
+    req.on("error", (err) => {
+      if (!settled) {
+        settled = true;
+        reject(err);
+      }
+    });
   });
 }
 
@@ -226,13 +239,20 @@ const server = http.createServer(async (req, res) => {
       return;
     }
 
-    const validated = validateRequest(parsed);
+    let validated: ProxyRequest;
+    try {
+      validated = validateRequest(parsed);
+    } catch (e) {
+      json(res, 400, { error: e instanceof Error ? e.message : String(e) });
+      return;
+    }
+
     const text = await callProvider(validated);
     json(res, 200, { text });
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e);
     console.error(`[${new Date().toISOString()}] Error:`, msg);
-    json(res, 500, { error: msg });
+    json(res, 500, { error: "Internal server error" });
   }
 });
 

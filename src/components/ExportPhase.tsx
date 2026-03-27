@@ -27,10 +27,14 @@ export default function ExportPhase({
     }
   }, [flow, format]);
 
-  const copyContent = () => {
-    navigator.clipboard.writeText(content);
-    setFormatCopied(true);
-    setTimeout(() => setFormatCopied(false), 2000);
+  const copyContent = async () => {
+    try {
+      await navigator.clipboard.writeText(content);
+      setFormatCopied(true);
+      setTimeout(() => setFormatCopied(false), 2000);
+    } catch {
+      // Clipboard API unavailable (HTTP context or permissions denied)
+    }
   };
 
   const downloadContent = () => {

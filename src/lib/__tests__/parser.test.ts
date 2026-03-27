@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, afterEach } from "vitest";
+import type { Step } from "../../types";
 import { parseFlow, parseGroupInstructions } from "../parser";
 
 // Mock the AI module so tests don't hit a real API
@@ -39,7 +40,7 @@ describe("parseFlow", () => {
     expect(flow.status).toBe("Published");
     expect(flow.shared).toBe(true);
     expect(flow.items).toHaveLength(1);
-    expect((flow.items[0] as any).title).toBe("Step 1");
+    expect((flow.items[0] as Step).title).toBe("Step 1");
   });
 
   it("handles AI response wrapped in markdown code fences", async () => {

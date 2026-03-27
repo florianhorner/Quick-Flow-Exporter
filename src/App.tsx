@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import type { Flow, FlowItem, Phase, HistoryEntry } from "./types";
 import { createEmptyFlow, allGroups, allSteps } from "./lib/flow";
 import { parseFlow } from "./lib/parser";
@@ -22,21 +22,26 @@ export default function App() {
     loadHistory().then(setHistory);
   }, []);
 
+  const parseIdRef = useRef(0);
+
   const doParse = useCallback(async () => {
     if (!raw.trim()) return;
+    const currentId = ++parseIdRef.current;
     setParsing(true);
     setParseError(null);
     try {
       const parsed = await parseFlow(raw);
+      if (parseIdRef.current !== currentId) return; // stale — reset or new parse happened
       setFlow(parsed);
       const hasGroups = allGroups(parsed.items).length > 0;
       setPhase(hasGroups ? "groups" : "review");
     } catch (e) {
+      if (parseIdRef.current !== currentId) return;
       setParseError(
         `Parsing failed: ${e instanceof Error ? e.message : String(e)}`,
       );
     }
-    setParsing(false);
+    if (parseIdRef.current === currentId) setParsing(false);
   }, [raw]);
 
   const recordExport = useCallback(async () => {
@@ -61,6 +66,8 @@ export default function App() {
   };
 
   const resetToNew = () => {
+    parseIdRef.current++; // invalidate any in-flight parse
+    setParsing(false);
     setPhase("paste");
     setFlow(createEmptyFlow());
     setRaw("");
