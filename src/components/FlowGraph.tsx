@@ -17,23 +17,23 @@ import type { Flow, Step, Group } from "../types";
 import { STEP_TYPES } from "../constants";
 import { allSteps } from "../lib/flow";
 
-/* ── colour palette per step type ── */
+/* ── colour palette per step type (dark-mode adjusted) ── */
 const TYPE_COLORS: Record<string, { bg: string; border: string; text: string }> = {
-  chat_agent:        { bg: "#dbeafe", border: "#3b82f6", text: "#1e40af" },
-  general_knowledge: { bg: "#dcfce7", border: "#22c55e", text: "#166534" },
-  web_search:        { bg: "#e0f2fe", border: "#0ea5e9", text: "#0c4a6e" },
-  ui_agent:          { bg: "#fef3c7", border: "#f59e0b", text: "#92400e" },
-  create_image:      { bg: "#fce7f3", border: "#ec4899", text: "#9d174d" },
-  quicksuite_data:   { bg: "#ede9fe", border: "#8b5cf6", text: "#5b21b6" },
-  dashboard_topics:  { bg: "#e0e7ff", border: "#6366f1", text: "#3730a3" },
-  app_actions:       { bg: "#ffedd5", border: "#f97316", text: "#9a3412" },
-  user_input_text:   { bg: "#fef9c3", border: "#eab308", text: "#854d0e" },
-  user_input_files:  { bg: "#fed7aa", border: "#fb923c", text: "#9a3412" },
+  chat_agent:        { bg: "#1e3a5f", border: "#3b82f6", text: "#93c5fd" },
+  general_knowledge: { bg: "#1a3d2a", border: "#22c55e", text: "#86efac" },
+  web_search:        { bg: "#164e63", border: "#0ea5e9", text: "#7dd3fc" },
+  ui_agent:          { bg: "#422006", border: "#f59e0b", text: "#fcd34d" },
+  create_image:      { bg: "#4a1942", border: "#ec4899", text: "#f9a8d4" },
+  quicksuite_data:   { bg: "#2d1f5e", border: "#8b5cf6", text: "#c4b5fd" },
+  dashboard_topics:  { bg: "#1e1b4b", border: "#6366f1", text: "#a5b4fc" },
+  app_actions:       { bg: "#431407", border: "#f97316", text: "#fdba74" },
+  user_input_text:   { bg: "#3f3c0a", border: "#eab308", text: "#fde047" },
+  user_input_files:  { bg: "#431407", border: "#fb923c", text: "#fed7aa" },
 };
 
-const GROUP_STYLE = { bg: "#f5f3ff", border: "#a78bfa", text: "#6d28d9" };
+const GROUP_STYLE = { bg: "#2d1f5e", border: "#a78bfa", text: "#c4b5fd" };
 
-const DEFAULT_COLOR = { bg: "#f3f4f6", border: "#9ca3af", text: "#374151" };
+const DEFAULT_COLOR = { bg: "#1e293b", border: "#64748b", text: "#94a3b8" };
 
 /* ── Custom Step Node ── */
 function StepNode({ data }: { data: { step: Step; index: number } }) {
@@ -46,31 +46,31 @@ function StepNode({ data }: { data: { step: Step; index: number } }) {
       className="rounded-xl shadow-lg px-4 py-3 min-w-[220px] max-w-[300px] border-2 transition-shadow hover:shadow-xl"
       style={{ background: colors.bg, borderColor: colors.border }}
     >
-      <Handle type="target" position={Position.Top} className="!bg-gray-400 !w-3 !h-3" />
+      <Handle type="target" position={Position.Top} className="!bg-slate-500 !w-3 !h-3" />
       <div className="flex items-center gap-2 mb-1">
         <span className="text-lg">{meta?.icon ?? "?"}</span>
         <span className="text-xs font-bold uppercase tracking-wide" style={{ color: colors.text }}>
           {meta?.label ?? step.type}
         </span>
       </div>
-      <div className="font-semibold text-sm text-gray-900 mb-1">
+      <div className="font-semibold text-sm text-white mb-1">
         {index + 1}. {step.title || "(Untitled)"}
       </div>
       {step.prompt && (
-        <div className="text-xs text-gray-600 line-clamp-3 font-mono bg-white/60 rounded p-1.5 mt-1">
+        <div className="text-xs text-slate-400 line-clamp-3 font-mono bg-black/30 rounded p-1.5 mt-1">
           {step.prompt.slice(0, 150)}{step.prompt.length > 150 ? "…" : ""}
         </div>
       )}
       {step.references && (
         <div className="mt-1.5 flex flex-wrap gap-1">
           {step.references.split(",").map((ref, i) => (
-            <span key={i} className="text-[10px] bg-white/80 text-gray-500 rounded px-1.5 py-0.5 border">
+            <span key={i} className="text-[10px] bg-black/30 text-slate-400 rounded px-1.5 py-0.5 border border-slate-700">
               @{ref.trim()}
             </span>
           ))}
         </div>
       )}
-      <Handle type="source" position={Position.Bottom} className="!bg-gray-400 !w-3 !h-3" />
+      <Handle type="source" position={Position.Bottom} className="!bg-slate-500 !w-3 !h-3" />
     </div>
   );
 }
@@ -90,17 +90,17 @@ function GroupNode({ data }: { data: { group: Group; index: number; childCount: 
           Reasoning Group
         </span>
       </div>
-      <div className="font-semibold text-sm text-gray-900 mb-1">
+      <div className="font-semibold text-sm text-white mb-1">
         {index + 1}. {group.title || "(Untitled Group)"}
       </div>
       <div className="flex items-center gap-2 mt-1">
-        <span className="text-[10px] bg-purple-200 text-purple-800 rounded px-2 py-0.5 font-medium">
+        <span className="text-[10px] bg-purple-900/50 text-purple-300 rounded px-2 py-0.5 font-medium border border-purple-800">
           {group.runCondition}
         </span>
-        <span className="text-[10px] text-gray-500">{childCount} steps inside</span>
+        <span className="text-[10px] text-slate-400">{childCount} steps inside</span>
       </div>
       {group.reasoningInstructions && (
-        <div className="text-xs text-gray-600 font-mono bg-white/60 rounded p-1.5 mt-1.5 line-clamp-2">
+        <div className="text-xs text-slate-400 font-mono bg-black/30 rounded p-1.5 mt-1.5 line-clamp-2">
           {group.reasoningInstructions.slice(0, 120)}{group.reasoningInstructions.length > 120 ? "…" : ""}
         </div>
       )}
@@ -196,8 +196,8 @@ function buildGraph(flow: Flow) {
       id: `seq-${i}`,
       source: actualSrc,
       target: tgt,
-      style: { stroke: "#9ca3af", strokeWidth: 2 },
-      markerEnd: { type: MarkerType.ArrowClosed, color: "#9ca3af" },
+      style: { stroke: "#64748b", strokeWidth: 2 },
+      markerEnd: { type: MarkerType.ArrowClosed, color: "#64748b" },
     });
   }
 
@@ -233,13 +233,13 @@ function DetailPanel({ step, onClose }: { step: Step | null; onClose: () => void
   const colors = TYPE_COLORS[step.type] ?? DEFAULT_COLOR;
 
   return (
-    <div className="absolute right-0 top-0 bottom-0 w-96 bg-white shadow-2xl border-l z-20 overflow-y-auto">
-      <div className="sticky top-0 bg-white border-b px-4 py-3 flex items-center justify-between">
+    <div className="absolute right-0 top-0 bottom-0 w-96 bg-midnight-800 shadow-2xl border-l border-midnight-700 z-20 overflow-y-auto">
+      <div className="sticky top-0 bg-midnight-800 border-b border-midnight-700 px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="text-lg">{meta?.icon}</span>
-          <span className="font-semibold text-sm">{step.title || "(Untitled)"}</span>
+          <span className="font-semibold text-sm text-white">{step.title || "(Untitled)"}</span>
         </div>
-        <button onClick={onClose} className="text-gray-400 hover:text-gray-700 text-lg">✕</button>
+        <button onClick={onClose} className="text-slate-500 hover:text-slate-300 text-lg">✕</button>
       </div>
       <div className="p-4 space-y-3">
         <div>
@@ -249,31 +249,31 @@ function DetailPanel({ step, onClose }: { step: Step | null; onClose: () => void
         </div>
         {step.type === "chat_agent" && step.agentName && (
           <div>
-            <div className="text-xs text-gray-500 mb-1">Chat Agent</div>
-            <div className="text-sm font-medium">{step.agentName}</div>
+            <div className="text-xs text-slate-500 mb-1">Chat Agent</div>
+            <div className="text-sm font-medium text-white">{step.agentName}</div>
           </div>
         )}
         {step.type === "general_knowledge" && (
-          <div className="flex gap-3 text-xs">
-            <div><span className="text-gray-500">Source:</span> {step.source}</div>
-            <div><span className="text-gray-500">Output:</span> {step.outputPref}</div>
-            <div><span className="text-gray-500">Creativity:</span> {step.creativityLevel}/10</div>
+          <div className="flex gap-3 text-xs text-slate-400">
+            <div><span className="text-slate-500">Source:</span> {step.source}</div>
+            <div><span className="text-slate-500">Output:</span> {step.outputPref}</div>
+            <div><span className="text-slate-500">Creativity:</span> {step.creativityLevel}/10</div>
           </div>
         )}
         {step.prompt && (
           <div>
-            <div className="text-xs text-gray-500 mb-1">Prompt</div>
-            <pre className="text-sm font-mono bg-gray-50 rounded-lg p-3 whitespace-pre-wrap border max-h-96 overflow-y-auto">
+            <div className="text-xs text-slate-500 mb-1">Prompt</div>
+            <pre className="text-sm font-mono bg-[#0d1117] rounded-lg p-3 whitespace-pre-wrap border border-midnight-700 max-h-96 overflow-y-auto text-slate-300">
               {step.prompt}
             </pre>
           </div>
         )}
         {step.references && (
           <div>
-            <div className="text-xs text-gray-500 mb-1">References</div>
+            <div className="text-xs text-slate-500 mb-1">References</div>
             <div className="flex flex-wrap gap-1">
               {step.references.split(",").map((r, i) => (
-                <span key={i} className="text-xs bg-amber-100 text-amber-800 rounded px-2 py-0.5">
+                <span key={i} className="text-xs bg-amber-900/40 text-amber-300 rounded px-2 py-0.5 border border-amber-800">
                   @{r.trim()}
                 </span>
               ))}
@@ -282,14 +282,14 @@ function DetailPanel({ step, onClose }: { step: Step | null; onClose: () => void
         )}
         {step.type === "user_input_text" && (
           <>
-            {step.placeholder && <div className="text-sm"><span className="text-gray-500 text-xs">Placeholder:</span> {step.placeholder}</div>}
-            {step.defaultValue && <div className="text-sm"><span className="text-gray-500 text-xs">Default:</span> {step.defaultValue}</div>}
+            {step.placeholder && <div className="text-sm text-slate-300"><span className="text-slate-500 text-xs">Placeholder:</span> {step.placeholder}</div>}
+            {step.defaultValue && <div className="text-sm text-slate-300"><span className="text-slate-500 text-xs">Default:</span> {step.defaultValue}</div>}
           </>
         )}
         {step.config && (
           <div>
-            <div className="text-xs text-gray-500 mb-1">Config</div>
-            <pre className="text-xs font-mono bg-gray-50 rounded p-2 border">{step.config}</pre>
+            <div className="text-xs text-slate-500 mb-1">Config</div>
+            <pre className="text-xs font-mono bg-[#0d1117] rounded p-2 border border-midnight-700 text-slate-300">{step.config}</pre>
           </div>
         )}
       </div>
@@ -305,19 +305,19 @@ function Legend() {
     color: (TYPE_COLORS[t.value] ?? DEFAULT_COLOR).border,
   }));
   return (
-    <div className="bg-white/90 backdrop-blur rounded-lg shadow-lg p-3 text-xs space-y-1.5 max-h-80 overflow-y-auto">
-      <div className="font-bold text-gray-700 mb-1">Legend</div>
+    <div className="bg-midnight-800/90 backdrop-blur rounded-lg shadow-lg p-3 text-xs space-y-1.5 max-h-80 overflow-y-auto border border-midnight-700">
+      <div className="font-bold text-slate-300 mb-1">Legend</div>
       {items.map((it) => (
-        <div key={it.label} className="flex items-center gap-2">
+        <div key={it.label} className="flex items-center gap-2 text-slate-400">
           <div className="w-3 h-3 rounded-sm border-2" style={{ borderColor: it.color, background: it.color + "33" }} />
           <span>{it.icon} {it.label}</span>
         </div>
       ))}
-      <div className="flex items-center gap-2 mt-1 pt-1 border-t">
+      <div className="flex items-center gap-2 mt-1 pt-1 border-t border-midnight-700 text-slate-400">
         <div className="w-3 h-3 rounded-sm border-2 border-dashed" style={{ borderColor: GROUP_STYLE.border, background: GROUP_STYLE.bg }} />
         <span>🔄 Reasoning Group</span>
       </div>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 text-slate-400">
         <div className="w-6 h-0 border-t-2 border-dashed" style={{ borderColor: "#f59e0b" }} />
         <span>@reference link</span>
       </div>
@@ -346,16 +346,16 @@ export default function FlowGraph({ flow, onBack }: FlowGraphProps) {
   if (flow.items.length === 0) {
     return (
       <div className="space-y-4">
-        <div className="bg-white rounded-xl shadow-sm p-4 flex items-center gap-3">
+        <div className="bg-midnight-800 border border-midnight-700 rounded-xl shadow-sm p-4 flex items-center gap-3">
           <span className="text-2xl">🔀</span>
-          <span className="font-semibold text-sm">Flow Graph</span>
+          <span className="font-semibold text-sm text-white">Flow Graph</span>
           <div className="flex-1" />
-          <button onClick={onBack} className="text-sm text-gray-500 hover:text-gray-700">← Back</button>
+          <button onClick={onBack} className="text-sm text-slate-500 hover:text-slate-300">← Back</button>
         </div>
-        <div className="bg-white rounded-xl shadow-sm p-12 text-center">
+        <div className="bg-midnight-800 border border-midnight-700 rounded-xl shadow-sm p-12 text-center">
           <div className="text-4xl mb-3">📋</div>
-          <div className="font-semibold text-gray-700">No flow loaded</div>
-          <div className="text-sm text-gray-500 mt-1">Parse a flow first, then come back here to see the interactive graph.</div>
+          <div className="font-semibold text-slate-300">No flow loaded</div>
+          <div className="text-sm text-slate-500 mt-1">Parse a flow first, then come back here to see the interactive graph.</div>
         </div>
       </div>
     );
@@ -363,23 +363,23 @@ export default function FlowGraph({ flow, onBack }: FlowGraphProps) {
 
   return (
     <div className="space-y-4">
-      <div className="bg-white rounded-xl shadow-sm p-4 flex flex-wrap gap-3 items-center">
+      <div className="bg-midnight-800 border border-midnight-700 rounded-xl shadow-sm p-4 flex flex-wrap gap-3 items-center">
         <div className="flex items-center gap-2">
           <span className="text-2xl">🔀</span>
           <div>
-            <div className="font-semibold text-sm">{flow.title || "(Untitled)"}</div>
-            <div className="text-xs text-gray-500">
+            <div className="font-semibold text-sm text-white">{flow.title || "(Untitled)"}</div>
+            <div className="text-xs text-slate-500">
               Interactive flow graph · {steps.length} steps · Click any node for details
             </div>
           </div>
         </div>
         <div className="flex-1" />
-        <button onClick={onBack} className="text-sm text-gray-500 hover:text-gray-700">
+        <button onClick={onBack} className="text-sm text-slate-500 hover:text-slate-300">
           ← Back
         </button>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm overflow-hidden relative" style={{ height: "70vh" }}>
+      <div className="bg-midnight-800 border border-midnight-700 rounded-xl shadow-sm overflow-hidden relative" style={{ height: "70vh" }}>
         <ReactFlow
           nodes={initialNodes}
           edges={initialEdges}
@@ -391,7 +391,7 @@ export default function FlowGraph({ flow, onBack }: FlowGraphProps) {
           maxZoom={2}
           proOptions={{ hideAttribution: true }}
         >
-          <Background color="#e5e7eb" gap={20} />
+          <Background color="#334155" gap={20} />
           <Controls position="bottom-left" />
           <MiniMap
             nodeColor={(node) => {
@@ -399,8 +399,9 @@ export default function FlowGraph({ flow, onBack }: FlowGraphProps) {
               const step = (node.data as { step: Step }).step;
               return (TYPE_COLORS[step.type] ?? DEFAULT_COLOR).border;
             }}
-            maskColor="rgba(0,0,0,0.08)"
+            maskColor="rgba(0,0,0,0.3)"
             position="bottom-right"
+            style={{ background: "#0f172a" }}
           />
           <Panel position="top-left">
             <Legend />

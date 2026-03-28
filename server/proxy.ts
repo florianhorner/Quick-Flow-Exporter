@@ -9,6 +9,7 @@
  */
 
 import http from "node:http";
+import { createRateLimiter, validateProxyRequest, type ProxyRequest } from "./proxy-utils";
 
 const PORT = Number(process.env.PORT ?? 3001);
 const PROVIDER = process.env.PROVIDER ?? "anthropic";
@@ -18,61 +19,12 @@ const RATE_LIMIT = Number(process.env.RATE_LIMIT ?? 20);
 
 // ── Rate limiter (per-IP, sliding window) ────────────────────────────────────
 
-const hits = new Map<string, number[]>();
-
-function isRateLimited(ip: string): boolean {
-  const now = Date.now();
-  const timestamps = (hits.get(ip) ?? []).filter((t) => now - t < RATE_WINDOW_MS);
-  if (timestamps.length >= RATE_LIMIT) {
-    hits.set(ip, timestamps);
-    return true;
-  }
-  timestamps.push(now);
-  hits.set(ip, timestamps);
-  return false;
-}
+const rateLimiter = createRateLimiter(RATE_LIMIT, RATE_WINDOW_MS);
 
 // Clean up stale entries every 5 minutes
 setInterval(() => {
-  const now = Date.now();
-  for (const [ip, timestamps] of hits) {
-    const active = timestamps.filter((t) => now - t < RATE_WINDOW_MS);
-    if (active.length === 0) hits.delete(ip);
-    else hits.set(ip, active);
-  }
+  rateLimiter.prune();
 }, 300_000);
-
-// ── Request types ────────────────────────────────────────────────────────────
-
-interface ProxyRequest {
-  system: string;
-  userMessage: string;
-  maxTokens?: number;
-}
-
-function validateRequest(body: unknown): ProxyRequest {
-  if (typeof body !== "object" || body === null) {
-    throw new Error("Request body must be a JSON object");
-  }
-
-  const obj = body as Record<string, unknown>;
-
-  if (typeof obj.system !== "string" || obj.system.length === 0) {
-    throw new Error("'system' must be a non-empty string");
-  }
-  if (typeof obj.userMessage !== "string" || obj.userMessage.length === 0) {
-    throw new Error("'userMessage' must be a non-empty string");
-  }
-  if (obj.maxTokens !== undefined && (typeof obj.maxTokens !== "number" || obj.maxTokens < 1 || obj.maxTokens > 16000)) {
-    throw new Error("'maxTokens' must be a number between 1 and 16000");
-  }
-
-  return {
-    system: obj.system,
-    userMessage: obj.userMessage,
-    maxTokens: (obj.maxTokens as number | undefined) ?? 4096,
-  };
-}
 
 // ── Anthropic provider ───────────────────────────────────────────────────────
 
@@ -89,7 +41,7 @@ async function callAnthropic(req: ProxyRequest): Promise<string> {
     },
     body: JSON.stringify({
       model: process.env.ANTHROPIC_MODEL ?? "claude-sonnet-4-20250514",
-      max_tokens: req.maxTokens ?? 4096,
+      max_tokens: req.maxTokens,
       system: req.system,
       messages: [{ role: "user", content: req.userMessage }],
     }),
@@ -121,7 +73,7 @@ async function callBedrock(req: ProxyRequest): Promise<string> {
 
   const body = JSON.stringify({
     anthropic_version: "bedrock-2023-05-31",
-    max_tokens: req.maxTokens ?? 4096,
+    max_tokens: req.maxTokens,
     system: req.system,
     messages: [{ role: "user", content: req.userMessage }],
   });
@@ -160,7 +112,8 @@ function readBody(req: http.IncomingMessage): Promise<string> {
       size += chunk.length;
       if (size > MAX_BODY_BYTES) {
         settled = true;
-        req.destroy(new Error("Request body too large"));
+        reject(new Error("Request body too large"));
+        req.destroy();
         return;
       }
       chunks.push(chunk);
@@ -224,7 +177,7 @@ const server = http.createServer(async (req, res) => {
     req.socket.remoteAddress ??
     "unknown";
 
-  if (isRateLimited(ip)) {
+  if (rateLimiter.isRateLimited(ip)) {
     json(res, 429, { error: "Too many requests. Try again in a minute." });
     return;
   }
@@ -241,7 +194,7 @@ const server = http.createServer(async (req, res) => {
 
     let validated: ProxyRequest;
     try {
-      validated = validateRequest(parsed);
+      validated = validateProxyRequest(parsed);
     } catch (e) {
       json(res, 400, { error: e instanceof Error ? e.message : String(e) });
       return;

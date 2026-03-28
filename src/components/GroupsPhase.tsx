@@ -19,11 +19,11 @@ export default function GroupsPhase({
 
   return (
     <div className="space-y-4">
-      <div className="bg-white rounded-xl shadow-sm p-6 space-y-4">
+      <div className="bg-midnight-800 border border-midnight-700 rounded-xl shadow-sm p-6 space-y-4">
         <div className="text-center space-y-2">
           <div className="text-4xl">🔄</div>
-          <h2 className="text-xl font-bold">Reasoning Group Instructions</h2>
-          <p className="text-gray-500 text-sm">
+          <h2 className="text-xl font-bold font-mono text-white">Reasoning Group Instructions</h2>
+          <p className="text-slate-400 text-sm">
             {groups.length} Reasoning Group{groups.length > 1 ? "s" : ""} found.
             For each group: open it in QuickSuite, Ctrl+A, Ctrl+C, paste below.
           </p>
@@ -46,20 +46,20 @@ export default function GroupsPhase({
         <div className="flex items-center justify-between pt-2">
           <button
             onClick={onBack}
-            className="text-sm text-gray-500 hover:text-gray-700"
+            className="text-sm text-slate-500 hover:text-slate-300"
           >
             ← Back
           </button>
           <div className="flex gap-2">
             <button
               onClick={onContinue}
-              className="px-4 py-2 text-sm rounded bg-gray-200 hover:bg-gray-300 text-gray-700"
+              className="px-4 py-2 text-sm rounded bg-midnight-700 hover:bg-midnight-600 text-slate-400"
             >
               Skip →
             </button>
             <button
               onClick={onContinue}
-              className="px-6 py-2.5 rounded-lg text-sm font-semibold bg-gray-900 text-white hover:bg-gray-800 shadow-lg"
+              className="px-6 py-2.5 rounded-lg text-sm font-semibold bg-cyan-600 text-white hover:bg-cyan-500 shadow-lg shadow-cyan-500/20"
             >
               Continue to Review →
             </button>
