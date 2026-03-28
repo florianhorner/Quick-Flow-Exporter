@@ -41,7 +41,7 @@ export default function ReviewPhase({
     <div className="space-y-4">
       <div className="bg-midnight-800 border border-midnight-700 rounded-xl shadow-sm p-4 flex flex-wrap gap-4 items-center">
         <div className="flex items-center gap-2">
-          <span className="text-2xl">✅</span>
+          <span className="text-sm font-bold text-cyan-400 font-mono">REVIEW</span>
           <div>
             <div className="font-semibold text-sm text-white">
               {flow.title || "(Untitled)"}
@@ -56,7 +56,7 @@ export default function ReviewPhase({
           onClick={onExport}
           className="bg-cyan-600 text-white px-5 py-2 rounded-lg text-sm font-semibold hover:bg-cyan-500 shadow-lg shadow-cyan-500/20"
         >
-          📄 Export Markdown →
+          Export
         </button>
       </div>
 

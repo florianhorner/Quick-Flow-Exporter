@@ -56,8 +56,8 @@ export default function ExportPhase({
   };
 
   const formats: { key: ExportFormat; label: string; icon: string; desc: string }[] = [
-    { key: "markdown", label: "Markdown", icon: "📄", desc: "Human-readable documentation" },
-    { key: "mermaid", label: "Mermaid", icon: "🧜", desc: "Flowchart diagram (GitHub/Quip)" },
+    { key: "markdown", label: "Markdown", icon: ".md", desc: "Human-readable documentation" },
+    { key: "mermaid", label: "Mermaid", icon: ".mmd", desc: "Flowchart diagram (GitHub/Quip)" },
     { key: "json", label: "JSON", icon: "{ }", desc: "Canonical re-importable format" },
   ];
 
@@ -95,7 +95,7 @@ export default function ExportPhase({
           }`}
           aria-live="polite"
         >
-          {formatCopied ? "✓ Copied!" : copyError ? "Select text & Ctrl+C" : "📋 Copy"}
+          {formatCopied ? "Copied!" : copyError ? "Select text & Ctrl+C" : "Copy"}
         </button>
         <button
           onClick={downloadContent}
@@ -111,7 +111,7 @@ export default function ExportPhase({
       {/* Mermaid preview hint */}
       {format === "mermaid" && (
         <div className="bg-blue-900/20 border border-blue-800 rounded-lg p-3 text-sm text-blue-400">
-          💡 Paste this into any Mermaid-compatible renderer (GitHub markdown, Quip, mermaid.live) to see the flowchart.
+          Paste this into any Mermaid-compatible renderer (GitHub markdown, Quip, mermaid.live) to see the flowchart.
         </div>
       )}
 

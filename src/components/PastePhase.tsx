@@ -42,28 +42,23 @@ export default function PastePhase({
   return (
     <div className="space-y-4">
       <div className="bg-midnight-800 border border-midnight-700 rounded-xl shadow-sm p-6 space-y-4">
-        <div className="text-center space-y-2">
-          <div className="text-4xl">📋</div>
-          <h2 className="text-xl font-bold font-mono text-white">
-            Paste your <span className="text-cyan-400">Quick Flow</span>
+        <div className="space-y-1">
+          <h2 className="text-lg font-bold font-mono text-white">
+            Paste your flow
           </h2>
-          <p className="text-slate-400 text-sm max-w-lg mx-auto">
-            Extract, visualize, diff, and document your Amazon Quick Flows — because
-            the tool doesn't come with a native way to do it.
-          </p>
           <p className="text-slate-400 text-sm">
-            Open your Flow in Editor mode →{" "}
+            Open your flow in the Quick Flows editor, then{" "}
             <kbd className="px-1.5 py-0.5 bg-midnight-900 border border-midnight-700 rounded text-xs font-mono text-cyan-400">Ctrl+A</kbd>
-            {" → "}
+            {" "}
             <kbd className="px-1.5 py-0.5 bg-midnight-900 border border-midnight-700 rounded text-xs font-mono text-cyan-400">Ctrl+C</kbd>
-            {" → "}
+            {" "}
             <kbd className="px-1.5 py-0.5 bg-midnight-900 border border-midnight-700 rounded text-xs font-mono text-cyan-400">Ctrl+V</kbd>
-            {" here"}
+            {" here."}
           </p>
         </div>
 
         <label htmlFor="paste-input" className="sr-only">
-          Paste your Quick Flow content
+          Paste your flow content
         </label>
         <textarea
           id="paste-input"
@@ -80,7 +75,6 @@ export default function PastePhase({
         {needsKey && (
           <div className="bg-midnight-900 border border-cyan-800/50 rounded-lg p-4 space-y-3">
             <div className="flex items-center gap-2">
-              <span className="text-sm">🔑</span>
               <span className="text-sm font-semibold text-slate-300">Enter your Anthropic API key to continue</span>
             </div>
             <div className="flex gap-2">
@@ -119,7 +113,7 @@ export default function PastePhase({
                 onClick={() => { setNeedsKey(true); setKeyValue(getApiKey()); }}
                 className="text-xs text-slate-600 hover:text-slate-400"
               >
-                🔑 Change key
+                Change key
               </button>
             )}
           </div>
@@ -134,7 +128,7 @@ export default function PastePhase({
                   : "bg-midnight-700 text-slate-500"
             }`}
           >
-            {parsing ? "⏳ Parsing with AI..." : "🧠 Parse & Extract →"}
+            {parsing ? "Parsing..." : "Parse & Extract"}
           </button>
         </div>
 

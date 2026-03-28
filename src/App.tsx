@@ -78,7 +78,7 @@ export default function App() {
   const groups = allGroups(flow.items);
 
   const navBtn = (active: boolean, activeColor: string) =>
-    `px-3 py-1 text-sm rounded font-medium transition-colors ${
+    `px-3 py-1.5 text-sm rounded font-medium transition-colors ${
       active
         ? `${activeColor} text-white`
         : "bg-midnight-800 text-slate-400 hover:text-slate-200 hover:bg-midnight-700 border border-midnight-700"
@@ -90,7 +90,7 @@ export default function App() {
       <div className="bg-midnight-800 border-b border-midnight-700 sticky top-0 z-10">
         <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between flex-wrap gap-2">
           <div className="flex items-center gap-3">
-            <span className="text-lg font-bold font-mono text-cyan-400">⚡ Quick Flow Exporter</span>
+            <span className="text-lg font-bold font-mono text-cyan-400">Quick Flow Exporter</span>
             {phase !== "paste" && flow.title && (
               <span className="text-sm text-slate-500 truncate max-w-xs">
                 — {flow.title}
@@ -106,26 +106,26 @@ export default function App() {
                     onClick={() => setPhase("groups")}
                     className={navBtn(phase === "groups", "bg-purple-700")}
                   >
-                    🔄 Groups
+                    Groups
                   </button>
                 )}
                 <button
                   onClick={() => setPhase("review")}
                   className={navBtn(phase === "review", "bg-cyan-700")}
                 >
-                  ✏️ Review
+                  Review
                 </button>
                 <button
                   onClick={() => setPhase("graph")}
                   className={navBtn(phase === "graph", "bg-blue-700")}
                 >
-                  🔀 Graph
+                  Graph
                 </button>
                 <button
                   onClick={() => setPhase("export")}
                   className={navBtn(phase === "export", "bg-cyan-700")}
                 >
-                  📄 Export
+                  Export
                 </button>
               </>
             )}
@@ -133,13 +133,13 @@ export default function App() {
               onClick={() => setPhase("diff")}
               className={navBtn(phase === "diff", "bg-orange-700")}
             >
-              🔍 Diff
+              Diff
             </button>
             <button
               onClick={resetToNew}
-              className="px-3 py-1 text-sm rounded font-medium bg-cyan-600 text-white hover:bg-cyan-500 shadow-lg shadow-cyan-500/20"
+              className="px-3 py-1.5 text-sm rounded font-medium bg-cyan-600 text-white hover:bg-cyan-500 shadow-lg shadow-cyan-500/20"
             >
-              {phase === "paste" ? "📋 Paste Mode" : "🔄 New Export"}
+              {phase === "paste" ? "Paste Mode" : "New Export"}
             </button>
           </div>
         </div>

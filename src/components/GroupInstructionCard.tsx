@@ -98,7 +98,7 @@ export default function GroupInstructionCard({
                   : "bg-midnight-700 text-slate-500"
             }`}
           >
-            {parsing ? "⏳ Extracting..." : "🧠 Extract Instructions"}
+            {parsing ? "Extracting..." : "Extract Instructions"}
           </button>
         </div>
       )}

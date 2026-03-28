@@ -60,13 +60,12 @@ export default function DiffPhase({ currentFlow, onBack }: DiffPhaseProps) {
     return (
       <div className="space-y-4">
         <div className="bg-midnight-800 border border-midnight-700 rounded-xl shadow-sm p-6 space-y-4">
-          <div className="text-center space-y-2">
-            <div className="text-4xl">🔍</div>
-            <h2 className="text-xl font-bold font-mono text-white">
-              <span className="text-cyan-400">Flow</span> Diff
+          <div className="space-y-1">
+            <h2 className="text-lg font-bold font-mono text-white">
+              Compare flows
             </h2>
             <p className="text-slate-400 text-sm">
-              Compare two versions of a flow to see what changed
+              Paste two versions of a flow to see what changed.
             </p>
           </div>
 
@@ -116,7 +115,7 @@ export default function DiffPhase({ currentFlow, onBack }: DiffPhaseProps) {
                     : "bg-cyan-600 text-white hover:bg-cyan-500 shadow-lg shadow-cyan-500/25"
               }`}
             >
-              {parsing ? "⏳ Parsing..." : "🔍 Compare Flows"}
+              {parsing ? "Parsing..." : "Compare Flows"}
             </button>
           </div>
 
@@ -138,7 +137,7 @@ export default function DiffPhase({ currentFlow, onBack }: DiffPhaseProps) {
       {/* Summary bar */}
       <div className="bg-midnight-800 border border-midnight-700 rounded-xl shadow-sm p-4 flex flex-wrap gap-4 items-center">
         <div className="flex items-center gap-2">
-          <span className="text-2xl">🔍</span>
+          <span className="text-sm font-bold text-cyan-400 font-mono">DIFF</span>
           <div>
             <div className="font-semibold text-sm text-white">
               {leftFlow?.title || "(Untitled)"} → {rightFlow?.title || "(Untitled)"}
@@ -179,7 +178,7 @@ export default function DiffPhase({ currentFlow, onBack }: DiffPhaseProps) {
 
       {noChanges ? (
         <div className="bg-green-900/20 border border-green-800 rounded-xl shadow-sm p-8 text-center">
-          <div className="text-4xl mb-2">✅</div>
+          <div className="text-sm font-bold text-green-400 font-mono mb-2">NO CHANGES</div>
           <div className="font-semibold text-green-400">Flows are identical</div>
           <div className="text-sm text-green-500 mt-1">No differences found between the two versions.</div>
         </div>

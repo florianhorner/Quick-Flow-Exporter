@@ -65,8 +65,7 @@ export default function BookmarkletPanel() {
   return (
     <div className="bg-midnight-800 border border-midnight-700 rounded-xl shadow-sm p-5 space-y-3">
       <div className="flex items-center gap-2">
-        <span className="text-xl">🔖</span>
-        <span className="font-semibold text-sm text-cyan-400 font-mono">One-Click Bookmarklet</span>
+        <span className="font-semibold text-sm text-cyan-400 font-mono">Bookmarklet</span>
       </div>
       <p className="text-xs text-slate-400">
         Drag the button below to your bookmarks bar. When you're on a Quick Flows editor page,
@@ -90,15 +89,15 @@ export default function BookmarkletPanel() {
       <div className="flex gap-2">
         <button
           onClick={() => setShowCode(!showCode)}
-          className="text-xs text-cyan-500 hover:text-cyan-400 underline"
+          className="text-xs text-cyan-500 hover:text-cyan-400 underline py-1"
         >
           {showCode ? "Hide source" : "View source"}
         </button>
         <button
           onClick={copyCode}
-          className="text-xs text-cyan-500 hover:text-cyan-400 underline"
+          className="text-xs text-cyan-500 hover:text-cyan-400 underline py-1"
         >
-          {copied ? "✓ Copied!" : "Copy bookmarklet URL"}
+          {copied ? "Copied!" : "Copy bookmarklet URL"}
         </button>
       </div>
 
