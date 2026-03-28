@@ -2,10 +2,25 @@
  * AI parsing abstraction.
  *
  * Calls a local proxy at /api/parse so the API key never touches the browser.
+ * Optionally, the user can provide an API key via the UI which gets sent
+ * to the proxy as a fallback when no server-side env var is set.
  * See README.md for setup instructions.
  */
 
 const REQUEST_TIMEOUT_MS = 60_000; // 60 seconds
+const API_KEY_STORAGE_KEY = "qf-api-key";
+
+export function getApiKey(): string {
+  return localStorage.getItem(API_KEY_STORAGE_KEY) ?? "";
+}
+
+export function setApiKey(key: string): void {
+  if (key) {
+    localStorage.setItem(API_KEY_STORAGE_KEY, key);
+  } else {
+    localStorage.removeItem(API_KEY_STORAGE_KEY);
+  }
+}
 
 interface ParseRequest {
   system: string;
@@ -21,10 +36,16 @@ export async function parseWithAI({
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
 
+  const headers: Record<string, string> = { "Content-Type": "application/json" };
+  const apiKey = getApiKey();
+  if (apiKey) {
+    headers["x-api-key"] = apiKey;
+  }
+
   try {
     const res = await fetch("/api/parse", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers,
       body: JSON.stringify({ system, userMessage, maxTokens }),
       signal: controller.signal,
     });

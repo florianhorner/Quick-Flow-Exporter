@@ -28,9 +28,9 @@ setInterval(() => {
 
 // ── Anthropic provider ───────────────────────────────────────────────────────
 
-async function callAnthropic(req: ProxyRequest): Promise<string> {
-  const key = process.env.ANTHROPIC_API_KEY;
-  if (!key) throw new Error("ANTHROPIC_API_KEY not set");
+async function callAnthropic(req: ProxyRequest, clientKey?: string): Promise<string> {
+  const key = process.env.ANTHROPIC_API_KEY || clientKey;
+  if (!key) throw new Error("No API key. Set ANTHROPIC_API_KEY or provide one in the UI.");
 
   const res = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
@@ -59,7 +59,8 @@ async function callAnthropic(req: ProxyRequest): Promise<string> {
 
 // ── AWS Bedrock provider ─────────────────────────────────────────────────────
 
-async function callBedrock(req: ProxyRequest): Promise<string> {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+async function callBedrock(req: ProxyRequest, clientKey?: string): Promise<string> {
   // Optional dependency — install with: npm install @aws-sdk/client-bedrock-runtime
   const mod = await (import("@aws-sdk/client-bedrock-runtime" as string) as Promise<{ BedrockRuntimeClient: new (config: { region: string }) => { send: (cmd: unknown) => Promise<{ body: Uint8Array }> }; InvokeModelCommand: new (input: { modelId: string; contentType: string; accept: string; body: Uint8Array }) => unknown }>);
   const { BedrockRuntimeClient, InvokeModelCommand } = mod;
@@ -95,7 +96,8 @@ async function callBedrock(req: ProxyRequest): Promise<string> {
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
-const callProvider = PROVIDER === "bedrock" ? callBedrock : callAnthropic;
+const callProvider: (req: ProxyRequest, clientKey?: string) => Promise<string> =
+  PROVIDER === "bedrock" ? callBedrock : callAnthropic;
 
 function json(res: http.ServerResponse, status: number, data: unknown) {
   res.writeHead(status, { "Content-Type": "application/json" });
@@ -145,7 +147,7 @@ const server = http.createServer(async (req, res) => {
   const origin = process.env.CORS_ORIGIN ?? "http://localhost:5173";
   res.setHeader("Access-Control-Allow-Origin", origin);
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, x-api-key");
 
   if (req.method === "OPTIONS") {
     res.writeHead(204);
@@ -171,11 +173,13 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  // Rate limit
-  const ip =
-    (req.headers["x-forwarded-for"] as string)?.split(",")[0]?.trim() ??
-    req.socket.remoteAddress ??
-    "unknown";
+  // Rate limit — only trust X-Forwarded-For behind a known reverse proxy
+  const trustProxy = process.env.TRUST_PROXY === "true";
+  const ip = trustProxy
+    ? (req.headers["x-forwarded-for"] as string)?.split(",")[0]?.trim() ??
+      req.socket.remoteAddress ??
+      "unknown"
+    : req.socket.remoteAddress ?? "unknown";
 
   if (rateLimiter.isRateLimited(ip)) {
     json(res, 429, { error: "Too many requests. Try again in a minute." });
@@ -200,7 +204,8 @@ const server = http.createServer(async (req, res) => {
       return;
     }
 
-    const text = await callProvider(validated);
+    const clientKey = (req.headers["x-api-key"] as string) || undefined;
+    const text = await callProvider(validated, clientKey);
     json(res, 200, { text });
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e);

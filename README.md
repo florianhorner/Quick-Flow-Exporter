@@ -152,12 +152,14 @@ src/
 │   ├── PastePhase.tsx            # Raw text paste & parse
 │   ├── ReviewPhase.tsx           # Full flow editor
 │   ├── StepCard.tsx              # Collapsible step editor
-│   └── StepFields.tsx            # Step-type-specific form fields
+│   ├── StepFields.tsx            # Step-type-specific form fields
+│   └── ErrorBoundary.tsx         # Catch rendering errors gracefully
 ├── App.tsx                       # Main app with phase navigation
 ├── main.tsx                      # Entry point
 └── index.css                     # Tailwind imports
 server/
-└── proxy.ts                      # AI proxy server (Anthropic / Bedrock)
+├── proxy.ts                      # AI proxy server (Anthropic / Bedrock)
+└── proxy-utils.ts                # Shared proxy utilities (rate limiter, validation)
 ```
 
 ## Tech Stack
@@ -182,7 +184,7 @@ server/
 - [ ] Browser extension (Chrome/Edge) for zero-friction extraction
 - [ ] Flow analytics (prompt complexity, reference graph completeness, cost estimation)
 - [ ] Shareable links (encode flow in URL for Slack/email sharing)
-- [ ] Dark mode
+- [x] ~~Dark mode~~ (ships with dark theme by default)
 - [ ] Keyboard shortcuts
 - [ ] `npx quick-flow-exporter` for zero-setup local usage
 

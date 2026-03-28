@@ -14,8 +14,14 @@ export function validateProxyRequest(body: unknown): ProxyRequest {
   if (typeof obj.system !== "string" || obj.system.length === 0) {
     throw new Error("'system' must be a non-empty string");
   }
+  if (obj.system.length > 10_000) {
+    throw new Error("'system' exceeds 10,000 character limit");
+  }
   if (typeof obj.userMessage !== "string" || obj.userMessage.length === 0) {
     throw new Error("'userMessage' must be a non-empty string");
+  }
+  if (obj.userMessage.length > 200_000) {
+    throw new Error("'userMessage' exceeds 200,000 character limit");
   }
   if (
     obj.maxTokens !== undefined

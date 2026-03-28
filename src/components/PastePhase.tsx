@@ -1,5 +1,7 @@
+import { useState } from "react";
 import type { HistoryEntry } from "../types";
 import BookmarkletPanel from "./BookmarkletPanel";
+import { getApiKey, setApiKey } from "../lib/ai";
 
 interface PastePhaseProps {
   raw: string;
@@ -18,6 +20,25 @@ export default function PastePhase({
   parseError,
   history,
 }: PastePhaseProps) {
+  const [needsKey, setNeedsKey] = useState(false);
+  const [keyValue, setKeyValue] = useState("");
+  const hasKey = !!getApiKey();
+
+  const handleParse = () => {
+    if (!getApiKey()) {
+      setNeedsKey(true);
+      return;
+    }
+    onParse();
+  };
+
+  const handleKeySaveAndParse = () => {
+    setApiKey(keyValue);
+    setNeedsKey(false);
+    setKeyValue("");
+    onParse();
+  };
+
   return (
     <div className="space-y-4">
       <div className="bg-midnight-800 border border-midnight-700 rounded-xl shadow-sm p-6 space-y-4">
@@ -26,6 +47,10 @@ export default function PastePhase({
           <h2 className="text-xl font-bold font-mono text-white">
             Paste your <span className="text-cyan-400">Quick Flow</span>
           </h2>
+          <p className="text-slate-400 text-sm max-w-lg mx-auto">
+            Extract, visualize, diff, and document your Amazon Quick Flows — because
+            the tool doesn't come with a native way to do it.
+          </p>
           <p className="text-slate-400 text-sm">
             Open your Flow in Editor mode →{" "}
             <kbd className="px-1.5 py-0.5 bg-midnight-900 border border-midnight-700 rounded text-xs font-mono text-cyan-400">Ctrl+A</kbd>
@@ -52,12 +77,54 @@ export default function PastePhase({
           autoFocus
         />
 
+        {needsKey && (
+          <div className="bg-midnight-900 border border-cyan-800/50 rounded-lg p-4 space-y-3">
+            <div className="flex items-center gap-2">
+              <span className="text-sm">🔑</span>
+              <span className="text-sm font-semibold text-slate-300">Enter your Anthropic API key to continue</span>
+            </div>
+            <div className="flex gap-2">
+              <input
+                type="password"
+                value={keyValue}
+                onChange={(e) => setKeyValue(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && keyValue.trim() && raw.trim()) handleKeySaveAndParse();
+                }}
+                placeholder="sk-ant-..."
+                autoFocus
+                className="flex-1 border border-midnight-700 rounded-lg px-3 py-2 text-sm font-mono bg-[#0d1117] text-slate-300 placeholder-slate-600 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/30"
+              />
+              <button
+                onClick={handleKeySaveAndParse}
+                disabled={!keyValue.trim() || !raw.trim()}
+                className="px-4 py-2 rounded-lg text-sm font-semibold bg-cyan-600 text-white hover:bg-cyan-500 disabled:bg-midnight-700 disabled:text-slate-500"
+              >
+                Save & Parse
+              </button>
+            </div>
+            <p className="text-xs text-slate-500">
+              Stored in your browser only. Or set <code className="text-cyan-500">ANTHROPIC_API_KEY</code> on the proxy server.
+            </p>
+          </div>
+        )}
+
         <div className="flex items-center justify-between">
-          <span className="text-xs text-slate-500 font-mono">
-            {raw.length > 0 ? `${raw.length.toLocaleString()} chars` : ""}
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-slate-500 font-mono">
+              {raw.length > 0 ? `${raw.length.toLocaleString()} chars` : ""}
+            </span>
+            {hasKey && !needsKey && (
+              <button
+                onClick={() => { setNeedsKey(true); setKeyValue(getApiKey()); }}
+                className="text-xs text-slate-600 hover:text-slate-400"
+              >
+                🔑 Change key
+              </button>
+            )}
+          </div>
           <button
-            onClick={onParse}
+            onClick={handleParse}
             disabled={parsing || !raw.trim()}
             className={`px-6 py-2.5 rounded-lg text-sm font-semibold transition-all ${
               parsing

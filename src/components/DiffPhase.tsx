@@ -62,7 +62,9 @@ export default function DiffPhase({ currentFlow, onBack }: DiffPhaseProps) {
         <div className="bg-midnight-800 border border-midnight-700 rounded-xl shadow-sm p-6 space-y-4">
           <div className="text-center space-y-2">
             <div className="text-4xl">🔍</div>
-            <h2 className="text-xl font-bold font-mono text-white">Flow Diff</h2>
+            <h2 className="text-xl font-bold font-mono text-white">
+              <span className="text-cyan-400">Flow</span> Diff
+            </h2>
             <p className="text-slate-400 text-sm">
               Compare two versions of a flow to see what changed
             </p>
@@ -80,7 +82,7 @@ export default function DiffPhase({ currentFlow, onBack }: DiffPhaseProps) {
               </div>
               {!currentFlow && (
                 <textarea
-                  className="w-full border border-red-900/50 rounded-lg px-3 py-2 text-sm font-mono bg-[#0d1117] text-slate-300 placeholder-slate-600 focus:border-red-500 transition-colors"
+                  className="w-full border border-red-900/50 rounded-lg px-4 py-3 text-sm font-mono bg-[#0d1117] text-slate-300 placeholder-slate-600 focus:border-red-500 focus:ring-1 focus:ring-red-500/30 transition-colors"
                   rows={10}
                   placeholder="Paste the BEFORE version of the flow here..."
                   value={leftRaw}
@@ -91,7 +93,7 @@ export default function DiffPhase({ currentFlow, onBack }: DiffPhaseProps) {
             <div className="space-y-2">
               <span className="text-sm font-semibold text-green-400">After ▶</span>
               <textarea
-                className="w-full border border-green-900/50 rounded-lg px-3 py-2 text-sm font-mono bg-[#0d1117] text-slate-300 placeholder-slate-600 focus:border-green-500 transition-colors"
+                className="w-full border border-green-900/50 rounded-lg px-4 py-3 text-sm font-mono bg-[#0d1117] text-slate-300 placeholder-slate-600 focus:border-green-500 focus:ring-1 focus:ring-green-500/30 transition-colors"
                 rows={10}
                 placeholder="Paste the AFTER version of the flow here..."
                 value={rightRaw}
@@ -111,7 +113,7 @@ export default function DiffPhase({ currentFlow, onBack }: DiffPhaseProps) {
                   ? "bg-midnight-700 text-slate-500"
                   : (!currentFlow && !leftRaw.trim()) || !rightRaw.trim()
                     ? "bg-midnight-700 text-slate-500"
-                    : "bg-cyan-600 text-white hover:bg-cyan-500 shadow-lg shadow-cyan-500/20"
+                    : "bg-cyan-600 text-white hover:bg-cyan-500 shadow-lg shadow-cyan-500/25"
               }`}
             >
               {parsing ? "⏳ Parsing..." : "🔍 Compare Flows"}

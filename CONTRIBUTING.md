@@ -38,9 +38,9 @@ Thanks for your interest in contributing to Quick Flow Exporter.
 
 ## Adding a New AI Provider
 
-The AI integration is isolated in `server/proxy.ts`. To add a new provider:
+The AI integration lives in `server/proxy.ts` (HTTP server and routing) and `server/proxy-utils.ts` (shared utilities like rate limiting and request validation). To add a new provider:
 
-1. Add a `callYourProvider(req: ProxyRequest)` function
+1. Add a `callYourProvider(req: ProxyRequest)` function in `proxy.ts`
 2. Wire it into the `PROVIDER` switch at the bottom
 3. Document the required env vars in the README
 

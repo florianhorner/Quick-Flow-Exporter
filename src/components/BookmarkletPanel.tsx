@@ -26,8 +26,10 @@ const BOOKMARKLET_SOURCE = `
       /* Fallback: prompt with text for manual copy */
       var w = window.open('', '_blank');
       if (w) {
-        w.document.write('<html><head><title>Quick Flow Export</title></head><body><pre>' + text.replace(/</g,'&lt;') + '</pre></body></html>');
-        w.document.close();
+        w.document.title = 'Quick Flow Export';
+        var pre = w.document.createElement('pre');
+        pre.textContent = text;
+        w.document.body.appendChild(pre);
       } else {
         prompt('Popup blocked. Copy the text manually:', text.substring(0, 2000));
       }
