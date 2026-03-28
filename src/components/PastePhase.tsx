@@ -24,7 +24,7 @@ export default function PastePhase({
         <div className="text-center space-y-2">
           <div className="text-4xl">📋</div>
           <h2 className="text-xl font-bold font-mono text-white">
-            Paste your <span className="text-cyan-400">QuickSuite Flow</span>
+            Paste your <span className="text-cyan-400">Quick Flow</span>
           </h2>
           <p className="text-slate-400 text-sm">
             Open your Flow in Editor mode →{" "}
@@ -38,14 +38,14 @@ export default function PastePhase({
         </div>
 
         <label htmlFor="paste-input" className="sr-only">
-          Paste your QuickSuite Flow content
+          Paste your Quick Flow content
         </label>
         <textarea
           id="paste-input"
           className="w-full border border-midnight-700 rounded-lg px-4 py-3 text-sm font-mono bg-[#0d1117] text-slate-300 placeholder-slate-600 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/30 transition-colors"
           rows={12}
           placeholder={
-            "// Paste your flow content here...\n\nTip: In QuickSuite Flow Editor, press Ctrl+A to select all, then Ctrl+C to copy."
+            "// Paste your flow content here...\n\nTip: In the Quick Flows editor, press Ctrl+A to select all, then Ctrl+C to copy."
           }
           value={raw}
           onChange={(e) => onRawChange(e.target.value)}

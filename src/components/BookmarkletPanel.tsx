@@ -21,19 +21,19 @@ const BOOKMARKLET_SOURCE = `
 
     /* Copy to clipboard */
     navigator.clipboard.writeText(text).then(function() {
-      alert('Quick Flow content copied! (' + text.length + ' chars)\\nPaste it into the QS Exporter.');
+      alert('Quick Flow content copied! (' + text.length + ' chars)\\nPaste it into the Quick Flow Exporter.');
     }).catch(function() {
       /* Fallback: prompt with text for manual copy */
       var w = window.open('', '_blank');
       if (w) {
-        w.document.write('<html><head><title>QS Export</title></head><body><pre>' + text.replace(/</g,'&lt;') + '</pre></body></html>');
+        w.document.write('<html><head><title>Quick Flow Export</title></head><body><pre>' + text.replace(/</g,'&lt;') + '</pre></body></html>');
         w.document.close();
       } else {
         prompt('Popup blocked. Copy the text manually:', text.substring(0, 2000));
       }
     });
   } catch(e) {
-    alert('QS Exporter bookmarklet error: ' + e.message);
+    alert('Quick Flow Exporter bookmarklet error: ' + e.message);
   }
 })();
 `.trim();
@@ -80,7 +80,7 @@ export default function BookmarkletPanel() {
           className="inline-flex items-center gap-2 bg-cyan-600 text-white px-4 py-2 rounded-lg text-sm font-semibold shadow-lg shadow-cyan-500/20 hover:bg-cyan-500 cursor-grab active:cursor-grabbing select-none"
           title="Drag this to your bookmarks bar"
         >
-          ⚡ QS Export
+          ⚡ Quick Flow Export
         </a>
         <span className="text-xs text-slate-500">← Drag to bookmarks bar</span>
       </div>

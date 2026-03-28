@@ -82,7 +82,7 @@ export default function GroupInstructionCard({
             className="w-full border border-midnight-700 rounded px-3 py-2 text-sm bg-[#0d1117] text-slate-300 font-mono placeholder-slate-600 focus:border-purple-500"
             rows={4}
             placeholder={
-              "Open this group in QuickSuite → Ctrl+A → Ctrl+C → Ctrl+V here\n\nAI will extract the reasoning instructions."
+              "Open this group in Quick Flows → Ctrl+A → Ctrl+C → Ctrl+V here\n\nAI will extract the reasoning instructions."
             }
             value={rawInput}
             onChange={(e) => setRawInput(e.target.value)}

@@ -38,7 +38,7 @@ export async function parseFlow(rawText: string): Promise<Flow> {
 
   const text = await parseWithAI({
     system: FLOW_PARSE_PROMPT,
-    userMessage: `Parse this QuickSuite Flow:\n\n${rawText}`,
+    userMessage: `Parse this Quick Flow:\n\n${rawText}`,
     maxTokens: 8000,
   });
 

@@ -25,7 +25,7 @@ export default function GroupsPhase({
           <h2 className="text-xl font-bold font-mono text-white">Reasoning Group Instructions</h2>
           <p className="text-slate-400 text-sm">
             {groups.length} Reasoning Group{groups.length > 1 ? "s" : ""} found.
-            For each group: open it in QuickSuite, Ctrl+A, Ctrl+C, paste below.
+            For each group: open it in Quick Flows, Ctrl+A, Ctrl+C, paste below.
           </p>
         </div>
 

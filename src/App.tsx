@@ -90,7 +90,7 @@ export default function App() {
       <div className="bg-midnight-800 border-b border-midnight-700 sticky top-0 z-10">
         <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between flex-wrap gap-2">
           <div className="flex items-center gap-3">
-            <span className="text-lg font-bold font-mono text-cyan-400">⚡ QS Exporter</span>
+            <span className="text-lg font-bold font-mono text-cyan-400">⚡ Quick Flow Exporter</span>
             {phase !== "paste" && flow.title && (
               <span className="text-sm text-slate-500 truncate max-w-xs">
                 — {flow.title}
