@@ -9,6 +9,7 @@
  */
 
 import http from "node:http";
+import { createRateLimiter, validateProxyRequest, type ProxyRequest } from "./proxy-utils";
 
 const PORT = Number(process.env.PORT ?? 3001);
 const PROVIDER = process.env.PROVIDER ?? "anthropic";
@@ -18,67 +19,18 @@ const RATE_LIMIT = Number(process.env.RATE_LIMIT ?? 20);
 
 // ── Rate limiter (per-IP, sliding window) ────────────────────────────────────
 
-const hits = new Map<string, number[]>();
-
-function isRateLimited(ip: string): boolean {
-  const now = Date.now();
-  const timestamps = (hits.get(ip) ?? []).filter((t) => now - t < RATE_WINDOW_MS);
-  if (timestamps.length >= RATE_LIMIT) {
-    hits.set(ip, timestamps);
-    return true;
-  }
-  timestamps.push(now);
-  hits.set(ip, timestamps);
-  return false;
-}
+const rateLimiter = createRateLimiter(RATE_LIMIT, RATE_WINDOW_MS);
 
 // Clean up stale entries every 5 minutes
 setInterval(() => {
-  const now = Date.now();
-  for (const [ip, timestamps] of hits) {
-    const active = timestamps.filter((t) => now - t < RATE_WINDOW_MS);
-    if (active.length === 0) hits.delete(ip);
-    else hits.set(ip, active);
-  }
+  rateLimiter.prune();
 }, 300_000);
-
-// ── Request types ────────────────────────────────────────────────────────────
-
-interface ProxyRequest {
-  system: string;
-  userMessage: string;
-  maxTokens?: number;
-}
-
-function validateRequest(body: unknown): ProxyRequest {
-  if (typeof body !== "object" || body === null) {
-    throw new Error("Request body must be a JSON object");
-  }
-
-  const obj = body as Record<string, unknown>;
-
-  if (typeof obj.system !== "string" || obj.system.length === 0) {
-    throw new Error("'system' must be a non-empty string");
-  }
-  if (typeof obj.userMessage !== "string" || obj.userMessage.length === 0) {
-    throw new Error("'userMessage' must be a non-empty string");
-  }
-  if (obj.maxTokens !== undefined && (typeof obj.maxTokens !== "number" || obj.maxTokens < 1 || obj.maxTokens > 16000)) {
-    throw new Error("'maxTokens' must be a number between 1 and 16000");
-  }
-
-  return {
-    system: obj.system,
-    userMessage: obj.userMessage,
-    maxTokens: (obj.maxTokens as number | undefined) ?? 4096,
-  };
-}
 
 // ── Anthropic provider ───────────────────────────────────────────────────────
 
-async function callAnthropic(req: ProxyRequest): Promise<string> {
-  const key = process.env.ANTHROPIC_API_KEY;
-  if (!key) throw new Error("ANTHROPIC_API_KEY not set");
+async function callAnthropic(req: ProxyRequest, clientKey?: string): Promise<string> {
+  const key = process.env.ANTHROPIC_API_KEY || clientKey;
+  if (!key) throw new Error("No API key. Set ANTHROPIC_API_KEY or provide one in the UI.");
 
   const res = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
@@ -89,7 +41,7 @@ async function callAnthropic(req: ProxyRequest): Promise<string> {
     },
     body: JSON.stringify({
       model: process.env.ANTHROPIC_MODEL ?? "claude-sonnet-4-20250514",
-      max_tokens: req.maxTokens ?? 4096,
+      max_tokens: req.maxTokens,
       system: req.system,
       messages: [{ role: "user", content: req.userMessage }],
     }),
@@ -107,7 +59,8 @@ async function callAnthropic(req: ProxyRequest): Promise<string> {
 
 // ── AWS Bedrock provider ─────────────────────────────────────────────────────
 
-async function callBedrock(req: ProxyRequest): Promise<string> {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+async function callBedrock(req: ProxyRequest, clientKey?: string): Promise<string> {
   // Optional dependency — install with: npm install @aws-sdk/client-bedrock-runtime
   const mod = await (import("@aws-sdk/client-bedrock-runtime" as string) as Promise<{ BedrockRuntimeClient: new (config: { region: string }) => { send: (cmd: unknown) => Promise<{ body: Uint8Array }> }; InvokeModelCommand: new (input: { modelId: string; contentType: string; accept: string; body: Uint8Array }) => unknown }>);
   const { BedrockRuntimeClient, InvokeModelCommand } = mod;
@@ -121,7 +74,7 @@ async function callBedrock(req: ProxyRequest): Promise<string> {
 
   const body = JSON.stringify({
     anthropic_version: "bedrock-2023-05-31",
-    max_tokens: req.maxTokens ?? 4096,
+    max_tokens: req.maxTokens,
     system: req.system,
     messages: [{ role: "user", content: req.userMessage }],
   });
@@ -143,7 +96,8 @@ async function callBedrock(req: ProxyRequest): Promise<string> {
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
-const callProvider = PROVIDER === "bedrock" ? callBedrock : callAnthropic;
+const callProvider: (req: ProxyRequest, clientKey?: string) => Promise<string> =
+  PROVIDER === "bedrock" ? callBedrock : callAnthropic;
 
 function json(res: http.ServerResponse, status: number, data: unknown) {
   res.writeHead(status, { "Content-Type": "application/json" });
@@ -160,7 +114,8 @@ function readBody(req: http.IncomingMessage): Promise<string> {
       size += chunk.length;
       if (size > MAX_BODY_BYTES) {
         settled = true;
-        req.destroy(new Error("Request body too large"));
+        reject(new Error("Request body too large"));
+        req.destroy();
         return;
       }
       chunks.push(chunk);
@@ -192,7 +147,7 @@ const server = http.createServer(async (req, res) => {
   const origin = process.env.CORS_ORIGIN ?? "http://localhost:5173";
   res.setHeader("Access-Control-Allow-Origin", origin);
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, x-api-key");
 
   if (req.method === "OPTIONS") {
     res.writeHead(204);
@@ -218,13 +173,15 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  // Rate limit
-  const ip =
-    (req.headers["x-forwarded-for"] as string)?.split(",")[0]?.trim() ??
-    req.socket.remoteAddress ??
-    "unknown";
+  // Rate limit — only trust X-Forwarded-For behind a known reverse proxy
+  const trustProxy = process.env.TRUST_PROXY === "true";
+  const ip = trustProxy
+    ? (req.headers["x-forwarded-for"] as string)?.split(",")[0]?.trim() ??
+      req.socket.remoteAddress ??
+      "unknown"
+    : req.socket.remoteAddress ?? "unknown";
 
-  if (isRateLimited(ip)) {
+  if (rateLimiter.isRateLimited(ip)) {
     json(res, 429, { error: "Too many requests. Try again in a minute." });
     return;
   }
@@ -241,13 +198,14 @@ const server = http.createServer(async (req, res) => {
 
     let validated: ProxyRequest;
     try {
-      validated = validateRequest(parsed);
+      validated = validateProxyRequest(parsed);
     } catch (e) {
       json(res, 400, { error: e instanceof Error ? e.message : String(e) });
       return;
     }
 
-    const text = await callProvider(validated);
+    const clientKey = (req.headers["x-api-key"] as string) || undefined;
+    const text = await callProvider(validated, clientKey);
     json(res, 200, { text });
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e);

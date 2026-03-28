@@ -39,14 +39,14 @@ export default function ReviewPhase({
 
   return (
     <div className="space-y-4">
-      <div className="bg-white rounded-xl shadow-sm p-4 flex flex-wrap gap-4 items-center">
+      <div className="bg-midnight-800 border border-midnight-700 rounded-xl shadow-sm p-4 flex flex-wrap gap-4 items-center">
         <div className="flex items-center gap-2">
-          <span className="text-2xl">✅</span>
+          <span className="text-sm font-bold text-cyan-400 font-mono">REVIEW</span>
           <div>
-            <div className="font-semibold text-sm">
+            <div className="font-semibold text-sm text-white">
               {flow.title || "(Untitled)"}
             </div>
-            <div className="text-xs text-gray-500">
+            <div className="text-xs text-slate-500">
               {steps.length} steps · {groups.length} groups · {flow.status}
             </div>
           </div>
@@ -54,22 +54,22 @@ export default function ReviewPhase({
         <div className="flex-1" />
         <button
           onClick={onExport}
-          className="bg-gray-900 text-white px-5 py-2 rounded-lg text-sm font-semibold hover:bg-gray-800 shadow"
+          className="bg-cyan-600 text-white px-5 py-2 rounded-lg text-sm font-semibold hover:bg-cyan-500 shadow-lg shadow-cyan-500/20"
         >
-          📄 Export Markdown →
+          Export
         </button>
       </div>
 
-      <div className="bg-white rounded-lg shadow-sm p-4 space-y-2">
+      <div className="bg-midnight-800 border border-midnight-700 rounded-lg shadow-sm p-4 space-y-2">
         <div className="flex gap-2 flex-wrap">
           <input
-            className="flex-1 min-w-48 border rounded px-3 py-2 text-sm font-semibold bg-white"
+            className="flex-1 min-w-48 border border-midnight-700 rounded px-3 py-2 text-sm font-semibold bg-midnight-900 text-white placeholder-slate-600 focus:border-cyan-500"
             placeholder="Flow Title"
             value={flow.title}
             onChange={(e) => onFlowChange({ ...flow, title: e.target.value })}
           />
           <select
-            className="border rounded px-2 py-1 text-sm bg-white"
+            className="border border-midnight-700 rounded px-2 py-1 text-sm bg-midnight-900 text-slate-300"
             value={flow.status}
             onChange={(e) =>
               onFlowChange({
@@ -81,19 +81,20 @@ export default function ReviewPhase({
             <option>Draft</option>
             <option>Published</option>
           </select>
-          <label className="flex items-center gap-1 text-sm">
+          <label className="flex items-center gap-1 text-sm text-slate-400">
             <input
               type="checkbox"
               checked={flow.shared}
               onChange={(e) =>
                 onFlowChange({ ...flow, shared: e.target.checked })
               }
+              className="accent-cyan-500"
             />
             Shared
           </label>
         </div>
         <textarea
-          className="w-full border rounded px-3 py-2 text-sm bg-white"
+          className="w-full border border-midnight-700 rounded px-3 py-2 text-sm bg-midnight-900 text-slate-300 placeholder-slate-600 focus:border-cyan-500"
           rows={2}
           placeholder="Description"
           value={flow.description}
@@ -131,9 +132,9 @@ export default function ReviewPhase({
         )}
       </div>
 
-      <div className="bg-white rounded-lg shadow-sm p-3 flex flex-wrap gap-2 items-center">
+      <div className="bg-midnight-800 border border-midnight-700 rounded-lg shadow-sm p-3 flex flex-wrap gap-2 items-center">
         <select
-          className="border rounded px-2 py-1 text-sm bg-white"
+          className="border border-midnight-700 rounded px-2 py-1 text-sm bg-midnight-900 text-slate-300"
           value={addType}
           onChange={(e) => setAddType(e.target.value as StepType)}
         >
@@ -150,7 +151,7 @@ export default function ReviewPhase({
               items: [...flow.items, createEmptyStep(addType)],
             })
           }
-          className="bg-gray-900 text-white text-sm px-4 py-1.5 rounded hover:bg-gray-800"
+          className="bg-cyan-600 text-white text-sm px-4 py-1.5 rounded hover:bg-cyan-500"
         >
           + Step
         </button>

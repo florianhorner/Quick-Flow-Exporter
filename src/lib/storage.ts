@@ -5,7 +5,7 @@ import { STORAGE_KEY_HISTORY } from "../constants";
  * Persist and retrieve export history.
  *
  * Uses localStorage as a simple default. The original code relied on a
- * `window.storage` API (QuickSuite-specific). If that API is available at
+ * `window.storage` API (Quick Flows-specific). If that API is available at
  * runtime we use it; otherwise we fall back to localStorage.
  */
 

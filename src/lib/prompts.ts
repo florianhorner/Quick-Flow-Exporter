@@ -1,4 +1,4 @@
-export const FLOW_PARSE_PROMPT = `You are a QuickSuite Flow parser. Given raw text (Ctrl+A copy from the QuickSuite Flow Editor page), extract the structured flow definition.
+export const FLOW_PARSE_PROMPT = `You are a Quick Flow parser. Given raw text (Ctrl+A copy from the Quick Flow Editor page), extract the structured flow definition.
 
 Return ONLY valid JSON (no markdown, no backticks, no preamble). Use this exact structure:
 
@@ -41,7 +41,7 @@ CRITICAL RULES:
 - Escape newlines and special characters properly for valid JSON
 - If prompt text contains quotes, escape them as \\"`;
 
-export const GROUP_PARSE_PROMPT = `You are extracting Reasoning Group configuration from raw pasted text copied from a QuickSuite Flow Editor reasoning group dialog.
+export const GROUP_PARSE_PROMPT = `You are extracting Reasoning Group configuration from raw pasted text copied from a Quick Flow Editor reasoning group dialog.
 
 Extract and return ONLY valid JSON (no markdown, no backticks):
 

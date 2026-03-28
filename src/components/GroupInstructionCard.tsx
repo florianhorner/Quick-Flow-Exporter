@@ -37,17 +37,17 @@ export default function GroupInstructionCard({
   };
 
   return (
-    <div className="border-2 border-purple-300 rounded-lg p-4 bg-purple-50 space-y-2">
+    <div className="border border-purple-800 border-l-4 border-l-purple-500 rounded-lg p-4 bg-midnight-800 space-y-2">
       <div className="flex items-center gap-2">
         <span>🔄</span>
-        <span className="font-semibold text-purple-800">
+        <span className="font-semibold text-purple-300 font-mono">
           {item.title || `Group ${index + 1}`}
         </span>
         <span className="text-xs text-purple-500">
           ({item.steps.length} steps inside)
         </span>
         {extracted && item.reasoningInstructions && (
-          <span className="text-xs text-green-600 font-medium">
+          <span className="text-xs text-green-400 font-medium">
             ✓ extracted
           </span>
         )}
@@ -56,14 +56,14 @@ export default function GroupInstructionCard({
       {extracted && item.reasoningInstructions ? (
         <div className="space-y-2">
           <div className="flex items-center gap-2">
-            <span className="text-xs font-medium text-gray-500">
+            <span className="text-xs font-medium text-slate-500">
               Run Condition:
             </span>
-            <span className="text-xs bg-purple-200 text-purple-800 px-2 py-0.5 rounded">
+            <span className="text-xs bg-purple-900/50 text-purple-300 px-2 py-0.5 rounded border border-purple-800">
               {item.runCondition}
             </span>
           </div>
-          <div className="bg-white border rounded p-3 text-sm font-mono whitespace-pre-wrap">
+          <div className="bg-[#0d1117] border border-midnight-700 rounded p-3 text-sm font-mono whitespace-pre-wrap text-slate-300">
             {item.reasoningInstructions}
           </div>
           <button
@@ -71,7 +71,7 @@ export default function GroupInstructionCard({
               setExtracted(false);
               setRawInput("");
             }}
-            className="text-xs text-purple-600 hover:text-purple-800"
+            className="text-xs text-purple-400 hover:text-purple-300"
           >
             ↻ Re-paste
           </button>
@@ -79,10 +79,10 @@ export default function GroupInstructionCard({
       ) : (
         <div className="space-y-2">
           <textarea
-            className="w-full border rounded px-3 py-2 text-sm bg-white font-mono focus:border-purple-400"
+            className="w-full border border-midnight-700 rounded px-3 py-2 text-sm bg-[#0d1117] text-slate-300 font-mono placeholder-slate-600 focus:border-purple-500"
             rows={4}
             placeholder={
-              "Open this group in QuickSuite → Ctrl+A → Ctrl+C → Ctrl+V here\n\nAI will extract the reasoning instructions."
+              "Open this group in Quick Flows → Ctrl+A → Ctrl+C → Ctrl+V here\n\nAI will extract the reasoning instructions."
             }
             value={rawInput}
             onChange={(e) => setRawInput(e.target.value)}
@@ -92,13 +92,13 @@ export default function GroupInstructionCard({
             disabled={parsing || !rawInput.trim()}
             className={`px-4 py-1.5 rounded text-sm font-medium ${
               parsing
-                ? "bg-gray-300 text-gray-500"
+                ? "bg-midnight-700 text-slate-500"
                 : rawInput.trim()
-                  ? "bg-purple-700 text-white hover:bg-purple-800"
-                  : "bg-gray-200 text-gray-400"
+                  ? "bg-purple-700 text-white hover:bg-purple-600"
+                  : "bg-midnight-700 text-slate-500"
             }`}
           >
-            {parsing ? "⏳ Extracting..." : "🧠 Extract Instructions"}
+            {parsing ? "Extracting..." : "Extract Instructions"}
           </button>
         </div>
       )}

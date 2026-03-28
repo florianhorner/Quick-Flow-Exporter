@@ -77,15 +77,22 @@ export default function App() {
   const hasFlow = flow.items.length > 0;
   const groups = allGroups(flow.items);
 
+  const navBtn = (active: boolean, activeColor: string) =>
+    `px-3 py-1.5 text-sm rounded font-medium transition-colors ${
+      active
+        ? `${activeColor} text-white`
+        : "bg-midnight-800 text-slate-400 hover:text-slate-200 hover:bg-midnight-700 border border-midnight-700"
+    }`;
+
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen">
       {/* Header */}
-      <div className="bg-white border-b shadow-sm sticky top-0 z-10">
+      <div className="bg-midnight-800 border-b border-midnight-700 sticky top-0 z-10">
         <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between flex-wrap gap-2">
           <div className="flex items-center gap-3">
-            <span className="text-lg font-bold">⚡ QS Exporter</span>
+            <span className="text-lg font-bold font-mono text-cyan-400">Quick Flow Exporter</span>
             {phase !== "paste" && flow.title && (
-              <span className="text-sm text-gray-500 truncate max-w-xs">
+              <span className="text-sm text-slate-500 truncate max-w-xs">
                 — {flow.title}
               </span>
             )}
@@ -97,62 +104,42 @@ export default function App() {
                 {groups.length > 0 && (
                   <button
                     onClick={() => setPhase("groups")}
-                    className={`px-3 py-1 text-sm rounded ${
-                      phase === "groups"
-                        ? "bg-purple-700 text-white"
-                        : "bg-purple-100 hover:bg-purple-200 text-purple-700"
-                    }`}
+                    className={navBtn(phase === "groups", "bg-purple-700")}
                   >
-                    🔄 Groups
+                    Groups
                   </button>
                 )}
                 <button
                   onClick={() => setPhase("review")}
-                  className={`px-3 py-1 text-sm rounded ${
-                    phase === "review"
-                      ? "bg-gray-900 text-white"
-                      : "bg-gray-100 hover:bg-gray-200"
-                  }`}
+                  className={navBtn(phase === "review", "bg-cyan-700")}
                 >
-                  ✏️ Review
+                  Review
                 </button>
                 <button
                   onClick={() => setPhase("graph")}
-                  className={`px-3 py-1 text-sm rounded ${
-                    phase === "graph"
-                      ? "bg-blue-700 text-white"
-                      : "bg-blue-50 hover:bg-blue-100 text-blue-700"
-                  }`}
+                  className={navBtn(phase === "graph", "bg-blue-700")}
                 >
-                  🔀 Graph
+                  Graph
                 </button>
                 <button
                   onClick={() => setPhase("export")}
-                  className={`px-3 py-1 text-sm rounded ${
-                    phase === "export"
-                      ? "bg-gray-900 text-white"
-                      : "bg-gray-100 hover:bg-gray-200"
-                  }`}
+                  className={navBtn(phase === "export", "bg-cyan-700")}
                 >
-                  📄 Export
+                  Export
                 </button>
               </>
             )}
             <button
               onClick={() => setPhase("diff")}
-              className={`px-3 py-1 text-sm rounded ${
-                phase === "diff"
-                  ? "bg-orange-700 text-white"
-                  : "bg-orange-50 hover:bg-orange-100 text-orange-700"
-              }`}
+              className={navBtn(phase === "diff", "bg-orange-700")}
             >
-              🔍 Diff
+              Diff
             </button>
             <button
               onClick={resetToNew}
-              className="px-3 py-1 text-sm rounded bg-amber-500 text-white hover:bg-amber-600"
+              className="px-3 py-1.5 text-sm rounded font-medium bg-cyan-600 text-white hover:bg-cyan-500 shadow-lg shadow-cyan-500/20"
             >
-              {phase === "paste" ? "📋 Paste Mode" : "🔄 New Export"}
+              {phase === "paste" ? "Paste Mode" : "New Export"}
             </button>
           </div>
         </div>

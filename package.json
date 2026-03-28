@@ -1,8 +1,8 @@
 {
-  "name": "quicksuite-exporter",
+  "name": "quick-flow-exporter",
   "version": "1.0.0",
   "private": true,
-  "description": "Export QuickSuite Flows into readable, reproducible Markdown",
+  "description": "Export Quick Flows into readable, reproducible Markdown",
   "type": "module",
   "scripts": {
     "dev": "vite",

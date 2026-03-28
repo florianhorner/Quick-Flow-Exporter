@@ -6,6 +6,9 @@ interface StepFieldsProps {
   onChange: (step: Step) => void;
 }
 
+const inputClass = "w-full border border-midnight-700 rounded px-2 py-1 text-sm bg-midnight-900 text-slate-300 placeholder-slate-600 focus:border-cyan-500";
+const selectClass = "border border-midnight-700 rounded px-2 py-1 text-xs bg-midnight-900 text-slate-300";
+
 export default function StepFields({ step, onChange }: StepFieldsProps) {
   const update = <K extends keyof Step>(field: K, value: Step[K]) =>
     onChange({ ...step, [field]: value });
@@ -17,7 +20,7 @@ export default function StepFields({ step, onChange }: StepFieldsProps) {
       <label htmlFor={`title-${uid}`} className="sr-only">Step title</label>
       <input
         id={`title-${uid}`}
-        className="w-full border rounded px-2 py-1 text-sm bg-white"
+        className={inputClass}
         placeholder="Step Title"
         value={step.title}
         onChange={(e) => update("title", e.target.value)}
@@ -29,7 +32,7 @@ export default function StepFields({ step, onChange }: StepFieldsProps) {
           <label htmlFor={`agent-${uid}`} className="sr-only">Chat agent name</label>
           <input
             id={`agent-${uid}`}
-            className="w-full border rounded px-2 py-1 text-sm bg-white"
+            className={inputClass}
             placeholder="Chat Agent Name"
             value={step.agentName}
             onChange={(e) => update("agentName", e.target.value)}
@@ -43,7 +46,7 @@ export default function StepFields({ step, onChange }: StepFieldsProps) {
             <label htmlFor={`source-${uid}`} className="sr-only">Source</label>
             <select
               id={`source-${uid}`}
-              className="border rounded px-2 py-1 text-xs bg-white"
+              className={selectClass}
               value={step.source}
               onChange={(e) => update("source", e.target.value as Step["source"])}
             >
@@ -56,7 +59,7 @@ export default function StepFields({ step, onChange }: StepFieldsProps) {
             <label htmlFor={`output-${uid}`} className="sr-only">Output preference</label>
             <select
               id={`output-${uid}`}
-              className="border rounded px-2 py-1 text-xs bg-white"
+              className={selectClass}
               value={step.outputPref}
               onChange={(e) =>
                 update("outputPref", e.target.value as Step["outputPref"])
@@ -67,7 +70,7 @@ export default function StepFields({ step, onChange }: StepFieldsProps) {
               ))}
             </select>
           </div>
-          <label htmlFor={`creativity-${uid}`} className="flex items-center gap-1 text-xs">
+          <label htmlFor={`creativity-${uid}`} className="flex items-center gap-1 text-xs text-slate-400">
             Creativity:
             <input
               id={`creativity-${uid}`}
@@ -76,7 +79,7 @@ export default function StepFields({ step, onChange }: StepFieldsProps) {
               max="10"
               value={step.creativityLevel}
               onChange={(e) => update("creativityLevel", +e.target.value)}
-              className="w-20"
+              className="w-20 accent-cyan-500"
               aria-valuemin={0}
               aria-valuemax={10}
               aria-valuenow={step.creativityLevel}
@@ -91,7 +94,7 @@ export default function StepFields({ step, onChange }: StepFieldsProps) {
           <label htmlFor={`prompt-${uid}`} className="sr-only">Prompt</label>
           <textarea
             id={`prompt-${uid}`}
-            className="w-full border rounded px-2 py-1 text-sm bg-white font-mono"
+            className="w-full border border-midnight-700 rounded px-2 py-1 text-sm bg-[#0d1117] text-slate-300 font-mono placeholder-slate-600 focus:border-cyan-500"
             rows={4}
             placeholder="Prompt / Instructions"
             value={step.prompt}
@@ -106,7 +109,7 @@ export default function StepFields({ step, onChange }: StepFieldsProps) {
           <label htmlFor={`placeholder-${uid}`} className="sr-only">Placeholder text</label>
           <input
             id={`placeholder-${uid}`}
-            className="w-full border rounded px-2 py-1 text-sm bg-white"
+            className={inputClass}
             placeholder="Placeholder"
             value={step.placeholder}
             onChange={(e) => update("placeholder", e.target.value)}
@@ -114,7 +117,7 @@ export default function StepFields({ step, onChange }: StepFieldsProps) {
           <label htmlFor={`default-${uid}`} className="sr-only">Default value</label>
           <input
             id={`default-${uid}`}
-            className="w-full border rounded px-2 py-1 text-sm bg-white"
+            className={inputClass}
             placeholder="Default value"
             value={step.defaultValue}
             onChange={(e) => update("defaultValue", e.target.value)}
@@ -127,7 +130,7 @@ export default function StepFields({ step, onChange }: StepFieldsProps) {
           <label htmlFor={`config-${uid}`} className="sr-only">Configuration</label>
           <textarea
             id={`config-${uid}`}
-            className="w-full border rounded px-2 py-1 text-sm bg-white font-mono"
+            className="w-full border border-midnight-700 rounded px-2 py-1 text-sm bg-[#0d1117] text-slate-300 font-mono placeholder-slate-600 focus:border-cyan-500"
             rows={3}
             placeholder="Configuration"
             value={step.config}
@@ -139,7 +142,7 @@ export default function StepFields({ step, onChange }: StepFieldsProps) {
       <label htmlFor={`refs-${uid}`} className="sr-only">References</label>
       <input
         id={`refs-${uid}`}
-        className="w-full border rounded px-2 py-1 text-xs bg-gray-50 text-gray-600"
+        className="w-full border border-midnight-700 rounded px-2 py-1 text-xs bg-midnight-900 text-slate-500 placeholder-slate-600"
         placeholder="@References (comma-separated)"
         value={step.references}
         onChange={(e) => update("references", e.target.value)}

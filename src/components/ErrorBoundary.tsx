@@ -29,13 +29,13 @@ export default class ErrorBoundary extends Component<Props, State> {
       return (
         <div
           role="alert"
-          className="max-w-xl mx-auto mt-20 bg-red-50 border border-red-200 rounded-xl p-8 text-center space-y-4"
+          className="max-w-xl mx-auto mt-20 bg-red-900/30 border border-red-800 rounded-xl p-8 text-center space-y-4"
         >
           <div className="text-4xl">💥</div>
-          <h2 className="text-lg font-bold text-red-800">
+          <h2 className="text-lg font-bold text-red-400">
             Something went wrong
           </h2>
-          <p className="text-sm text-red-600 font-mono break-all">
+          <p className="text-sm text-red-300 font-mono break-all">
             {this.state.error?.message ?? "Unknown error"}
           </p>
           <button

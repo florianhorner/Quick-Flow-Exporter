@@ -18,6 +18,7 @@ export default function ExportPhase({
 }: ExportPhaseProps) {
   const [format, setFormat] = useState<ExportFormat>("markdown");
   const [formatCopied, setFormatCopied] = useState(false);
+  const [copyError, setCopyError] = useState(false);
 
   const content = useMemo(() => {
     switch (format) {
@@ -31,9 +32,11 @@ export default function ExportPhase({
     try {
       await navigator.clipboard.writeText(content);
       setFormatCopied(true);
+      setCopyError(false);
       setTimeout(() => setFormatCopied(false), 2000);
     } catch {
-      // Clipboard API unavailable (HTTP context or permissions denied)
+      setCopyError(true);
+      setTimeout(() => setCopyError(false), 3000);
     }
   };
 
@@ -53,24 +56,24 @@ export default function ExportPhase({
   };
 
   const formats: { key: ExportFormat; label: string; icon: string; desc: string }[] = [
-    { key: "markdown", label: "Markdown", icon: "📄", desc: "Human-readable documentation" },
-    { key: "mermaid", label: "Mermaid", icon: "🧜", desc: "Flowchart diagram (GitHub/Quip)" },
+    { key: "markdown", label: "Markdown", icon: ".md", desc: "Human-readable documentation" },
+    { key: "mermaid", label: "Mermaid", icon: ".mmd", desc: "Flowchart diagram (GitHub/Quip)" },
     { key: "json", label: "JSON", icon: "{ }", desc: "Canonical re-importable format" },
   ];
 
   return (
     <div className="space-y-4">
-      <div className="bg-white rounded-xl shadow-sm p-4 flex flex-wrap gap-3 items-center">
+      <div className="bg-midnight-800 border border-midnight-700 rounded-xl shadow-sm p-4 flex flex-wrap gap-3 items-center">
         {/* Format selector */}
-        <div className="flex gap-1 bg-gray-100 rounded-lg p-1">
+        <div className="flex gap-1 bg-midnight-900 rounded-lg p-1">
           {formats.map((f) => (
             <button
               key={f.key}
               onClick={() => setFormat(f.key)}
               className={`px-3 py-1.5 text-sm rounded-md transition-all ${
                 format === f.key
-                  ? "bg-white shadow font-semibold text-gray-900"
-                  : "text-gray-500 hover:text-gray-700"
+                  ? "bg-midnight-700 shadow font-semibold text-white"
+                  : "text-slate-500 hover:text-slate-300"
               }`}
               title={f.desc}
             >
@@ -86,11 +89,13 @@ export default function ExportPhase({
           className={`px-5 py-2 rounded-lg text-sm font-semibold shadow ${
             formatCopied
               ? "bg-green-600 text-white"
-              : "bg-gray-900 text-white hover:bg-gray-800"
+              : copyError
+                ? "bg-red-600 text-white"
+                : "bg-cyan-600 text-white hover:bg-cyan-500 shadow-cyan-500/20"
           }`}
           aria-live="polite"
         >
-          {formatCopied ? "✓ Copied!" : "📋 Copy"}
+          {formatCopied ? "Copied!" : copyError ? "Select text & Ctrl+C" : "Copy"}
         </button>
         <button
           onClick={downloadContent}
@@ -98,19 +103,19 @@ export default function ExportPhase({
         >
           ⬇ Download
         </button>
-        <button onClick={onBack} className="text-sm text-gray-500 hover:text-gray-700">
+        <button onClick={onBack} className="text-sm text-slate-500 hover:text-slate-300">
           ← Back
         </button>
       </div>
 
       {/* Mermaid preview hint */}
       {format === "mermaid" && (
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm text-blue-700">
-          💡 Paste this into any Mermaid-compatible renderer (GitHub markdown, Quip, mermaid.live) to see the flowchart.
+        <div className="bg-blue-900/20 border border-blue-800 rounded-lg p-3 text-sm text-blue-400">
+          Paste this into any Mermaid-compatible renderer (GitHub markdown, Quip, mermaid.live) to see the flowchart.
         </div>
       )}
 
-      <pre className="bg-white rounded-xl shadow-sm p-5 text-sm font-mono whitespace-pre-wrap overflow-auto max-h-[70vh] border select-all cursor-text">
+      <pre className="bg-[#0d1117] border border-midnight-700 rounded-xl shadow-sm p-5 text-sm font-mono whitespace-pre-wrap overflow-auto max-h-[70vh] text-slate-300 select-all cursor-text">
         {content}
       </pre>
     </div>
