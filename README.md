@@ -33,8 +33,12 @@ Compare two versions of a flow side-by-side with word-level inline diffs on prom
 ### Interactive Flow Graph
 Visualize your flow as a color-coded directed graph. Each step type has its own color, `@references` show as dashed edges, and reasoning groups render as sub-graphs. Click any node to see the full prompt in a detail panel.
 
+![Flow Graph](docs/screenshots/03-flow-graph.png)
+
 ### Multi-Format Export
 Export to Markdown (documentation), Mermaid (flowchart diagrams for GitHub/Quip), or JSON (canonical, re-importable).
+
+![Export Phase](docs/screenshots/04-export-phase.png)
 
 ### One-Click Bookmarklet
 Drag the bookmarklet to your bookmarks bar. One click on any Quick Flows editor page copies the content to your clipboard — no Ctrl+A needed.
