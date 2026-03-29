@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.1.1] - 2026-03-29
+
+### Added
+
+- Pre-commit hooks with husky and lint-staged (eslint --fix + prettier --write on staged files)
+- Explicit `prettier --check` and `tsc --noEmit` CI steps in GitHub Actions workflow
+- `format:check` and `typecheck` npm scripts
+- `.git-blame-ignore-revs` to skip formatting commit in git blame
+- Prettier as an explicit devDependency (was previously npx-only)
+
+### Changed
+
+- Prettier config: `singleQuote: true`, `trailingComma: "es5"` (aligned to project standard)
+- All source files auto-formatted with updated prettier config
+
 ## [1.1.0] - 2026-03-28
 
 ### Changed
