@@ -1,6 +1,6 @@
-import { useState } from "react";
-import type { Group } from "../types";
-import { parseGroupInstructions } from "../lib/parser";
+import { useState } from 'react';
+import type { Group } from '../types';
+import { parseGroupInstructions } from '../lib/parser';
 
 interface GroupInstructionCardProps {
   item: Group;
@@ -13,7 +13,7 @@ export default function GroupInstructionCard({
   index,
   onUpdate,
 }: GroupInstructionCardProps) {
-  const [rawInput, setRawInput] = useState("");
+  const [rawInput, setRawInput] = useState('');
   const [parsing, setParsing] = useState(false);
   const [extracted, setExtracted] = useState(!!item.reasoningInstructions);
 
@@ -24,8 +24,7 @@ export default function GroupInstructionCard({
       const result = await parseGroupInstructions(rawInput);
       onUpdate({
         ...item,
-        runCondition:
-          (result.runCondition as Group["runCondition"]) || item.runCondition,
+        runCondition: (result.runCondition as Group['runCondition']) || item.runCondition,
         reasoningInstructions: result.reasoningInstructions || rawInput,
       });
       setExtracted(true);
@@ -47,18 +46,14 @@ export default function GroupInstructionCard({
           ({item.steps.length} steps inside)
         </span>
         {extracted && item.reasoningInstructions && (
-          <span className="text-xs text-green-400 font-medium">
-            ✓ extracted
-          </span>
+          <span className="text-xs text-green-400 font-medium">✓ extracted</span>
         )}
       </div>
 
       {extracted && item.reasoningInstructions ? (
         <div className="space-y-2">
           <div className="flex items-center gap-2">
-            <span className="text-xs font-medium text-slate-500">
-              Run Condition:
-            </span>
+            <span className="text-xs font-medium text-slate-500">Run Condition:</span>
             <span className="text-xs bg-purple-900/50 text-purple-300 px-2 py-0.5 rounded border border-purple-800">
               {item.runCondition}
             </span>
@@ -69,7 +64,7 @@ export default function GroupInstructionCard({
           <button
             onClick={() => {
               setExtracted(false);
-              setRawInput("");
+              setRawInput('');
             }}
             className="text-xs text-purple-400 hover:text-purple-300"
           >
@@ -82,7 +77,7 @@ export default function GroupInstructionCard({
             className="w-full border border-midnight-700 rounded px-3 py-2 text-sm bg-[#0d1117] text-slate-300 font-mono placeholder-slate-600 focus:border-purple-500"
             rows={4}
             placeholder={
-              "Open this group in Quick Flows → Ctrl+A → Ctrl+C → Ctrl+V here\n\nAI will extract the reasoning instructions."
+              'Open this group in Quick Flows → Ctrl+A → Ctrl+C → Ctrl+V here\n\nAI will extract the reasoning instructions.'
             }
             value={rawInput}
             onChange={(e) => setRawInput(e.target.value)}
@@ -92,13 +87,13 @@ export default function GroupInstructionCard({
             disabled={parsing || !rawInput.trim()}
             className={`px-4 py-1.5 rounded text-sm font-medium ${
               parsing
-                ? "bg-midnight-700 text-slate-500"
+                ? 'bg-midnight-700 text-slate-500'
                 : rawInput.trim()
-                  ? "bg-purple-700 text-white hover:bg-purple-600"
-                  : "bg-midnight-700 text-slate-500"
+                  ? 'bg-purple-700 text-white hover:bg-purple-600'
+                  : 'bg-midnight-700 text-slate-500'
             }`}
           >
-            {parsing ? "Extracting..." : "Extract Instructions"}
+            {parsing ? 'Extracting...' : 'Extract Instructions'}
           </button>
         </div>
       )}

@@ -1,5 +1,5 @@
-import { Component } from "react";
-import type { ErrorInfo, ReactNode } from "react";
+import { Component } from 'react';
+import type { ErrorInfo, ReactNode } from 'react';
 
 interface Props {
   children: ReactNode;
@@ -21,7 +21,7 @@ export default class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, info: ErrorInfo) {
-    console.error("ErrorBoundary caught:", error, info.componentStack);
+    console.error('ErrorBoundary caught:', error, info.componentStack);
   }
 
   render() {
@@ -32,11 +32,9 @@ export default class ErrorBoundary extends Component<Props, State> {
           className="max-w-xl mx-auto mt-20 bg-red-900/30 border border-red-800 rounded-xl p-8 text-center space-y-4"
         >
           <div className="text-4xl">💥</div>
-          <h2 className="text-lg font-bold text-red-400">
-            Something went wrong
-          </h2>
+          <h2 className="text-lg font-bold text-red-400">Something went wrong</h2>
           <p className="text-sm text-red-300 font-mono break-all">
-            {this.state.error?.message ?? "Unknown error"}
+            {this.state.error?.message ?? 'Unknown error'}
           </p>
           <button
             onClick={() => this.setState({ hasError: false, error: null })}

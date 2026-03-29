@@ -1,6 +1,6 @@
-import type { Flow, Group } from "../types";
-import { allGroups } from "../lib/flow";
-import GroupInstructionCard from "./GroupInstructionCard";
+import type { Flow, Group } from '../types';
+import { allGroups } from '../lib/flow';
+import GroupInstructionCard from './GroupInstructionCard';
 
 interface GroupsPhaseProps {
   flow: Flow;
@@ -22,10 +22,12 @@ export default function GroupsPhase({
       <div className="bg-midnight-800 border border-midnight-700 rounded-xl shadow-sm p-6 space-y-4">
         <div className="text-center space-y-2">
           <div className="text-4xl">🔄</div>
-          <h2 className="text-xl font-bold font-mono text-white">Reasoning Group Instructions</h2>
+          <h2 className="text-xl font-bold font-mono text-white">
+            Reasoning Group Instructions
+          </h2>
           <p className="text-slate-400 text-sm">
-            {groups.length} Reasoning Group{groups.length > 1 ? "s" : ""} found.
-            For each group: open it in Quick Flows, Ctrl+A, Ctrl+C, paste below.
+            {groups.length} Reasoning Group{groups.length > 1 ? 's' : ''} found. For each
+            group: open it in Quick Flows, Ctrl+A, Ctrl+C, paste below.
           </p>
         </div>
 

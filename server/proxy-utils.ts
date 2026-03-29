@@ -5,27 +5,27 @@ export interface ProxyRequest {
 }
 
 export function validateProxyRequest(body: unknown): ProxyRequest {
-  if (typeof body !== "object" || body === null) {
-    throw new Error("Request body must be a JSON object");
+  if (typeof body !== 'object' || body === null) {
+    throw new Error('Request body must be a JSON object');
   }
 
   const obj = body as Record<string, unknown>;
 
-  if (typeof obj.system !== "string" || obj.system.length === 0) {
+  if (typeof obj.system !== 'string' || obj.system.length === 0) {
     throw new Error("'system' must be a non-empty string");
   }
   if (obj.system.length > 10_000) {
     throw new Error("'system' exceeds 10,000 character limit");
   }
-  if (typeof obj.userMessage !== "string" || obj.userMessage.length === 0) {
+  if (typeof obj.userMessage !== 'string' || obj.userMessage.length === 0) {
     throw new Error("'userMessage' must be a non-empty string");
   }
   if (obj.userMessage.length > 200_000) {
     throw new Error("'userMessage' exceeds 200,000 character limit");
   }
   if (
-    obj.maxTokens !== undefined
-    && (typeof obj.maxTokens !== "number" || obj.maxTokens < 1 || obj.maxTokens > 16000)
+    obj.maxTokens !== undefined &&
+    (typeof obj.maxTokens !== 'number' || obj.maxTokens < 1 || obj.maxTokens > 16000)
   ) {
     throw new Error("'maxTokens' must be a number between 1 and 16000");
   }

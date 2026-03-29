@@ -1,19 +1,19 @@
-import type { Step, Group, Flow, FlowItem, StepType } from "../types";
+import type { Step, Group, Flow, FlowItem, StepType } from '../types';
 
-export function createEmptyStep(type: StepType = "general_knowledge"): Step {
+export function createEmptyStep(type: StepType = 'general_knowledge'): Step {
   return {
     id: crypto.randomUUID(),
     type,
-    title: "",
-    prompt: "",
-    agentName: "",
-    source: "General knowledge",
-    outputPref: "Versatility and performance",
+    title: '',
+    prompt: '',
+    agentName: '',
+    source: 'General knowledge',
+    outputPref: 'Versatility and performance',
     creativityLevel: 5,
-    placeholder: "",
-    defaultValue: "",
-    config: "",
-    references: "",
+    placeholder: '',
+    defaultValue: '',
+    config: '',
+    references: '',
   };
 }
 
@@ -21,20 +21,20 @@ export function createEmptyGroup(): Group {
   return {
     id: crypto.randomUUID(),
     isGroup: true,
-    title: "",
-    runCondition: "Once",
-    reasoningInstructions: "",
+    title: '',
+    runCondition: 'Once',
+    reasoningInstructions: '',
     steps: [],
   };
 }
 
 export function createEmptyFlow(): Flow {
   return {
-    title: "",
-    description: "",
-    status: "Draft",
+    title: '',
+    description: '',
+    status: 'Draft',
     shared: false,
-    schedules: "",
+    schedules: '',
     items: [],
   };
 }

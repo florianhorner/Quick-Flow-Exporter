@@ -8,10 +8,10 @@
  */
 
 const REQUEST_TIMEOUT_MS = 60_000; // 60 seconds
-const API_KEY_STORAGE_KEY = "qf-api-key";
+const API_KEY_STORAGE_KEY = 'qf-api-key';
 
 export function getApiKey(): string {
-  return localStorage.getItem(API_KEY_STORAGE_KEY) ?? "";
+  return localStorage.getItem(API_KEY_STORAGE_KEY) ?? '';
 }
 
 export function setApiKey(key: string): void {
@@ -36,38 +36,38 @@ export async function parseWithAI({
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
 
-  const headers: Record<string, string> = { "Content-Type": "application/json" };
+  const headers: Record<string, string> = { 'Content-Type': 'application/json' };
   const apiKey = getApiKey();
   if (apiKey) {
-    headers["x-api-key"] = apiKey;
+    headers['x-api-key'] = apiKey;
   }
 
   try {
-    const res = await fetch("/api/parse", {
-      method: "POST",
+    const res = await fetch('/api/parse', {
+      method: 'POST',
       headers,
       body: JSON.stringify({ system, userMessage, maxTokens }),
       signal: controller.signal,
     });
 
     if (!res.ok) {
-      const body = await res.text().catch(() => "");
+      const body = await res.text().catch(() => '');
       throw new Error(`AI proxy returned ${res.status}: ${body}`);
     }
 
     const data: unknown = await res.json();
     if (
-      typeof data === "object" &&
+      typeof data === 'object' &&
       data !== null &&
-      "text" in data &&
-      typeof (data as { text: string }).text === "string"
+      'text' in data &&
+      typeof (data as { text: string }).text === 'string'
     ) {
       return (data as { text: string }).text;
     }
-    throw new Error("Unexpected response shape from AI proxy");
+    throw new Error('Unexpected response shape from AI proxy');
   } catch (e) {
-    if (e instanceof DOMException && e.name === "AbortError") {
-      throw new Error("AI request timed out after 60 seconds");
+    if (e instanceof DOMException && e.name === 'AbortError') {
+      throw new Error('AI request timed out after 60 seconds');
     }
     throw e;
   } finally {

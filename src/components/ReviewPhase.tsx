@@ -1,9 +1,9 @@
-import type { Flow, FlowItem, StepType } from "../types";
-import { STEP_TYPES } from "../constants";
-import { createEmptyStep, createEmptyGroup, allSteps, allGroups } from "../lib/flow";
-import StepCard from "./StepCard";
-import GroupCard from "./GroupCard";
-import { useState } from "react";
+import type { Flow, FlowItem, StepType } from '../types';
+import { STEP_TYPES } from '../constants';
+import { createEmptyStep, createEmptyGroup, allSteps, allGroups } from '../lib/flow';
+import StepCard from './StepCard';
+import GroupCard from './GroupCard';
+import { useState } from 'react';
 
 interface ReviewPhaseProps {
   flow: Flow;
@@ -11,12 +11,8 @@ interface ReviewPhaseProps {
   onExport: () => void;
 }
 
-export default function ReviewPhase({
-  flow,
-  onFlowChange,
-  onExport,
-}: ReviewPhaseProps) {
-  const [addType, setAddType] = useState<StepType>("general_knowledge");
+export default function ReviewPhase({ flow, onFlowChange, onExport }: ReviewPhaseProps) {
+  const [addType, setAddType] = useState<StepType>('general_knowledge');
   const steps = allSteps(flow.items);
   const groups = allGroups(flow.items);
 
@@ -44,7 +40,7 @@ export default function ReviewPhase({
           <span className="text-sm font-bold text-cyan-400 font-mono">REVIEW</span>
           <div>
             <div className="font-semibold text-sm text-white">
-              {flow.title || "(Untitled)"}
+              {flow.title || '(Untitled)'}
             </div>
             <div className="text-xs text-slate-500">
               {steps.length} steps · {groups.length} groups · {flow.status}
@@ -74,7 +70,7 @@ export default function ReviewPhase({
             onChange={(e) =>
               onFlowChange({
                 ...flow,
-                status: e.target.value as Flow["status"],
+                status: e.target.value as Flow['status'],
               })
             }
           >
@@ -85,9 +81,7 @@ export default function ReviewPhase({
             <input
               type="checkbox"
               checked={flow.shared}
-              onChange={(e) =>
-                onFlowChange({ ...flow, shared: e.target.checked })
-              }
+              onChange={(e) => onFlowChange({ ...flow, shared: e.target.checked })}
               className="accent-cyan-500"
             />
             Shared
@@ -98,9 +92,7 @@ export default function ReviewPhase({
           rows={2}
           placeholder="Description"
           value={flow.description}
-          onChange={(e) =>
-            onFlowChange({ ...flow, description: e.target.value })
-          }
+          onChange={(e) => onFlowChange({ ...flow, description: e.target.value })}
         />
       </div>
 
@@ -128,7 +120,7 @@ export default function ReviewPhase({
               isFirst={i === 0}
               isLast={i === flow.items.length - 1}
             />
-          ),
+          )
         )}
       </div>
 
