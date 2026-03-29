@@ -181,12 +181,15 @@ server/
 
 ## Scripts
 
-| Command           | Description                         |
-| ----------------- | ----------------------------------- |
-| `npm run dev`     | Start dev server at localhost:5173  |
-| `npm run build`   | Type-check and build for production |
-| `npm run preview` | Preview production build            |
-| `npm run lint`    | Run ESLint                          |
+| Command                | Description                                  |
+| ---------------------- | -------------------------------------------- |
+| `npm run dev`          | Start dev server at localhost:5173           |
+| `npm run build`        | Type-check and build for production          |
+| `npm run preview`      | Preview production build                     |
+| `npm run lint`         | Run ESLint                                   |
+| `npm run test`         | Run tests with Vitest                        |
+| `npm run format:check` | Check formatting with Prettier               |
+| `npm run typecheck`    | Type-check without emitting (`tsc --noEmit`) |
 
 ## Roadmap
 
