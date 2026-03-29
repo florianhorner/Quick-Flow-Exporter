@@ -22,7 +22,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Hardened proxy server input validation and error handling
 - Rate limiter now uses remoteAddress by default (TRUST_PROXY opt-in)
 - Bookmarklet uses textContent instead of document.write (XSS fix)
-- Fixed .env.example VITE_ prefix that would leak API keys in build
+- Fixed .env.example VITE\_ prefix that would leak API keys in build
 
 ### Added
 

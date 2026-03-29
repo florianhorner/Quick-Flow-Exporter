@@ -47,6 +47,7 @@ The AI integration lives in `server/proxy.ts` (HTTP server and routing) and `ser
 ## Reporting Issues
 
 Open an issue with:
+
 - What you expected to happen
 - What actually happened
 - Steps to reproduce
