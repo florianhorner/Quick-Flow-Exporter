@@ -65,7 +65,7 @@ async function callAnthropic(req: ProxyRequest, clientKey?: string): Promise<str
 // ── AWS Bedrock provider ─────────────────────────────────────────────────────
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function callBedrock(req: ProxyRequest, clientKey?: string): Promise<string> {
+async function callBedrock(req: ProxyRequest, _clientKey?: string): Promise<string> {
   // Optional dependency — install with: npm install @aws-sdk/client-bedrock-runtime
   const mod = await (import('@aws-sdk/client-bedrock-runtime' as string) as Promise<{
     BedrockRuntimeClient: new (config: { region: string }) => {
