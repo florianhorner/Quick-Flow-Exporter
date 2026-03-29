@@ -21,56 +21,61 @@ This tool fills that gap.
 ## Screenshots
 
 ### Paste & Parse
+
 Ctrl+A your flow in the Quick Flows editor, paste it here, and AI extracts the full structure.
 
 ![Paste Phase](docs/screenshots/01-paste-phase.png)
 
 ### Flow Diff
+
 Compare two versions of a flow side-by-side with word-level inline diffs on prompts.
 
 ![Diff Phase](docs/screenshots/02-diff-phase.png)
 
 ### Interactive Flow Graph
+
 Visualize your flow as a color-coded directed graph. Each step type has its own color, `@references` show as dashed edges, and reasoning groups render as sub-graphs. Click any node to see the full prompt in a detail panel.
 
 ![Flow Graph](docs/screenshots/03-flow-graph.png)
 
 ### Multi-Format Export
+
 Export to Markdown (documentation), Mermaid (flowchart diagrams for GitHub/Quip), or JSON (canonical, re-importable).
 
 ![Export Phase](docs/screenshots/04-export-phase.png)
 
 ### One-Click Bookmarklet
+
 Drag the bookmarklet to your bookmarks bar. One click on any Quick Flows editor page copies the content to your clipboard — no Ctrl+A needed.
 
 ## Features
 
-| Feature | Description |
-|---------|-------------|
+| Feature               | Description                                                               |
+| --------------------- | ------------------------------------------------------------------------- |
 | 🧠 AI-Powered Parsing | Paste raw editor content → structured flow with steps, groups, conditions |
-| 🔀 Interactive Graph | React Flow-powered DAG with color-coded nodes, @reference edges, minimap |
-| 🔍 Flow Diffing | Side-by-side comparison with word-level diffs (added/removed/modified) |
-| 📄 Markdown Export | Human-readable documentation with full prompt text |
-| 🧜 Mermaid Export | Flowchart diagrams that render in GitHub, Quip, mermaid.live |
-| { } JSON Export | Canonical format for version control and re-import |
-| 🔖 Bookmarklet | One-click content extraction from the Quick Flows editor |
-| ✏️ Review & Edit | Reorder steps, edit prompts, adjust settings before export |
-| 🔄 Reasoning Groups | Full support for conditional logic groups with run conditions |
+| 🔀 Interactive Graph  | React Flow-powered DAG with color-coded nodes, @reference edges, minimap  |
+| 🔍 Flow Diffing       | Side-by-side comparison with word-level diffs (added/removed/modified)    |
+| 📄 Markdown Export    | Human-readable documentation with full prompt text                        |
+| 🧜 Mermaid Export     | Flowchart diagrams that render in GitHub, Quip, mermaid.live              |
+| { } JSON Export       | Canonical format for version control and re-import                        |
+| 🔖 Bookmarklet        | One-click content extraction from the Quick Flows editor                  |
+| ✏️ Review & Edit      | Reorder steps, edit prompts, adjust settings before export                |
+| 🔄 Reasoning Groups   | Full support for conditional logic groups with run conditions             |
 
 ## Supported Step Types
 
-| Type | Icon | Description |
-|------|------|-------------|
-| Chat Agent | 🤖 | Conversational AI agent |
-| General Knowledge | 🧠 | LLM-powered knowledge step |
-| Web Search | 🌐 | Internet search step |
-| UI Agent | 🖱️ | Browser automation |
-| Create Image | 🖼️ | Image generation |
-| Quick Suite Data | 📊 | Internal data queries |
-| Dashboards & Topics | 📈 | BI dashboard integration |
-| Application Actions | ⚡ | External system actions |
-| User Input (Text) | 📝 | Text input from user |
-| User Input (Files) | 📎 | File upload from user |
+| Type                | Icon | Description                |
+| ------------------- | ---- | -------------------------- |
+| Chat Agent          | 🤖   | Conversational AI agent    |
+| General Knowledge   | 🧠   | LLM-powered knowledge step |
+| Web Search          | 🌐   | Internet search step       |
+| UI Agent            | 🖱️   | Browser automation         |
+| Create Image        | 🖼️   | Image generation           |
+| Quick Suite Data    | 📊   | Internal data queries      |
+| Dashboards & Topics | 📈   | BI dashboard integration   |
+| Application Actions | ⚡   | External system actions    |
+| User Input (Text)   | 📝   | Text input from user       |
+| User Input (Files)  | 📎   | File upload from user      |
 
 ## Quick Start
 
@@ -176,12 +181,15 @@ server/
 
 ## Scripts
 
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start dev server at localhost:5173 |
-| `npm run build` | Type-check and build for production |
-| `npm run preview` | Preview production build |
-| `npm run lint` | Run ESLint |
+| Command                | Description                                  |
+| ---------------------- | -------------------------------------------- |
+| `npm run dev`          | Start dev server at localhost:5173           |
+| `npm run build`        | Type-check and build for production          |
+| `npm run preview`      | Preview production build                     |
+| `npm run lint`         | Run ESLint                                   |
+| `npm run test`         | Run tests with Vitest                        |
+| `npm run format:check` | Check formatting with Prettier               |
+| `npm run typecheck`    | Type-check without emitting (`tsc --noEmit`) |
 
 ## Roadmap
 

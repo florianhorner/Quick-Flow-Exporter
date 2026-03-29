@@ -1,66 +1,66 @@
-import DiffMatchPatch from "diff-match-patch";
-import type { Flow, FlowItem, Step, Group, DiffChange } from "../types";
+import DiffMatchPatch from 'diff-match-patch';
+import type { Flow, FlowItem, Step, Group, DiffChange } from '../types';
 
 const dmp = new DiffMatchPatch();
 
 const FLOW_METADATA_FIELDS = [
   {
-    path: "title",
-    label: "Flow Title",
+    path: 'title',
+    label: 'Flow Title',
     read: (flow: Flow) => flow.title,
   },
   {
-    path: "description",
-    label: "Description",
+    path: 'description',
+    label: 'Description',
     read: (flow: Flow) => flow.description,
   },
   {
-    path: "status",
-    label: "Status",
+    path: 'status',
+    label: 'Status',
     read: (flow: Flow) => flow.status,
   },
   {
-    path: "shared",
-    label: "Shared",
+    path: 'shared',
+    label: 'Shared',
     read: (flow: Flow) => String(flow.shared),
   },
 ] as const;
 
 const STEP_FIELDS = [
-  { path: "type", label: "Type", read: (step: Step) => step.type },
-  { path: "prompt", label: "Prompt", read: (step: Step) => step.prompt },
-  { path: "source", label: "Source", read: (step: Step) => step.source },
+  { path: 'type', label: 'Type', read: (step: Step) => step.type },
+  { path: 'prompt', label: 'Prompt', read: (step: Step) => step.prompt },
+  { path: 'source', label: 'Source', read: (step: Step) => step.source },
   {
-    path: "outputPref",
-    label: "Output Pref",
+    path: 'outputPref',
+    label: 'Output Pref',
     read: (step: Step) => step.outputPref,
   },
   {
-    path: "creativity",
-    label: "Creativity",
+    path: 'creativity',
+    label: 'Creativity',
     read: (step: Step) => String(step.creativityLevel),
   },
   {
-    path: "agentName",
-    label: "Agent Name",
+    path: 'agentName',
+    label: 'Agent Name',
     read: (step: Step) => step.agentName,
   },
   {
-    path: "references",
-    label: "References",
+    path: 'references',
+    label: 'References',
     read: (step: Step) => step.references,
   },
 ] as const;
 
 const GROUP_FIELDS = [
   {
-    path: "runCondition",
-    label: "Run Condition",
+    path: 'runCondition',
+    label: 'Run Condition',
     read: (group: Group) => group.runCondition,
   },
   {
-    path: "reasoning",
-    label: "Reasoning",
+    path: 'reasoning',
+    label: 'Reasoning',
     read: (group: Group) => group.reasoningInstructions,
   },
 ] as const;
@@ -82,9 +82,9 @@ export function diffFlows(left: Flow, right: Flow): FlowDiffResult {
   for (const [key, item] of leftMap) {
     if (!rightMap.has(key)) {
       changes.push({
-        type: "removed",
+        type: 'removed',
         path: `items.${key}`,
-        label: `${item.isGroup ? "Group" : "Step"}: ${itemTitle(item)}`,
+        label: `${item.isGroup ? 'Group' : 'Step'}: ${itemTitle(item)}`,
         leftValue: itemSummary(item),
       });
     }
@@ -93,9 +93,9 @@ export function diffFlows(left: Flow, right: Flow): FlowDiffResult {
   for (const [key, item] of rightMap) {
     if (!leftMap.has(key)) {
       changes.push({
-        type: "added",
+        type: 'added',
         path: `items.${key}`,
-        label: `${item.isGroup ? "Group" : "Step"}: ${itemTitle(item)}`,
+        label: `${item.isGroup ? 'Group' : 'Step'}: ${itemTitle(item)}`,
         rightValue: itemSummary(item),
       });
     }
@@ -136,14 +136,14 @@ function addModifiedChange(
   path: string,
   label: string,
   leftValue: string,
-  rightValue: string,
+  rightValue: string
 ): void {
   if (leftValue === rightValue) {
     return;
   }
 
   changes.push({
-    type: "modified",
+    type: 'modified',
     path,
     label,
     leftValue,
@@ -158,7 +158,7 @@ function diffStep(left: Step, right: Step, key: string, changes: DiffChange[]): 
       `${key}.${field.path}`,
       `${left.title} → ${field.label}`,
       field.read(left),
-      field.read(right),
+      field.read(right)
     );
   }
 }
@@ -170,7 +170,7 @@ function diffGroup(left: Group, right: Group, key: string, changes: DiffChange[]
       `${key}.${field.path}`,
       `${left.title} → ${field.label}`,
       field.read(left),
-      field.read(right),
+      field.read(right)
     );
   }
 
@@ -180,7 +180,7 @@ function diffGroup(left: Group, right: Group, key: string, changes: DiffChange[]
   for (const [childKey, step] of leftChildMap) {
     if (!rightChildMap.has(childKey)) {
       changes.push({
-        type: "removed",
+        type: 'removed',
         path: `${key}.steps.${childKey}`,
         label: `${left.title} → Step: ${step.title}`,
         leftValue: step.prompt,
@@ -191,7 +191,7 @@ function diffGroup(left: Group, right: Group, key: string, changes: DiffChange[]
   for (const [childKey, step] of rightChildMap) {
     if (!leftChildMap.has(childKey)) {
       changes.push({
-        type: "added",
+        type: 'added',
         path: `${key}.steps.${childKey}`,
         label: `${left.title} → Step: ${step.title}`,
         rightValue: step.prompt,
@@ -207,7 +207,7 @@ function diffGroup(left: Group, right: Group, key: string, changes: DiffChange[]
   }
 }
 
-function summarizeChanges(changes: DiffChange[]): FlowDiffResult["summary"] {
+function summarizeChanges(changes: DiffChange[]): FlowDiffResult['summary'] {
   const summary = { added: 0, removed: 0, modified: 0 };
 
   for (const change of changes) {
@@ -227,13 +227,13 @@ function buildKeyedItems(items: FlowItem[]): [string, FlowItem][] {
 
 function buildKeyedSteps(steps: Step[]): [string, Step][] {
   return buildKeyedEntries(steps, (step) =>
-    step.title ? step.title.toLowerCase() : "__unnamed",
+    step.title ? step.title.toLowerCase() : '__unnamed'
   );
 }
 
 function buildKeyedEntries<T>(
   items: T[],
-  baseKeyFor: (item: T, index: number) => string,
+  baseKeyFor: (item: T, index: number) => string
 ): [string, T][] {
   const counts = new Map<string, number>();
 
@@ -255,11 +255,11 @@ function itemSummary(item: FlowItem): string {
     return `Group "${item.title}" (${item.steps.length} steps, ${item.runCondition})`;
   }
 
-  return `${item.type}: "${item.title}" — ${item.prompt.slice(0, 100)}${item.prompt.length > 100 ? "…" : ""}`;
+  return `${item.type}: "${item.title}" — ${item.prompt.slice(0, 100)}${item.prompt.length > 100 ? '…' : ''}`;
 }
 
 export interface DiffSegment {
-  op: "equal" | "insert" | "delete";
+  op: 'equal' | 'insert' | 'delete';
   text: string;
 }
 
@@ -269,7 +269,7 @@ export function wordDiffSegments(left: string, right: string): DiffSegment[] {
   dmp.diff_cleanupSemantic(diffs);
 
   return diffs.map(([op, text]) => ({
-    op: op === -1 ? "delete" : op === 1 ? "insert" : "equal",
+    op: op === -1 ? 'delete' : op === 1 ? 'insert' : 'equal',
     text,
   }));
 }

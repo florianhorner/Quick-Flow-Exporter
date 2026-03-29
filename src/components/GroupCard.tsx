@@ -1,8 +1,8 @@
-import { useState } from "react";
-import type { Group, Step, StepType } from "../types";
-import { STEP_TYPES, RUN_CONDITIONS } from "../constants";
-import { createEmptyStep } from "../lib/flow";
-import StepCard from "./StepCard";
+import { useState } from 'react';
+import type { Group, Step, StepType } from '../types';
+import { STEP_TYPES, RUN_CONDITIONS } from '../constants';
+import { createEmptyStep } from '../lib/flow';
+import StepCard from './StepCard';
 
 interface GroupCardProps {
   group: Group;
@@ -24,8 +24,8 @@ export default function GroupCard({
   isLast,
 }: GroupCardProps) {
   const [open, setOpen] = useState(false);
-  const [addType, setAddType] = useState<StepType>("general_knowledge");
-  const label = group.title || "Reasoning Group";
+  const [addType, setAddType] = useState<StepType>('general_knowledge');
+  const label = group.title || 'Reasoning Group';
   const panelId = `group-panel-${group.id}`;
 
   const updateStep = (i: number, s: Step) => {
@@ -46,7 +46,11 @@ export default function GroupCard({
   };
 
   return (
-    <div className="border border-purple-800 border-l-4 border-l-purple-500 rounded-lg bg-midnight-800" role="region" aria-label={label}>
+    <div
+      className="border border-purple-800 border-l-4 border-l-purple-500 rounded-lg bg-midnight-800"
+      role="region"
+      aria-label={label}
+    >
       <div
         className="flex items-center justify-between px-3 py-2 bg-purple-900/20 rounded-t-lg cursor-pointer"
         role="button"
@@ -55,7 +59,7 @@ export default function GroupCard({
         aria-controls={panelId}
         onClick={() => setOpen(!open)}
         onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") {
+          if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
             setOpen(!open);
           }
@@ -63,42 +67,55 @@ export default function GroupCard({
       >
         <div className="flex items-center gap-2 min-w-0">
           <span aria-hidden="true">🔄</span>
-          <span className="font-medium text-sm text-purple-300 truncate">
-            {label}
-          </span>
-          <span className="text-xs text-purple-500">
-            ({group.steps.length} steps)
-          </span>
+          <span className="font-medium text-sm text-purple-300 truncate">{label}</span>
+          <span className="text-xs text-purple-500">({group.steps.length} steps)</span>
         </div>
         <div className="flex items-center gap-1 shrink-0">
           {!isFirst && (
             <button
-              onClick={(e) => { e.stopPropagation(); onMoveUp(); }}
+              onClick={(e) => {
+                e.stopPropagation();
+                onMoveUp();
+              }}
               className="text-purple-500 hover:text-purple-300 text-xs px-1"
               aria-label={`Move ${label} up`}
-            >▲</button>
+            >
+              ▲
+            </button>
           )}
           {!isLast && (
             <button
-              onClick={(e) => { e.stopPropagation(); onMoveDown(); }}
+              onClick={(e) => {
+                e.stopPropagation();
+                onMoveDown();
+              }}
               className="text-purple-500 hover:text-purple-300 text-xs px-1"
               aria-label={`Move ${label} down`}
-            >▼</button>
+            >
+              ▼
+            </button>
           )}
           <span className="text-xs text-purple-500 ml-1" aria-hidden="true">
-            {open ? "▾" : "▸"}
+            {open ? '▾' : '▸'}
           </span>
           <button
-            onClick={(e) => { e.stopPropagation(); onRemove(); }}
+            onClick={(e) => {
+              e.stopPropagation();
+              onRemove();
+            }}
             className="text-red-500 hover:text-red-400 text-xs ml-1"
             aria-label={`Remove ${label}`}
-          >✕</button>
+          >
+            ✕
+          </button>
         </div>
       </div>
 
       {open && (
         <div id={panelId} className="p-3 space-y-2">
-          <label htmlFor={`group-title-${group.id}`} className="sr-only">Group title</label>
+          <label htmlFor={`group-title-${group.id}`} className="sr-only">
+            Group title
+          </label>
           <input
             id={`group-title-${group.id}`}
             className="w-full border border-midnight-700 rounded px-2 py-1 text-sm bg-midnight-900 text-slate-300 placeholder-slate-600 focus:border-purple-500"
@@ -106,7 +123,9 @@ export default function GroupCard({
             value={group.title}
             onChange={(e) => onChange({ ...group, title: e.target.value })}
           />
-          <label htmlFor={`run-cond-${group.id}`} className="sr-only">Run condition</label>
+          <label htmlFor={`run-cond-${group.id}`} className="sr-only">
+            Run condition
+          </label>
           <select
             id={`run-cond-${group.id}`}
             className="border border-midnight-700 rounded px-2 py-1 text-xs bg-midnight-900 text-slate-300"
@@ -114,7 +133,7 @@ export default function GroupCard({
             onChange={(e) =>
               onChange({
                 ...group,
-                runCondition: e.target.value as Group["runCondition"],
+                runCondition: e.target.value as Group['runCondition'],
               })
             }
           >
@@ -122,7 +141,9 @@ export default function GroupCard({
               <option key={o}>{o}</option>
             ))}
           </select>
-          <label htmlFor={`reasoning-${group.id}`} className="sr-only">Reasoning instructions</label>
+          <label htmlFor={`reasoning-${group.id}`} className="sr-only">
+            Reasoning instructions
+          </label>
           <textarea
             id={`reasoning-${group.id}`}
             className="w-full border border-midnight-700 rounded px-2 py-1 text-sm bg-[#0d1117] text-slate-300 font-mono placeholder-slate-600 focus:border-purple-500"
@@ -134,7 +155,11 @@ export default function GroupCard({
             }
           />
 
-          <div className="space-y-2 ml-2 border-l-2 border-purple-800 pl-3" role="list" aria-label="Group steps">
+          <div
+            className="space-y-2 ml-2 border-l-2 border-purple-800 pl-3"
+            role="list"
+            aria-label="Group steps"
+          >
             {group.steps.map((s, i) => (
               <div role="listitem" key={s.id}>
                 <StepCard

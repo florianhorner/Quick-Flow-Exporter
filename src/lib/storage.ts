@@ -1,5 +1,5 @@
-import type { HistoryEntry } from "../types";
-import { STORAGE_KEY_HISTORY } from "../constants";
+import type { HistoryEntry } from '../types';
+import { STORAGE_KEY_HISTORY } from '../constants';
 
 /**
  * Persist and retrieve export history.
@@ -24,12 +24,12 @@ function validateHistory(data: unknown): HistoryEntry[] {
   if (!Array.isArray(data)) return [];
   return data.filter(
     (item): item is HistoryEntry =>
-      typeof item === "object" &&
+      typeof item === 'object' &&
       item !== null &&
-      typeof item.title === "string" &&
-      typeof item.date === "string" &&
-      typeof item.stepCount === "number" &&
-      Number.isFinite(item.stepCount),
+      typeof item.title === 'string' &&
+      typeof item.date === 'string' &&
+      typeof item.stepCount === 'number' &&
+      Number.isFinite(item.stepCount)
   );
 }
 

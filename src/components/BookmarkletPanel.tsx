@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from 'react';
 
 /**
  * Bookmarklet that scrapes the Quick Flows editor page DOM and
@@ -68,8 +68,8 @@ export default function BookmarkletPanel() {
         <span className="font-semibold text-sm text-cyan-400 font-mono">Bookmarklet</span>
       </div>
       <p className="text-xs text-slate-400">
-        Drag the button below to your bookmarks bar. When you're on a Quick Flows editor page,
-        click it to instantly copy the flow content to your clipboard.
+        Drag the button below to your bookmarks bar. When you're on a Quick Flows editor
+        page, click it to instantly copy the flow content to your clipboard.
       </p>
 
       <div className="flex items-center gap-3 flex-wrap">
@@ -91,13 +91,13 @@ export default function BookmarkletPanel() {
           onClick={() => setShowCode(!showCode)}
           className="text-xs text-cyan-500 hover:text-cyan-400 underline py-1"
         >
-          {showCode ? "Hide source" : "View source"}
+          {showCode ? 'Hide source' : 'View source'}
         </button>
         <button
           onClick={copyCode}
           className="text-xs text-cyan-500 hover:text-cyan-400 underline py-1"
         >
-          {copied ? "Copied!" : "Copy bookmarklet URL"}
+          {copied ? 'Copied!' : 'Copy bookmarklet URL'}
         </button>
       </div>
 

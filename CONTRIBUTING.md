@@ -16,18 +16,25 @@ Thanks for your interest in contributing to Quick Flow Exporter.
 4. Make your changes
 5. Run the tests:
    ```bash
-   npx vitest run
+   npm run test
    ```
 6. Run the linter:
    ```bash
    npm run lint
    ```
-7. Type-check both frontend and server:
+7. Check formatting:
    ```bash
-   npx tsc -p tsconfig.json --noEmit
-   npx tsc -p tsconfig.server.json --noEmit
+   npm run format:check
    ```
-8. Open a pull request
+8. Type-check:
+   ```bash
+   npm run typecheck
+   ```
+9. Open a pull request
+
+> **Note:** Pre-commit hooks (husky + lint-staged) run automatically on
+> `git commit`. They apply `eslint --fix` and `prettier --write` to staged
+> files, so most formatting issues are caught before you push.
 
 ## Guidelines
 
@@ -47,6 +54,7 @@ The AI integration lives in `server/proxy.ts` (HTTP server and routing) and `ser
 ## Reporting Issues
 
 Open an issue with:
+
 - What you expected to happen
 - What actually happened
 - Steps to reproduce

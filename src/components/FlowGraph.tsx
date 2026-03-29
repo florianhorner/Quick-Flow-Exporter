@@ -1,4 +1,4 @@
-import { useMemo, useState, useCallback } from "react";
+import { useMemo, useState, useCallback } from 'react';
 import {
   ReactFlow,
   Background,
@@ -11,29 +11,29 @@ import {
   Handle,
   Position,
   MarkerType,
-} from "@xyflow/react";
-import "@xyflow/react/dist/style.css";
-import type { Flow, Step, Group } from "../types";
-import { STEP_TYPES } from "../constants";
-import { allSteps } from "../lib/flow";
+} from '@xyflow/react';
+import '@xyflow/react/dist/style.css';
+import type { Flow, Step, Group } from '../types';
+import { STEP_TYPES } from '../constants';
+import { allSteps } from '../lib/flow';
 
 /* ── colour palette per step type (dark-mode adjusted) ── */
 const TYPE_COLORS: Record<string, { bg: string; border: string; text: string }> = {
-  chat_agent:        { bg: "#1e3a5f", border: "#3b82f6", text: "#93c5fd" },
-  general_knowledge: { bg: "#1a3d2a", border: "#22c55e", text: "#86efac" },
-  web_search:        { bg: "#164e63", border: "#0ea5e9", text: "#7dd3fc" },
-  ui_agent:          { bg: "#422006", border: "#f59e0b", text: "#fcd34d" },
-  create_image:      { bg: "#4a1942", border: "#ec4899", text: "#f9a8d4" },
-  quicksuite_data:   { bg: "#2d1f5e", border: "#8b5cf6", text: "#c4b5fd" },
-  dashboard_topics:  { bg: "#1e1b4b", border: "#6366f1", text: "#a5b4fc" },
-  app_actions:       { bg: "#431407", border: "#f97316", text: "#fdba74" },
-  user_input_text:   { bg: "#3f3c0a", border: "#eab308", text: "#fde047" },
-  user_input_files:  { bg: "#431407", border: "#fb923c", text: "#fed7aa" },
+  chat_agent: { bg: '#1e3a5f', border: '#3b82f6', text: '#93c5fd' },
+  general_knowledge: { bg: '#1a3d2a', border: '#22c55e', text: '#86efac' },
+  web_search: { bg: '#164e63', border: '#0ea5e9', text: '#7dd3fc' },
+  ui_agent: { bg: '#422006', border: '#f59e0b', text: '#fcd34d' },
+  create_image: { bg: '#4a1942', border: '#ec4899', text: '#f9a8d4' },
+  quicksuite_data: { bg: '#2d1f5e', border: '#8b5cf6', text: '#c4b5fd' },
+  dashboard_topics: { bg: '#1e1b4b', border: '#6366f1', text: '#a5b4fc' },
+  app_actions: { bg: '#431407', border: '#f97316', text: '#fdba74' },
+  user_input_text: { bg: '#3f3c0a', border: '#eab308', text: '#fde047' },
+  user_input_files: { bg: '#431407', border: '#fb923c', text: '#fed7aa' },
 };
 
-const GROUP_STYLE = { bg: "#2d1f5e", border: "#a78bfa", text: "#c4b5fd" };
+const GROUP_STYLE = { bg: '#2d1f5e', border: '#a78bfa', text: '#c4b5fd' };
 
-const DEFAULT_COLOR = { bg: "#1e293b", border: "#64748b", text: "#94a3b8" };
+const DEFAULT_COLOR = { bg: '#1e293b', border: '#64748b', text: '#94a3b8' };
 
 /* ── Custom Step Node ── */
 function StepNode({ data }: { data: { step: Step; index: number } }) {
@@ -48,50 +48,72 @@ function StepNode({ data }: { data: { step: Step; index: number } }) {
     >
       <Handle type="target" position={Position.Top} className="!bg-slate-500 !w-3 !h-3" />
       <div className="flex items-center gap-2 mb-1">
-        <span className="text-lg">{meta?.icon ?? "?"}</span>
-        <span className="text-xs font-bold uppercase tracking-wide" style={{ color: colors.text }}>
+        <span className="text-lg">{meta?.icon ?? '?'}</span>
+        <span
+          className="text-xs font-bold uppercase tracking-wide"
+          style={{ color: colors.text }}
+        >
           {meta?.label ?? step.type}
         </span>
       </div>
       <div className="font-semibold text-sm text-white mb-1">
-        {index + 1}. {step.title || "(Untitled)"}
+        {index + 1}. {step.title || '(Untitled)'}
       </div>
       {step.prompt && (
         <div className="text-xs text-slate-400 line-clamp-3 font-mono bg-black/30 rounded p-1.5 mt-1">
-          {step.prompt.slice(0, 150)}{step.prompt.length > 150 ? "…" : ""}
+          {step.prompt.slice(0, 150)}
+          {step.prompt.length > 150 ? '…' : ''}
         </div>
       )}
       {step.references && (
         <div className="mt-1.5 flex flex-wrap gap-1">
-          {step.references.split(",").map((ref, i) => (
-            <span key={i} className="text-[10px] bg-black/30 text-slate-400 rounded px-1.5 py-0.5 border border-slate-700">
+          {step.references.split(',').map((ref, i) => (
+            <span
+              key={i}
+              className="text-[10px] bg-black/30 text-slate-400 rounded px-1.5 py-0.5 border border-slate-700"
+            >
               @{ref.trim()}
             </span>
           ))}
         </div>
       )}
-      <Handle type="source" position={Position.Bottom} className="!bg-slate-500 !w-3 !h-3" />
+      <Handle
+        type="source"
+        position={Position.Bottom}
+        className="!bg-slate-500 !w-3 !h-3"
+      />
     </div>
   );
 }
 
 /* ── Custom Group Node ── */
-function GroupNode({ data }: { data: { group: Group; index: number; childCount: number } }) {
+function GroupNode({
+  data,
+}: {
+  data: { group: Group; index: number; childCount: number };
+}) {
   const { group, index, childCount } = data;
   return (
     <div
       className="rounded-xl shadow-lg px-4 py-3 min-w-[260px] max-w-[320px] border-2 border-dashed"
       style={{ background: GROUP_STYLE.bg, borderColor: GROUP_STYLE.border }}
     >
-      <Handle type="target" position={Position.Top} className="!bg-purple-400 !w-3 !h-3" />
+      <Handle
+        type="target"
+        position={Position.Top}
+        className="!bg-purple-400 !w-3 !h-3"
+      />
       <div className="flex items-center gap-2 mb-1">
         <span className="text-lg">🔄</span>
-        <span className="text-xs font-bold uppercase tracking-wide" style={{ color: GROUP_STYLE.text }}>
+        <span
+          className="text-xs font-bold uppercase tracking-wide"
+          style={{ color: GROUP_STYLE.text }}
+        >
           Reasoning Group
         </span>
       </div>
       <div className="font-semibold text-sm text-white mb-1">
-        {index + 1}. {group.title || "(Untitled Group)"}
+        {index + 1}. {group.title || '(Untitled Group)'}
       </div>
       <div className="flex items-center gap-2 mt-1">
         <span className="text-[10px] bg-purple-900/50 text-purple-300 rounded px-2 py-0.5 font-medium border border-purple-800">
@@ -101,10 +123,15 @@ function GroupNode({ data }: { data: { group: Group; index: number; childCount: 
       </div>
       {group.reasoningInstructions && (
         <div className="text-xs text-slate-400 font-mono bg-black/30 rounded p-1.5 mt-1.5 line-clamp-2">
-          {group.reasoningInstructions.slice(0, 120)}{group.reasoningInstructions.length > 120 ? "…" : ""}
+          {group.reasoningInstructions.slice(0, 120)}
+          {group.reasoningInstructions.length > 120 ? '…' : ''}
         </div>
       )}
-      <Handle type="source" position={Position.Bottom} className="!bg-purple-400 !w-3 !h-3" />
+      <Handle
+        type="source"
+        position={Position.Bottom}
+        className="!bg-purple-400 !w-3 !h-3"
+      />
     </div>
   );
 }
@@ -132,7 +159,7 @@ function buildGraph(flow: Flow) {
       const groupId = `group-${item.id}`;
       nodes.push({
         id: groupId,
-        type: "groupNode",
+        type: 'groupNode',
         position: { x: 0, y },
         data: { group: item, index: globalIndex, childCount: item.steps.length },
       });
@@ -145,7 +172,7 @@ function buildGraph(flow: Flow) {
         const stepId = `step-${step.id}`;
         nodes.push({
           id: stepId,
-          type: "stepNode",
+          type: 'stepNode',
           position: { x: GROUP_CHILD_X_OFFSET, y: childY },
           data: { step, index: globalIndex },
         });
@@ -169,7 +196,7 @@ function buildGraph(flow: Flow) {
       const stepId = `step-${item.id}`;
       nodes.push({
         id: stepId,
-        type: "stepNode",
+        type: 'stepNode',
         position: { x: 0, y },
         data: { step: item, index: globalIndex },
       });
@@ -196,8 +223,8 @@ function buildGraph(flow: Flow) {
       id: `seq-${i}`,
       source: actualSrc,
       target: tgt,
-      style: { stroke: "#64748b", strokeWidth: 2 },
-      markerEnd: { type: MarkerType.ArrowClosed, color: "#64748b" },
+      style: { stroke: '#64748b', strokeWidth: 2 },
+      markerEnd: { type: MarkerType.ArrowClosed, color: '#64748b' },
     });
   }
 
@@ -206,8 +233,8 @@ function buildGraph(flow: Flow) {
   for (const step of allStepsList) {
     if (!step.references) continue;
     const stepId = `step-${step.id}`;
-    for (const ref of step.references.split(",")) {
-      const refName = ref.trim().replace(/^@/, "").toLowerCase();
+    for (const ref of step.references.split(',')) {
+      const refName = ref.trim().replace(/^@/, '').toLowerCase();
       const targetId = stepTitleToId.get(refName);
       if (targetId && targetId !== stepId) {
         edges.push({
@@ -215,9 +242,9 @@ function buildGraph(flow: Flow) {
           source: targetId,
           target: stepId,
           animated: true,
-          style: { stroke: "#f59e0b", strokeWidth: 2, strokeDasharray: "5 5" },
-          markerEnd: { type: MarkerType.ArrowClosed, color: "#f59e0b" },
-          label: "@ref",
+          style: { stroke: '#f59e0b', strokeWidth: 2, strokeDasharray: '5 5' },
+          markerEnd: { type: MarkerType.ArrowClosed, color: '#f59e0b' },
+          label: '@ref',
         });
       }
     }
@@ -237,27 +264,41 @@ function DetailPanel({ step, onClose }: { step: Step | null; onClose: () => void
       <div className="sticky top-0 bg-midnight-800 border-b border-midnight-700 px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="text-lg">{meta?.icon}</span>
-          <span className="font-semibold text-sm text-white">{step.title || "(Untitled)"}</span>
+          <span className="font-semibold text-sm text-white">
+            {step.title || '(Untitled)'}
+          </span>
         </div>
-        <button onClick={onClose} className="text-slate-500 hover:text-slate-300 text-lg">✕</button>
+        <button onClick={onClose} className="text-slate-500 hover:text-slate-300 text-lg">
+          ✕
+        </button>
       </div>
       <div className="p-4 space-y-3">
         <div>
-          <span className="text-xs font-bold uppercase tracking-wide" style={{ color: colors.text }}>
+          <span
+            className="text-xs font-bold uppercase tracking-wide"
+            style={{ color: colors.text }}
+          >
             {meta?.label}
           </span>
         </div>
-        {step.type === "chat_agent" && step.agentName && (
+        {step.type === 'chat_agent' && step.agentName && (
           <div>
             <div className="text-xs text-slate-500 mb-1">Chat Agent</div>
             <div className="text-sm font-medium text-white">{step.agentName}</div>
           </div>
         )}
-        {step.type === "general_knowledge" && (
+        {step.type === 'general_knowledge' && (
           <div className="flex gap-3 text-xs text-slate-400">
-            <div><span className="text-slate-500">Source:</span> {step.source}</div>
-            <div><span className="text-slate-500">Output:</span> {step.outputPref}</div>
-            <div><span className="text-slate-500">Creativity:</span> {step.creativityLevel}/10</div>
+            <div>
+              <span className="text-slate-500">Source:</span> {step.source}
+            </div>
+            <div>
+              <span className="text-slate-500">Output:</span> {step.outputPref}
+            </div>
+            <div>
+              <span className="text-slate-500">Creativity:</span> {step.creativityLevel}
+              /10
+            </div>
           </div>
         )}
         {step.prompt && (
@@ -272,24 +313,39 @@ function DetailPanel({ step, onClose }: { step: Step | null; onClose: () => void
           <div>
             <div className="text-xs text-slate-500 mb-1">References</div>
             <div className="flex flex-wrap gap-1">
-              {step.references.split(",").map((r, i) => (
-                <span key={i} className="text-xs bg-amber-900/40 text-amber-300 rounded px-2 py-0.5 border border-amber-800">
+              {step.references.split(',').map((r, i) => (
+                <span
+                  key={i}
+                  className="text-xs bg-amber-900/40 text-amber-300 rounded px-2 py-0.5 border border-amber-800"
+                >
                   @{r.trim()}
                 </span>
               ))}
             </div>
           </div>
         )}
-        {step.type === "user_input_text" && (
+        {step.type === 'user_input_text' && (
           <>
-            {step.placeholder && <div className="text-sm text-slate-300"><span className="text-slate-500 text-xs">Placeholder:</span> {step.placeholder}</div>}
-            {step.defaultValue && <div className="text-sm text-slate-300"><span className="text-slate-500 text-xs">Default:</span> {step.defaultValue}</div>}
+            {step.placeholder && (
+              <div className="text-sm text-slate-300">
+                <span className="text-slate-500 text-xs">Placeholder:</span>{' '}
+                {step.placeholder}
+              </div>
+            )}
+            {step.defaultValue && (
+              <div className="text-sm text-slate-300">
+                <span className="text-slate-500 text-xs">Default:</span>{' '}
+                {step.defaultValue}
+              </div>
+            )}
           </>
         )}
         {step.config && (
           <div>
             <div className="text-xs text-slate-500 mb-1">Config</div>
-            <pre className="text-xs font-mono bg-[#0d1117] rounded p-2 border border-midnight-700 text-slate-300">{step.config}</pre>
+            <pre className="text-xs font-mono bg-[#0d1117] rounded p-2 border border-midnight-700 text-slate-300">
+              {step.config}
+            </pre>
           </div>
         )}
       </div>
@@ -309,16 +365,27 @@ function Legend() {
       <div className="font-bold text-slate-300 mb-1">Legend</div>
       {items.map((it) => (
         <div key={it.label} className="flex items-center gap-2 text-slate-400">
-          <div className="w-3 h-3 rounded-sm border-2" style={{ borderColor: it.color, background: it.color + "33" }} />
-          <span>{it.icon} {it.label}</span>
+          <div
+            className="w-3 h-3 rounded-sm border-2"
+            style={{ borderColor: it.color, background: it.color + '33' }}
+          />
+          <span>
+            {it.icon} {it.label}
+          </span>
         </div>
       ))}
       <div className="flex items-center gap-2 mt-1 pt-1 border-t border-midnight-700 text-slate-400">
-        <div className="w-3 h-3 rounded-sm border-2 border-dashed" style={{ borderColor: GROUP_STYLE.border, background: GROUP_STYLE.bg }} />
+        <div
+          className="w-3 h-3 rounded-sm border-2 border-dashed"
+          style={{ borderColor: GROUP_STYLE.border, background: GROUP_STYLE.bg }}
+        />
         <span>🔄 Reasoning Group</span>
       </div>
       <div className="flex items-center gap-2 text-slate-400">
-        <div className="w-6 h-0 border-t-2 border-dashed" style={{ borderColor: "#f59e0b" }} />
+        <div
+          className="w-6 h-0 border-t-2 border-dashed"
+          style={{ borderColor: '#f59e0b' }}
+        />
         <span>@reference link</span>
       </div>
     </div>
@@ -332,11 +399,14 @@ interface FlowGraphProps {
 }
 
 export default function FlowGraph({ flow, onBack }: FlowGraphProps) {
-  const { nodes: initialNodes, edges: initialEdges } = useMemo(() => buildGraph(flow), [flow]);
+  const { nodes: initialNodes, edges: initialEdges } = useMemo(
+    () => buildGraph(flow),
+    [flow]
+  );
   const [selectedStep, setSelectedStep] = useState<Step | null>(null);
 
   const onNodeClick = useCallback((_: React.MouseEvent, node: Node) => {
-    if (node.type === "stepNode") {
+    if (node.type === 'stepNode') {
       setSelectedStep((node.data as { step: Step }).step);
     }
   }, []);
@@ -350,12 +420,19 @@ export default function FlowGraph({ flow, onBack }: FlowGraphProps) {
           <span className="text-2xl">🔀</span>
           <span className="font-semibold text-sm text-white">Flow Graph</span>
           <div className="flex-1" />
-          <button onClick={onBack} className="text-sm text-slate-500 hover:text-slate-300">← Back</button>
+          <button
+            onClick={onBack}
+            className="text-sm text-slate-500 hover:text-slate-300"
+          >
+            ← Back
+          </button>
         </div>
         <div className="bg-midnight-800 border border-midnight-700 rounded-xl shadow-sm p-12 text-center">
           <div className="text-4xl mb-3">📋</div>
           <div className="font-semibold text-slate-300">No flow loaded</div>
-          <div className="text-sm text-slate-500 mt-1">Parse a flow first, then come back here to see the interactive graph.</div>
+          <div className="text-sm text-slate-500 mt-1">
+            Parse a flow first, then come back here to see the interactive graph.
+          </div>
         </div>
       </div>
     );
@@ -367,7 +444,9 @@ export default function FlowGraph({ flow, onBack }: FlowGraphProps) {
         <div className="flex items-center gap-2">
           <span className="text-2xl">🔀</span>
           <div>
-            <div className="font-semibold text-sm text-white">{flow.title || "(Untitled)"}</div>
+            <div className="font-semibold text-sm text-white">
+              {flow.title || '(Untitled)'}
+            </div>
             <div className="text-xs text-slate-500">
               Interactive flow graph · {steps.length} steps · Click any node for details
             </div>
@@ -379,7 +458,10 @@ export default function FlowGraph({ flow, onBack }: FlowGraphProps) {
         </button>
       </div>
 
-      <div className="bg-midnight-800 border border-midnight-700 rounded-xl shadow-sm overflow-hidden relative" style={{ height: "70vh" }}>
+      <div
+        className="bg-midnight-800 border border-midnight-700 rounded-xl shadow-sm overflow-hidden relative"
+        style={{ height: '70vh' }}
+      >
         <ReactFlow
           nodes={initialNodes}
           edges={initialEdges}
@@ -395,13 +477,13 @@ export default function FlowGraph({ flow, onBack }: FlowGraphProps) {
           <Controls position="bottom-left" />
           <MiniMap
             nodeColor={(node) => {
-              if (node.type === "groupNode") return GROUP_STYLE.border;
+              if (node.type === 'groupNode') return GROUP_STYLE.border;
               const step = (node.data as { step: Step }).step;
               return (TYPE_COLORS[step.type] ?? DEFAULT_COLOR).border;
             }}
             maskColor="rgba(0,0,0,0.3)"
             position="bottom-right"
-            style={{ background: "#0f172a" }}
+            style={{ background: '#0f172a' }}
           />
           <Panel position="top-left">
             <Legend />

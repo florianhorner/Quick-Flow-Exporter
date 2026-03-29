@@ -1,28 +1,28 @@
-import { useState, useMemo, useCallback, useEffect } from "react";
-import type { Flow } from "../types";
-import { parseFlow } from "../lib/parser";
-import { diffFlows, wordDiffSegments, type FlowDiffResult } from "../lib/diff";
+import { useState, useMemo, useCallback, useEffect } from 'react';
+import type { Flow } from '../types';
+import { parseFlow } from '../lib/parser';
+import { diffFlows, wordDiffSegments, type FlowDiffResult } from '../lib/diff';
 
 interface DiffPhaseProps {
   currentFlow: Flow | null;
   onBack: () => void;
 }
 
-type DiffState = "input" | "result";
+type DiffState = 'input' | 'result';
 
 export default function DiffPhase({ currentFlow, onBack }: DiffPhaseProps) {
-  const [leftRaw, setLeftRaw] = useState("");
-  const [rightRaw, setRightRaw] = useState("");
+  const [leftRaw, setLeftRaw] = useState('');
+  const [rightRaw, setRightRaw] = useState('');
   const [leftFlow, setLeftFlow] = useState<Flow | null>(currentFlow);
   const [rightFlow, setRightFlow] = useState<Flow | null>(null);
-  const [state, setState] = useState<DiffState>("input");
+  const [state, setState] = useState<DiffState>('input');
   const [parsing, setParsing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [expandedPaths, setExpandedPaths] = useState<Set<string>>(new Set());
 
   // Sync leftFlow when currentFlow prop changes (e.g. user re-parses)
   useEffect(() => {
-    if (state === "input") {
+    if (state === 'input') {
       setLeftFlow(currentFlow);
     }
   }, [currentFlow, state]);
@@ -31,11 +31,11 @@ export default function DiffPhase({ currentFlow, onBack }: DiffPhaseProps) {
     setParsing(true);
     setError(null);
     try {
-      const left = currentFlow ?? await parseFlow(leftRaw);
+      const left = currentFlow ?? (await parseFlow(leftRaw));
       const right = await parseFlow(rightRaw);
       setLeftFlow(left);
       setRightFlow(right);
-      setState("result");
+      setState('result');
     } catch (e) {
       setError(`Parse error: ${e instanceof Error ? e.message : String(e)}`);
     }
@@ -56,14 +56,12 @@ export default function DiffPhase({ currentFlow, onBack }: DiffPhaseProps) {
     });
   };
 
-  if (state === "input") {
+  if (state === 'input') {
     return (
       <div className="space-y-4">
         <div className="bg-midnight-800 border border-midnight-700 rounded-xl shadow-sm p-6 space-y-4">
           <div className="space-y-1">
-            <h2 className="text-lg font-bold font-mono text-white">
-              Compare flows
-            </h2>
+            <h2 className="text-lg font-bold font-mono text-white">Compare flows</h2>
             <p className="text-slate-400 text-sm">
               Paste two versions of a flow to see what changed.
             </p>
@@ -103,24 +101,31 @@ export default function DiffPhase({ currentFlow, onBack }: DiffPhaseProps) {
           </div>
 
           <div className="flex items-center justify-between">
-            <button onClick={onBack} className="text-sm text-slate-500 hover:text-slate-300">← Back</button>
+            <button
+              onClick={onBack}
+              className="text-sm text-slate-500 hover:text-slate-300"
+            >
+              ← Back
+            </button>
             <button
               onClick={handleDiff}
               disabled={parsing || (!currentFlow && !leftRaw.trim()) || !rightRaw.trim()}
               className={`px-6 py-2.5 rounded-lg text-sm font-semibold transition-all ${
                 parsing
-                  ? "bg-midnight-700 text-slate-500"
+                  ? 'bg-midnight-700 text-slate-500'
                   : (!currentFlow && !leftRaw.trim()) || !rightRaw.trim()
-                    ? "bg-midnight-700 text-slate-500"
-                    : "bg-cyan-600 text-white hover:bg-cyan-500 shadow-lg shadow-cyan-500/25"
+                    ? 'bg-midnight-700 text-slate-500'
+                    : 'bg-cyan-600 text-white hover:bg-cyan-500 shadow-lg shadow-cyan-500/25'
               }`}
             >
-              {parsing ? "Parsing..." : "Compare Flows"}
+              {parsing ? 'Parsing...' : 'Compare Flows'}
             </button>
           </div>
 
           {error && (
-            <div className="bg-red-900/30 border border-red-800 rounded-lg p-3 text-sm text-red-400">{error}</div>
+            <div className="bg-red-900/30 border border-red-800 rounded-lg p-3 text-sm text-red-400">
+              {error}
+            </div>
           )}
         </div>
       </div>
@@ -140,12 +145,12 @@ export default function DiffPhase({ currentFlow, onBack }: DiffPhaseProps) {
           <span className="text-sm font-bold text-cyan-400 font-mono">DIFF</span>
           <div>
             <div className="font-semibold text-sm text-white">
-              {leftFlow?.title || "(Untitled)"} → {rightFlow?.title || "(Untitled)"}
+              {leftFlow?.title || '(Untitled)'} → {rightFlow?.title || '(Untitled)'}
             </div>
             <div className="text-xs text-slate-500">
               {noChanges
-                ? "No changes detected"
-                : `${changes.length} change${changes.length > 1 ? "s" : ""}`}
+                ? 'No changes detected'
+                : `${changes.length} change${changes.length > 1 ? 's' : ''}`}
             </div>
           </div>
         </div>
@@ -168,85 +173,129 @@ export default function DiffPhase({ currentFlow, onBack }: DiffPhaseProps) {
         </div>
         <div className="flex-1" />
         <button
-          onClick={() => { setState("input"); setRightFlow(null); setRightRaw(""); }}
+          onClick={() => {
+            setState('input');
+            setRightFlow(null);
+            setRightRaw('');
+          }}
           className="text-sm text-cyan-500 hover:text-cyan-400"
         >
           ↻ New Diff
         </button>
-        <button onClick={onBack} className="text-sm text-slate-500 hover:text-slate-300">← Back</button>
+        <button onClick={onBack} className="text-sm text-slate-500 hover:text-slate-300">
+          ← Back
+        </button>
       </div>
 
       {noChanges ? (
         <div className="bg-green-900/20 border border-green-800 rounded-xl shadow-sm p-8 text-center">
-          <div className="text-sm font-bold text-green-400 font-mono mb-2">NO CHANGES</div>
+          <div className="text-sm font-bold text-green-400 font-mono mb-2">
+            NO CHANGES
+          </div>
           <div className="font-semibold text-green-400">Flows are identical</div>
-          <div className="text-sm text-green-500 mt-1">No differences found between the two versions.</div>
+          <div className="text-sm text-green-500 mt-1">
+            No differences found between the two versions.
+          </div>
         </div>
       ) : (
         <div className="space-y-2">
           {changes.map((change) => {
             const expanded = expandedPaths.has(change.path);
-            const isPromptChange = change.path.endsWith(".prompt") || change.path.endsWith(".reasoning");
-            const hasLongContent = (change.leftValue?.length ?? 0) > 80 || (change.rightValue?.length ?? 0) > 80;
+            const isPromptChange =
+              change.path.endsWith('.prompt') || change.path.endsWith('.reasoning');
+            const hasLongContent =
+              (change.leftValue?.length ?? 0) > 80 ||
+              (change.rightValue?.length ?? 0) > 80;
 
             return (
               <div
                 key={change.path}
                 className={`bg-midnight-800 rounded-lg shadow-sm border-l-4 border border-midnight-700 ${
-                  change.type === "added" ? "border-l-green-500" :
-                  change.type === "removed" ? "border-l-red-500" :
-                  "border-l-amber-500"
+                  change.type === 'added'
+                    ? 'border-l-green-500'
+                    : change.type === 'removed'
+                      ? 'border-l-red-500'
+                      : 'border-l-amber-500'
                 }`}
               >
                 <div
                   className="px-4 py-3 flex items-center gap-3 cursor-pointer hover:bg-midnight-900/50"
                   onClick={() => toggleExpand(change.path)}
                 >
-                  <span className={`text-xs font-bold uppercase px-2 py-0.5 rounded ${
-                    change.type === "added" ? "bg-green-900/40 text-green-400" :
-                    change.type === "removed" ? "bg-red-900/40 text-red-400" :
-                    "bg-amber-900/40 text-amber-400"
-                  }`}>
-                    {change.type === "added" ? "+" : change.type === "removed" ? "−" : "~"}
+                  <span
+                    className={`text-xs font-bold uppercase px-2 py-0.5 rounded ${
+                      change.type === 'added'
+                        ? 'bg-green-900/40 text-green-400'
+                        : change.type === 'removed'
+                          ? 'bg-red-900/40 text-red-400'
+                          : 'bg-amber-900/40 text-amber-400'
+                    }`}
+                  >
+                    {change.type === 'added'
+                      ? '+'
+                      : change.type === 'removed'
+                        ? '−'
+                        : '~'}
                   </span>
-                  <span className="text-sm font-medium text-slate-200 flex-1">{change.label}</span>
+                  <span className="text-sm font-medium text-slate-200 flex-1">
+                    {change.label}
+                  </span>
                   {(isPromptChange || hasLongContent) && (
-                    <span className="text-xs text-slate-500">{expanded ? "▾" : "▸"}</span>
+                    <span className="text-xs text-slate-500">{expanded ? '▾' : '▸'}</span>
                   )}
                 </div>
 
                 {/* Inline preview for short values */}
-                {!isPromptChange && !hasLongContent && change.type === "modified" && (
+                {!isPromptChange && !hasLongContent && change.type === 'modified' && (
                   <div className="px-4 pb-3 flex items-center gap-2 text-sm">
-                    <span className="bg-red-900/30 text-red-400 px-2 py-0.5 rounded line-through">{change.leftValue}</span>
+                    <span className="bg-red-900/30 text-red-400 px-2 py-0.5 rounded line-through">
+                      {change.leftValue}
+                    </span>
                     <span className="text-slate-500">→</span>
-                    <span className="bg-green-900/30 text-green-400 px-2 py-0.5 rounded">{change.rightValue}</span>
+                    <span className="bg-green-900/30 text-green-400 px-2 py-0.5 rounded">
+                      {change.rightValue}
+                    </span>
                   </div>
                 )}
 
                 {/* Expanded word-level diff for prompts */}
-                {expanded && change.type === "modified" && change.leftValue && change.rightValue && (
-                  <div className="px-4 pb-3">
-                    <div className="text-sm font-mono bg-[#0d1117] rounded-lg p-3 border border-midnight-700 whitespace-pre-wrap leading-relaxed text-slate-300">
-                      {wordDiffSegments(change.leftValue, change.rightValue).map((seg, i) =>
-                        seg.op === "delete" ? (
-                          <span key={i} className="bg-red-900/50 text-red-300 line-through">{seg.text}</span>
-                        ) : seg.op === "insert" ? (
-                          <span key={i} className="bg-green-900/50 text-green-300">{seg.text}</span>
-                        ) : (
-                          <span key={i}>{seg.text}</span>
-                        )
-                      )}
+                {expanded &&
+                  change.type === 'modified' &&
+                  change.leftValue &&
+                  change.rightValue && (
+                    <div className="px-4 pb-3">
+                      <div className="text-sm font-mono bg-[#0d1117] rounded-lg p-3 border border-midnight-700 whitespace-pre-wrap leading-relaxed text-slate-300">
+                        {wordDiffSegments(change.leftValue, change.rightValue).map(
+                          (seg, i) =>
+                            seg.op === 'delete' ? (
+                              <span
+                                key={i}
+                                className="bg-red-900/50 text-red-300 line-through"
+                              >
+                                {seg.text}
+                              </span>
+                            ) : seg.op === 'insert' ? (
+                              <span key={i} className="bg-green-900/50 text-green-300">
+                                {seg.text}
+                              </span>
+                            ) : (
+                              <span key={i}>{seg.text}</span>
+                            )
+                        )}
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
 
                 {/* Expanded content for added/removed */}
-                {expanded && change.type !== "modified" && (
+                {expanded && change.type !== 'modified' && (
                   <div className="px-4 pb-3">
-                    <pre className={`text-sm font-mono rounded-lg p-3 border whitespace-pre-wrap ${
-                      change.type === "added" ? "bg-green-900/20 text-green-300 border-green-800" : "bg-red-900/20 text-red-300 border-red-800"
-                    }`}>
+                    <pre
+                      className={`text-sm font-mono rounded-lg p-3 border whitespace-pre-wrap ${
+                        change.type === 'added'
+                          ? 'bg-green-900/20 text-green-300 border-green-800'
+                          : 'bg-red-900/20 text-red-300 border-red-800'
+                      }`}
+                    >
                       {change.rightValue ?? change.leftValue}
                     </pre>
                   </div>

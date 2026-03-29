@@ -1,9 +1,9 @@
-import { useState, useMemo } from "react";
-import type { Flow } from "../types";
-import { generateMarkdown } from "../lib/markdown";
-import { generateMermaid } from "../lib/mermaid";
+import { useState, useMemo } from 'react';
+import type { Flow } from '../types';
+import { generateMarkdown } from '../lib/markdown';
+import { generateMermaid } from '../lib/mermaid';
 
-type ExportFormat = "markdown" | "mermaid" | "json";
+type ExportFormat = 'markdown' | 'mermaid' | 'json';
 
 interface ExportPhaseProps {
   flow: Flow;
@@ -11,20 +11,19 @@ interface ExportPhaseProps {
   onBack: () => void;
 }
 
-export default function ExportPhase({
-  flow,
-  onDownload,
-  onBack,
-}: ExportPhaseProps) {
-  const [format, setFormat] = useState<ExportFormat>("markdown");
+export default function ExportPhase({ flow, onDownload, onBack }: ExportPhaseProps) {
+  const [format, setFormat] = useState<ExportFormat>('markdown');
   const [formatCopied, setFormatCopied] = useState(false);
   const [copyError, setCopyError] = useState(false);
 
   const content = useMemo(() => {
     switch (format) {
-      case "markdown": return generateMarkdown(flow);
-      case "mermaid": return generateMermaid(flow);
-      case "json": return JSON.stringify(flow, null, 2);
+      case 'markdown':
+        return generateMarkdown(flow);
+      case 'mermaid':
+        return generateMermaid(flow);
+      case 'json':
+        return JSON.stringify(flow, null, 2);
     }
   }, [flow, format]);
 
@@ -41,13 +40,13 @@ export default function ExportPhase({
   };
 
   const downloadContent = () => {
-    const ext = format === "markdown" ? ".md" : format === "mermaid" ? ".mmd" : ".json";
-    const mime = format === "json" ? "application/json" : "text/plain";
+    const ext = format === 'markdown' ? '.md' : format === 'mermaid' ? '.mmd' : '.json';
+    const mime = format === 'json' ? 'application/json' : 'text/plain';
     const blob = new Blob([content], { type: `${mime};charset=utf-8` });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
+    const a = document.createElement('a');
     a.href = url;
-    a.download = (flow.title || "flow").replace(/[^a-zA-Z0-9-_ ]/g, "") + ext;
+    a.download = (flow.title || 'flow').replace(/[^a-zA-Z0-9-_ ]/g, '') + ext;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -56,9 +55,19 @@ export default function ExportPhase({
   };
 
   const formats: { key: ExportFormat; label: string; icon: string; desc: string }[] = [
-    { key: "markdown", label: "Markdown", icon: ".md", desc: "Human-readable documentation" },
-    { key: "mermaid", label: "Mermaid", icon: ".mmd", desc: "Flowchart diagram (GitHub/Quip)" },
-    { key: "json", label: "JSON", icon: "{ }", desc: "Canonical re-importable format" },
+    {
+      key: 'markdown',
+      label: 'Markdown',
+      icon: '.md',
+      desc: 'Human-readable documentation',
+    },
+    {
+      key: 'mermaid',
+      label: 'Mermaid',
+      icon: '.mmd',
+      desc: 'Flowchart diagram (GitHub/Quip)',
+    },
+    { key: 'json', label: 'JSON', icon: '{ }', desc: 'Canonical re-importable format' },
   ];
 
   return (
@@ -72,8 +81,8 @@ export default function ExportPhase({
               onClick={() => setFormat(f.key)}
               className={`px-3 py-1.5 text-sm rounded-md transition-all ${
                 format === f.key
-                  ? "bg-midnight-700 shadow font-semibold text-white"
-                  : "text-slate-500 hover:text-slate-300"
+                  ? 'bg-midnight-700 shadow font-semibold text-white'
+                  : 'text-slate-500 hover:text-slate-300'
               }`}
               title={f.desc}
             >
@@ -88,14 +97,14 @@ export default function ExportPhase({
           onClick={copyContent}
           className={`px-5 py-2 rounded-lg text-sm font-semibold shadow ${
             formatCopied
-              ? "bg-green-600 text-white"
+              ? 'bg-green-600 text-white'
               : copyError
-                ? "bg-red-600 text-white"
-                : "bg-cyan-600 text-white hover:bg-cyan-500 shadow-cyan-500/20"
+                ? 'bg-red-600 text-white'
+                : 'bg-cyan-600 text-white hover:bg-cyan-500 shadow-cyan-500/20'
           }`}
           aria-live="polite"
         >
-          {formatCopied ? "Copied!" : copyError ? "Select text & Ctrl+C" : "Copy"}
+          {formatCopied ? 'Copied!' : copyError ? 'Select text & Ctrl+C' : 'Copy'}
         </button>
         <button
           onClick={downloadContent}
@@ -109,9 +118,10 @@ export default function ExportPhase({
       </div>
 
       {/* Mermaid preview hint */}
-      {format === "mermaid" && (
+      {format === 'mermaid' && (
         <div className="bg-blue-900/20 border border-blue-800 rounded-lg p-3 text-sm text-blue-400">
-          Paste this into any Mermaid-compatible renderer (GitHub markdown, Quip, mermaid.live) to see the flowchart.
+          Paste this into any Mermaid-compatible renderer (GitHub markdown, Quip,
+          mermaid.live) to see the flowchart.
         </div>
       )}
 
