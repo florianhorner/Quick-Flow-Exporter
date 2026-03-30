@@ -32,6 +32,7 @@ describe('parseWithAI', () => {
         system: 'You are a parser',
         userMessage: 'Parse this',
         maxTokens: 2000,
+        provider: 'anthropic',
       }),
       signal: expect.any(AbortSignal),
     });
@@ -77,5 +78,6 @@ describe('parseWithAI', () => {
 
     const body = JSON.parse(mockFetch.mock.calls[0]![1].body);
     expect(body.maxTokens).toBe(4096);
+    expect(body.provider).toBe('anthropic');
   });
 });

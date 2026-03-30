@@ -9,6 +9,21 @@
 
 const REQUEST_TIMEOUT_MS = 60_000; // 60 seconds
 const API_KEY_STORAGE_KEY = 'qf-api-key';
+const PROVIDER_STORAGE_KEY = 'qf-provider';
+
+export type Provider = 'anthropic' | 'bedrock' | 'openai' | 'gemini' | 'perplexity';
+
+export const PROVIDERS: { value: Provider; label: string; keyPlaceholder: string }[] = [
+  { value: 'anthropic', label: 'Anthropic (Claude)', keyPlaceholder: 'sk-ant-...' },
+  { value: 'openai', label: 'OpenAI', keyPlaceholder: 'sk-...' },
+  { value: 'gemini', label: 'Google Gemini', keyPlaceholder: 'AIza...' },
+  { value: 'perplexity', label: 'Perplexity', keyPlaceholder: 'pplx-...' },
+  {
+    value: 'bedrock',
+    label: 'AWS Bedrock',
+    keyPlaceholder: '(uses server-side AWS credentials)',
+  },
+];
 
 export function getApiKey(): string {
   return localStorage.getItem(API_KEY_STORAGE_KEY) ?? '';
@@ -20,6 +35,18 @@ export function setApiKey(key: string): void {
   } else {
     localStorage.removeItem(API_KEY_STORAGE_KEY);
   }
+}
+
+export function getProvider(): Provider {
+  const stored = localStorage.getItem(PROVIDER_STORAGE_KEY);
+  if (stored && PROVIDERS.some((p) => p.value === stored)) {
+    return stored as Provider;
+  }
+  return 'anthropic';
+}
+
+export function setProvider(provider: Provider): void {
+  localStorage.setItem(PROVIDER_STORAGE_KEY, provider);
 }
 
 interface ParseRequest {
@@ -42,11 +69,13 @@ export async function parseWithAI({
     headers['x-api-key'] = apiKey;
   }
 
+  const provider = getProvider();
+
   try {
     const res = await fetch('/api/parse', {
       method: 'POST',
       headers,
-      body: JSON.stringify({ system, userMessage, maxTokens }),
+      body: JSON.stringify({ system, userMessage, maxTokens, provider }),
       signal: controller.signal,
     });
 

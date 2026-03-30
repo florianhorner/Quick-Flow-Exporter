@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { createRateLimiter, validateProxyRequest } from '../proxy-utils';
+import { createRateLimiter, validateProxyRequest, VALID_PROVIDERS } from '../proxy-utils';
 
 describe('proxy request validation', () => {
   it('accepts valid request', () => {
@@ -51,6 +51,46 @@ describe('proxy request validation', () => {
     expect(() =>
       validateProxyRequest({ system: 's', userMessage: 'm', maxTokens: 'big' })
     ).toThrow('maxTokens');
+  });
+
+  it('accepts valid provider', () => {
+    const req = validateProxyRequest({
+      system: 's',
+      userMessage: 'm',
+      provider: 'openai',
+    });
+    expect(req.provider).toBe('openai');
+  });
+
+  it('accepts all valid providers', () => {
+    for (const provider of VALID_PROVIDERS) {
+      const req = validateProxyRequest({
+        system: 's',
+        userMessage: 'm',
+        provider,
+      });
+      expect(req.provider).toBe(provider);
+    }
+  });
+
+  it('defaults provider to undefined when not specified', () => {
+    const req = validateProxyRequest({
+      system: 's',
+      userMessage: 'm',
+    });
+    expect(req.provider).toBeUndefined();
+  });
+
+  it('rejects invalid provider', () => {
+    expect(() =>
+      validateProxyRequest({ system: 's', userMessage: 'm', provider: 'llama' })
+    ).toThrow('provider');
+  });
+
+  it('rejects non-string provider', () => {
+    expect(() =>
+      validateProxyRequest({ system: 's', userMessage: 'm', provider: 42 })
+    ).toThrow('provider');
   });
 });
 

@@ -6,17 +6,34 @@
  *
  * For AWS Bedrock:
  *   PROVIDER=bedrock AWS_REGION=us-east-1 npx tsx server/proxy.ts
+ *
+ * For OpenAI:
+ *   PROVIDER=openai OPENAI_API_KEY=sk-... npx tsx server/proxy.ts
+ *
+ * For Google Gemini:
+ *   PROVIDER=gemini GEMINI_API_KEY=... npx tsx server/proxy.ts
+ *
+ * For Perplexity:
+ *   PROVIDER=perplexity PERPLEXITY_API_KEY=pplx-... npx tsx server/proxy.ts
+ *
+ * The client can override the provider per-request via the `provider` body field.
  */
 
 import http from 'node:http';
 import {
   createRateLimiter,
   validateProxyRequest,
+  VALID_PROVIDERS,
+  type Provider,
   type ProxyRequest,
 } from './proxy-utils';
 
 const PORT = Number(process.env.PORT ?? 3001);
-const PROVIDER = process.env.PROVIDER ?? 'anthropic';
+const DEFAULT_PROVIDER: Provider = VALID_PROVIDERS.includes(
+  process.env.PROVIDER as Provider
+)
+  ? (process.env.PROVIDER as Provider)
+  : 'anthropic';
 const MAX_BODY_BYTES = 512_000; // 500 KB
 const RATE_WINDOW_MS = 60_000;
 const RATE_LIMIT = Number(process.env.RATE_LIMIT ?? 20);
@@ -109,10 +126,135 @@ async function callBedrock(req: ProxyRequest, _clientKey?: string): Promise<stri
   return data.content.map((c) => c.text ?? '').join('');
 }
 
-// ── Helpers ──────────────────────────────────────────────────────────────────
+// ── OpenAI-compatible provider (shared by OpenAI & Perplexity) ──────────────
 
-const callProvider: (req: ProxyRequest, clientKey?: string) => Promise<string> =
-  PROVIDER === 'bedrock' ? callBedrock : callAnthropic;
+interface OpenAICompatibleConfig {
+  baseUrl: string;
+  envKey: string;
+  defaultModel: string;
+  envModel: string;
+  name: string;
+}
+
+async function callOpenAICompatible(
+  config: OpenAICompatibleConfig,
+  req: ProxyRequest,
+  clientKey?: string
+): Promise<string> {
+  const key = process.env[config.envKey] || clientKey;
+  if (!key) throw new Error(`No API key. Set ${config.envKey} or provide one in the UI.`);
+
+  const model = process.env[config.envModel] ?? config.defaultModel;
+
+  const res = await fetch(`${config.baseUrl}/chat/completions`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${key}`,
+    },
+    body: JSON.stringify({
+      model,
+      max_tokens: req.maxTokens,
+      messages: [
+        { role: 'system', content: req.system },
+        { role: 'user', content: req.userMessage },
+      ],
+    }),
+  });
+
+  if (!res.ok) {
+    throw new Error(`${config.name} API ${res.status}: ${await res.text()}`);
+  }
+
+  const data = (await res.json()) as {
+    choices: Array<{ message?: { content?: string } }>;
+  };
+  return data.choices?.[0]?.message?.content ?? '';
+}
+
+// ── OpenAI provider ─────────────────────────────────────────────────────────
+
+async function callOpenAI(req: ProxyRequest, clientKey?: string): Promise<string> {
+  return callOpenAICompatible(
+    {
+      baseUrl: 'https://api.openai.com/v1',
+      envKey: 'OPENAI_API_KEY',
+      defaultModel: 'gpt-4o',
+      envModel: 'OPENAI_MODEL',
+      name: 'OpenAI',
+    },
+    req,
+    clientKey
+  );
+}
+
+// ── Perplexity provider ─────────────────────────────────────────────────────
+
+async function callPerplexity(req: ProxyRequest, clientKey?: string): Promise<string> {
+  return callOpenAICompatible(
+    {
+      baseUrl: 'https://api.perplexity.ai',
+      envKey: 'PERPLEXITY_API_KEY',
+      defaultModel: 'sonar-pro',
+      envModel: 'PERPLEXITY_MODEL',
+      name: 'Perplexity',
+    },
+    req,
+    clientKey
+  );
+}
+
+// ── Google Gemini provider ──────────────────────────────────────────────────
+
+async function callGemini(req: ProxyRequest, clientKey?: string): Promise<string> {
+  const key = process.env.GEMINI_API_KEY || clientKey;
+  if (!key) throw new Error('No API key. Set GEMINI_API_KEY or provide one in the UI.');
+
+  const model = process.env.GEMINI_MODEL ?? 'gemini-2.5-flash';
+
+  const res = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        systemInstruction: { parts: [{ text: req.system }] },
+        contents: [{ role: 'user', parts: [{ text: req.userMessage }] }],
+        generationConfig: { maxOutputTokens: req.maxTokens },
+      }),
+    }
+  );
+
+  if (!res.ok) {
+    throw new Error(`Gemini API ${res.status}: ${await res.text()}`);
+  }
+
+  const data = (await res.json()) as {
+    candidates?: Array<{
+      content?: { parts?: Array<{ text?: string }> };
+    }>;
+  };
+  return data.candidates?.[0]?.content?.parts?.map((p) => p.text ?? '').join('') ?? '';
+}
+
+// ── Provider registry ───────────────────────────────────────────────────────
+
+type ProviderFn = (req: ProxyRequest, clientKey?: string) => Promise<string>;
+
+const providers: Record<Provider, ProviderFn> = {
+  anthropic: callAnthropic,
+  bedrock: callBedrock,
+  openai: callOpenAI,
+  gemini: callGemini,
+  perplexity: callPerplexity,
+};
+
+function getProvider(req: ProxyRequest): ProviderFn {
+  const name = req.provider ?? DEFAULT_PROVIDER;
+  return providers[name];
+}
+
+// ── Helpers ──────────────────────────────────────────────────────────────────
 
 function json(res: http.ServerResponse, status: number, data: unknown) {
   res.writeHead(status, { 'Content-Type': 'application/json' });
@@ -172,7 +314,11 @@ const server = http.createServer(async (req, res) => {
 
   // Health check
   if (req.method === 'GET' && req.url === '/health') {
-    json(res, 200, { status: 'ok', provider: PROVIDER });
+    json(res, 200, {
+      status: 'ok',
+      defaultProvider: DEFAULT_PROVIDER,
+      providers: VALID_PROVIDERS,
+    });
     return;
   }
 
@@ -220,7 +366,8 @@ const server = http.createServer(async (req, res) => {
     }
 
     const clientKey = (req.headers['x-api-key'] as string) || undefined;
-    const text = await callProvider(validated, clientKey);
+    const provider = getProvider(validated);
+    const text = await provider(validated, clientKey);
     json(res, 200, { text });
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e);
@@ -230,6 +377,9 @@ const server = http.createServer(async (req, res) => {
 });
 
 server.listen(PORT, () => {
-  console.log(`AI proxy (${PROVIDER}) listening on http://localhost:${PORT}`);
+  console.log(
+    `AI proxy (default: ${DEFAULT_PROVIDER}) listening on http://localhost:${PORT}`
+  );
+  console.log(`Available providers: ${VALID_PROVIDERS.join(', ')}`);
   console.log(`Rate limit: ${RATE_LIMIT} requests per ${RATE_WINDOW_MS / 1000}s`);
 });
