@@ -59,8 +59,10 @@ Drag the bookmarklet to your bookmarks bar. One click on any Quick Flows editor 
 | 🧜 Mermaid Export     | Flowchart diagrams that render in GitHub, Quip, mermaid.live              |
 | { } JSON Export       | Canonical format for version control and re-import                        |
 | 🔖 Bookmarklet        | One-click content extraction from the Quick Flows editor                  |
+| 🧩 Browser Extension  | Chrome/Edge extension for one-click extraction with popup UI              |
 | ✏️ Review & Edit      | Reorder steps, edit prompts, adjust settings before export                |
 | 🔄 Reasoning Groups   | Full support for conditional logic groups with run conditions             |
+| 🌗 Light & Dark Mode  | Theme toggle (light/dark/system) with localStorage persistence            |
 
 ## Supported Step Types
 
@@ -87,6 +89,27 @@ npm run dev
 ```
 
 Open `http://localhost:5173` in your browser.
+
+## Browser Extension (Chrome / Edge)
+
+A Manifest V3 browser extension is included for one-click flow extraction — no bookmarklet needed.
+
+### Install (developer mode)
+
+1. Build the extension:
+   ```bash
+   npm run build:extension
+   ```
+2. Open `chrome://extensions` (or `edge://extensions`)
+3. Enable **Developer mode**
+4. Click **Load unpacked** and select the `extension/dist/` directory
+
+### Usage
+
+1. Navigate to a Quick Flows editor page
+2. Click the extension icon in your toolbar
+3. Click **Extract Flow** — the popup shows a preview of the extracted text
+4. **Copy to Clipboard** to paste into the web app, or **Open in Exporter** to launch the app with the data pre-loaded
 
 ## AI Proxy Setup
 
@@ -184,6 +207,8 @@ ANTHROPIC_API_KEY=sk-... OPENAI_API_KEY=sk-... PERPLEXITY_API_KEY=pplx-... npx t
 src/
 ├── types.ts                     # TypeScript type definitions
 ├── constants.ts                 # Step types, output prefs, run conditions
+├── context/
+│   └── ThemeContext.tsx           # Light/dark/system theme provider
 ├── lib/
 │   ├── ai.ts                    # AI proxy client
 │   ├── diff.ts                  # Flow diff engine (word-level diffs)
@@ -208,10 +233,18 @@ src/
 │   └── ErrorBoundary.tsx         # Catch rendering errors gracefully
 ├── App.tsx                       # Main app with phase navigation
 ├── main.tsx                      # Entry point
-└── index.css                     # Tailwind imports
+└── index.css                     # Tailwind imports + light/dark body styles
 server/
 ├── proxy.ts                      # AI proxy server (Anthropic / Bedrock)
 └── proxy-utils.ts                # Shared proxy utilities (rate limiter, validation)
+extension/
+├── manifest.json                 # Chrome/Edge Manifest V3 config
+├── popup/                        # Extension popup (HTML, CSS, TypeScript)
+├── background/                   # Service worker for tab management
+└── icons/                        # Extension icons (16/48/128 px)
+scripts/
+├── build-extension.mjs           # esbuild bundler for the extension
+└── generate-icons.mjs            # Programmatic icon generation
 ```
 
 ## Tech Stack
@@ -224,22 +257,23 @@ server/
 
 ## Scripts
 
-| Command                | Description                                  |
-| ---------------------- | -------------------------------------------- |
-| `npm run dev`          | Start dev server at localhost:5173           |
-| `npm run build`        | Type-check and build for production          |
-| `npm run preview`      | Preview production build                     |
-| `npm run lint`         | Run ESLint                                   |
-| `npm run test`         | Run tests with Vitest                        |
-| `npm run format:check` | Check formatting with Prettier               |
-| `npm run typecheck`    | Type-check without emitting (`tsc --noEmit`) |
+| Command                   | Description                                  |
+| ------------------------- | -------------------------------------------- |
+| `npm run dev`             | Start dev server at localhost:5173           |
+| `npm run build`           | Type-check and build for production          |
+| `npm run build:extension` | Bundle browser extension to `extension/dist` |
+| `npm run preview`         | Preview production build                     |
+| `npm run lint`            | Run ESLint                                   |
+| `npm run test`            | Run tests with Vitest                        |
+| `npm run format:check`    | Check formatting with Prettier               |
+| `npm run typecheck`       | Type-check without emitting (`tsc --noEmit`) |
 
 ## Roadmap
 
-- [ ] Browser extension (Chrome/Edge) for zero-friction extraction
+- [x] ~~Browser extension (Chrome/Edge)~~ for zero-friction extraction
+- [x] ~~Light & dark mode~~ with system preference detection
 - [ ] Flow analytics (prompt complexity, reference graph completeness, cost estimation)
 - [ ] Shareable links (encode flow in URL for Slack/email sharing)
-- [x] ~~Dark mode~~ (ships with dark theme by default)
 - [ ] Keyboard shortcuts
 - [ ] `npx quick-flow-exporter` for zero-setup local usage
 

@@ -4,6 +4,27 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.3.0] - 2026-03-30
+
+### Added
+
+- Light mode with theme toggle in the header (cycles light / dark / system)
+- ThemeProvider context (`src/context/ThemeContext.tsx`) with localStorage persistence and `prefers-color-scheme` detection
+- Inline theme initialization script in `index.html` to prevent flash of wrong theme on page load
+- Chrome/Edge browser extension (Manifest V3) for one-click flow extraction
+  - Popup UI with Extract, Copy to Clipboard, and Open in Exporter actions
+  - Background service worker for opening the exporter app with extracted data
+  - Generated PNG icons (16/48/128 px) with cyan lightning bolt
+- `npm run build:extension` script using esbuild to bundle extension to `extension/dist/`
+- `scripts/generate-icons.mjs` for programmatic extension icon generation
+
+### Changed
+
+- Tailwind config now uses `darkMode: 'class'` strategy
+- All 12 component files updated with `dark:` variant classes alongside new light-mode base classes
+- FlowGraph step type colors now have separate light and dark palettes
+- Body gradient and dot-grid pattern in `index.css` are now theme-aware via `html.dark` selector
+
 ## [1.2.0] - 2026-03-30
 
 ### Added

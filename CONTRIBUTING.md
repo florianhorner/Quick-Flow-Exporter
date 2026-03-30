@@ -53,6 +53,26 @@ The AI integration lives in `server/proxy.ts` (HTTP server and routing), `server
 4. Add the provider type to the `Provider` union in `src/lib/ai.ts`
 5. Document the required env vars in the README
 
+## Working on the Browser Extension
+
+The extension source lives in `extension/` and is bundled with esbuild:
+
+```bash
+npm run build:extension     # builds to extension/dist/
+```
+
+To test locally, load the `extension/dist/` directory as an unpacked extension in `chrome://extensions`. The popup inlines its extraction logic (no separate content script), and the background service worker handles opening the exporter app.
+
+If you change the popup or background TypeScript, rebuild with the command above and reload the extension in the browser.
+
+## Working with Themes
+
+The app supports light, dark, and system themes via `src/context/ThemeContext.tsx`. When adding or modifying components:
+
+- Use Tailwind's `dark:` variant for all color classes (e.g. `bg-white dark:bg-midnight-800`)
+- For inline styles (like FlowGraph node colors), use the `useTheme()` hook to get `resolved` (`'light'` or `'dark'`) and select the appropriate palette
+- Test both themes visually — the toggle is in the top-right header
+
 ## Reporting Issues
 
 Open an issue with:
