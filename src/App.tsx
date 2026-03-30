@@ -3,6 +3,7 @@ import type { Flow, FlowItem, Phase, HistoryEntry } from './types';
 import { createEmptyFlow, allGroups, allSteps } from './lib/flow';
 import { parseFlow } from './lib/parser';
 import { loadHistory, saveHistory } from './lib/storage';
+import { useTheme } from './context/ThemeContext';
 import PastePhase from './components/PastePhase';
 import GroupsPhase from './components/GroupsPhase';
 import ReviewPhase from './components/ReviewPhase';
@@ -17,6 +18,7 @@ export default function App() {
   const [parseError, setParseError] = useState<string | null>(null);
   const [phase, setPhase] = useState<Phase>('paste');
   const [history, setHistory] = useState<HistoryEntry[]>([]);
+  const { mode, toggle } = useTheme();
 
   useEffect(() => {
     loadHistory().then(setHistory);
@@ -75,24 +77,28 @@ export default function App() {
   const hasFlow = flow.items.length > 0;
   const groups = allGroups(flow.items);
 
+  const themeIcon =
+    mode === 'light' ? '\u2600\uFE0F' : mode === 'dark' ? '\uD83C\uDF19' : '\uD83D\uDCBB';
+  const themeLabel = mode === 'light' ? 'Light' : mode === 'dark' ? 'Dark' : 'System';
+
   const navBtn = (active: boolean, activeColor: string) =>
     `px-3 py-1.5 text-sm rounded font-medium transition-colors ${
       active
         ? `${activeColor} text-white`
-        : 'bg-midnight-800 text-slate-400 hover:text-slate-200 hover:bg-midnight-700 border border-midnight-700'
+        : 'bg-white dark:bg-midnight-800 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-midnight-700 border border-slate-200 dark:border-midnight-700'
     }`;
 
   return (
     <div className="min-h-screen">
       {/* Header */}
-      <div className="bg-midnight-800 border-b border-midnight-700 sticky top-0 z-10">
+      <div className="bg-white dark:bg-midnight-800 border-b border-slate-200 dark:border-midnight-700 sticky top-0 z-10">
         <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between flex-wrap gap-2">
           <div className="flex items-center gap-3">
-            <span className="text-lg font-bold font-mono text-cyan-400">
+            <span className="text-lg font-bold font-mono text-cyan-600 dark:text-cyan-400">
               Quick Flow Exporter
             </span>
             {phase !== 'paste' && flow.title && (
-              <span className="text-sm text-slate-500 truncate max-w-xs">
+              <span className="text-sm text-slate-400 dark:text-slate-500 truncate max-w-xs">
                 — {flow.title}
               </span>
             )}
@@ -144,6 +150,14 @@ export default function App() {
               className="px-3 py-1.5 text-sm rounded font-medium bg-cyan-600 text-white hover:bg-cyan-500 shadow-lg shadow-cyan-500/20"
             >
               {phase === 'paste' ? 'Paste Mode' : 'New Export'}
+            </button>
+            <button
+              onClick={toggle}
+              className="px-2 py-1.5 text-sm rounded font-medium bg-slate-100 dark:bg-midnight-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-midnight-600 border border-slate-200 dark:border-midnight-600 transition-colors"
+              aria-label={`Theme: ${themeLabel}. Click to cycle.`}
+              title={`Theme: ${themeLabel}`}
+            >
+              {themeIcon}
             </button>
           </div>
         </div>

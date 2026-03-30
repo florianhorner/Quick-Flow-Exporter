@@ -29,12 +29,12 @@ export default function StepCard({
 
   return (
     <div
-      className="border border-midnight-700 rounded-lg bg-midnight-800"
+      className="border border-slate-200 dark:border-midnight-700 rounded-lg bg-white dark:bg-midnight-800"
       role="region"
       aria-label={label}
     >
       <div
-        className="flex items-center justify-between px-3 py-2 bg-midnight-900/50 rounded-t-lg cursor-pointer"
+        className="flex items-center justify-between px-3 py-2 bg-slate-50 dark:bg-midnight-900/50 rounded-t-lg cursor-pointer"
         role="button"
         tabIndex={0}
         aria-expanded={open}
@@ -51,7 +51,9 @@ export default function StepCard({
           <span className="text-sm shrink-0" aria-hidden="true">
             {meta?.icon}
           </span>
-          <span className="font-medium text-sm text-slate-200 truncate">{label}</span>
+          <span className="font-medium text-sm text-slate-700 dark:text-slate-200 truncate">
+            {label}
+          </span>
         </div>
         <div className="flex items-center gap-1 shrink-0">
           {!isFirst && (
@@ -60,10 +62,10 @@ export default function StepCard({
                 e.stopPropagation();
                 onMoveUp();
               }}
-              className="text-slate-500 hover:text-slate-300 text-xs px-1"
+              className="text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 text-xs px-1"
               aria-label={`Move ${label} up`}
             >
-              ▲
+              {'\u25B2'}
             </button>
           )}
           {!isLast && (
@@ -72,14 +74,17 @@ export default function StepCard({
                 e.stopPropagation();
                 onMoveDown();
               }}
-              className="text-slate-500 hover:text-slate-300 text-xs px-1"
+              className="text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 text-xs px-1"
               aria-label={`Move ${label} down`}
             >
-              ▼
+              {'\u25BC'}
             </button>
           )}
-          <span className="text-xs text-slate-500 ml-1" aria-hidden="true">
-            {open ? '▾' : '▸'}
+          <span
+            className="text-xs text-slate-400 dark:text-slate-500 ml-1"
+            aria-hidden="true"
+          >
+            {open ? '\u25BE' : '\u25B8'}
           </span>
           <button
             onClick={(e) => {
@@ -89,7 +94,7 @@ export default function StepCard({
             className="text-red-500 hover:text-red-400 text-xs ml-1"
             aria-label={`Remove ${label}`}
           >
-            ✕
+            {'\u2715'}
           </button>
         </div>
       </div>
@@ -101,7 +106,7 @@ export default function StepCard({
           </label>
           <select
             id={`step-type-${step.id}`}
-            className="border border-midnight-700 rounded px-2 py-1 text-xs bg-midnight-900 text-slate-300"
+            className="border border-slate-200 dark:border-midnight-700 rounded px-2 py-1 text-xs bg-slate-100 dark:bg-midnight-900 text-slate-700 dark:text-slate-300"
             value={step.type}
             onChange={(e) => onChange({ ...step, type: e.target.value as StepType })}
           >

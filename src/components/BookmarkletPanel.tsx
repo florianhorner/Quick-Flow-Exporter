@@ -63,11 +63,13 @@ export default function BookmarkletPanel() {
   };
 
   return (
-    <div className="bg-midnight-800 border border-midnight-700 rounded-xl shadow-sm p-5 space-y-3">
+    <div className="bg-white dark:bg-midnight-800 border border-slate-200 dark:border-midnight-700 rounded-xl shadow-sm p-5 space-y-3">
       <div className="flex items-center gap-2">
-        <span className="font-semibold text-sm text-cyan-400 font-mono">Bookmarklet</span>
+        <span className="font-semibold text-sm text-cyan-600 dark:text-cyan-400 font-mono">
+          Bookmarklet
+        </span>
       </div>
-      <p className="text-xs text-slate-400">
+      <p className="text-xs text-slate-500 dark:text-slate-400">
         Drag the button below to your bookmarks bar. When you're on a Quick Flows editor
         page, click it to instantly copy the flow content to your clipboard.
       </p>
@@ -81,28 +83,30 @@ export default function BookmarkletPanel() {
           className="inline-flex items-center gap-2 bg-cyan-600 text-white px-4 py-2 rounded-lg text-sm font-semibold shadow-lg shadow-cyan-500/20 hover:bg-cyan-500 cursor-grab active:cursor-grabbing select-none"
           title="Drag this to your bookmarks bar"
         >
-          ⚡ Quick Flow Export
+          {'\u26A1'} Quick Flow Export
         </a>
-        <span className="text-xs text-slate-500">← Drag to bookmarks bar</span>
+        <span className="text-xs text-slate-400 dark:text-slate-500">
+          &larr; Drag to bookmarks bar
+        </span>
       </div>
 
       <div className="flex gap-2">
         <button
           onClick={() => setShowCode(!showCode)}
-          className="text-xs text-cyan-500 hover:text-cyan-400 underline py-1"
+          className="text-xs text-cyan-600 dark:text-cyan-500 hover:text-cyan-500 dark:hover:text-cyan-400 underline py-1"
         >
           {showCode ? 'Hide source' : 'View source'}
         </button>
         <button
           onClick={copyCode}
-          className="text-xs text-cyan-500 hover:text-cyan-400 underline py-1"
+          className="text-xs text-cyan-600 dark:text-cyan-500 hover:text-cyan-500 dark:hover:text-cyan-400 underline py-1"
         >
           {copied ? 'Copied!' : 'Copy bookmarklet URL'}
         </button>
       </div>
 
       {showCode && (
-        <pre className="text-xs font-mono bg-[#0d1117] text-slate-400 rounded-lg p-3 border border-midnight-700 overflow-x-auto max-h-48 whitespace-pre-wrap">
+        <pre className="text-xs font-mono bg-slate-50 dark:bg-[#0d1117] text-slate-500 dark:text-slate-400 rounded-lg p-3 border border-slate-200 dark:border-midnight-700 overflow-x-auto max-h-48 whitespace-pre-wrap">
           {BOOKMARKLET_SOURCE}
         </pre>
       )}

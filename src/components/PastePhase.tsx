@@ -60,18 +60,20 @@ export default function PastePhase({
 
   return (
     <div className="space-y-4">
-      <div className="bg-midnight-800 border border-midnight-700 rounded-xl shadow-sm p-6 space-y-4">
+      <div className="bg-white dark:bg-midnight-800 border border-slate-200 dark:border-midnight-700 rounded-xl shadow-sm p-6 space-y-4">
         <div className="space-y-1">
-          <h2 className="text-lg font-bold font-mono text-white">Paste your flow</h2>
-          <p className="text-slate-400 text-sm">
+          <h2 className="text-lg font-bold font-mono text-slate-900 dark:text-white">
+            Paste your flow
+          </h2>
+          <p className="text-slate-500 dark:text-slate-400 text-sm">
             Open your flow in the Quick Flows editor, then{' '}
-            <kbd className="px-1.5 py-0.5 bg-midnight-900 border border-midnight-700 rounded text-xs font-mono text-cyan-400">
+            <kbd className="px-1.5 py-0.5 bg-slate-100 dark:bg-midnight-900 border border-slate-200 dark:border-midnight-700 rounded text-xs font-mono text-cyan-600 dark:text-cyan-400">
               Ctrl+A
             </kbd>{' '}
-            <kbd className="px-1.5 py-0.5 bg-midnight-900 border border-midnight-700 rounded text-xs font-mono text-cyan-400">
+            <kbd className="px-1.5 py-0.5 bg-slate-100 dark:bg-midnight-900 border border-slate-200 dark:border-midnight-700 rounded text-xs font-mono text-cyan-600 dark:text-cyan-400">
               Ctrl+C
             </kbd>{' '}
-            <kbd className="px-1.5 py-0.5 bg-midnight-900 border border-midnight-700 rounded text-xs font-mono text-cyan-400">
+            <kbd className="px-1.5 py-0.5 bg-slate-100 dark:bg-midnight-900 border border-slate-200 dark:border-midnight-700 rounded text-xs font-mono text-cyan-600 dark:text-cyan-400">
               Ctrl+V
             </kbd>
             {' here.'}
@@ -83,7 +85,7 @@ export default function PastePhase({
         </label>
         <textarea
           id="paste-input"
-          className="w-full border border-midnight-700 rounded-lg px-4 py-3 text-sm font-mono bg-[#0d1117] text-slate-300 placeholder-slate-600 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/30 transition-colors"
+          className="w-full border border-slate-200 dark:border-midnight-700 rounded-lg px-4 py-3 text-sm font-mono bg-slate-50 dark:bg-[#0d1117] text-slate-700 dark:text-slate-300 placeholder-slate-400 dark:placeholder-slate-600 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/30 transition-colors"
           rows={12}
           placeholder={
             '// Paste your flow content here...\n\nTip: In the Quick Flows editor, press Ctrl+A to select all, then Ctrl+C to copy.'
@@ -94,9 +96,9 @@ export default function PastePhase({
         />
 
         {needsKey && (
-          <div className="bg-midnight-900 border border-cyan-800/50 rounded-lg p-4 space-y-3">
+          <div className="bg-slate-100 dark:bg-midnight-900 border border-cyan-300/50 dark:border-cyan-800/50 rounded-lg p-4 space-y-3">
             <div className="flex items-center gap-2">
-              <span className="text-sm font-semibold text-slate-300">
+              <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">
                 Configure AI provider
               </span>
             </div>
@@ -105,7 +107,7 @@ export default function PastePhase({
             <div className="space-y-2">
               <label
                 htmlFor="provider-select"
-                className="text-xs font-medium text-slate-500"
+                className="text-xs font-medium text-slate-400 dark:text-slate-500"
               >
                 Provider
               </label>
@@ -113,7 +115,7 @@ export default function PastePhase({
                 id="provider-select"
                 value={selectedProvider}
                 onChange={(e) => handleProviderChange(e.target.value as Provider)}
-                className="w-full border border-midnight-700 rounded-lg px-3 py-2 text-sm bg-[#0d1117] text-slate-300 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/30"
+                className="w-full border border-slate-200 dark:border-midnight-700 rounded-lg px-3 py-2 text-sm bg-slate-50 dark:bg-[#0d1117] text-slate-700 dark:text-slate-300 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/30"
               >
                 {PROVIDERS.map((p) => (
                   <option key={p.value} value={p.value}>
@@ -136,12 +138,12 @@ export default function PastePhase({
                   }}
                   placeholder={currentProviderInfo.keyPlaceholder}
                   autoFocus
-                  className="flex-1 border border-midnight-700 rounded-lg px-3 py-2 text-sm font-mono bg-[#0d1117] text-slate-300 placeholder-slate-600 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/30"
+                  className="flex-1 border border-slate-200 dark:border-midnight-700 rounded-lg px-3 py-2 text-sm font-mono bg-slate-50 dark:bg-[#0d1117] text-slate-700 dark:text-slate-300 placeholder-slate-400 dark:placeholder-slate-600 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/30"
                 />
                 <button
                   onClick={handleKeySaveAndParse}
                   disabled={!keyValue.trim() || !raw.trim()}
-                  className="px-4 py-2 rounded-lg text-sm font-semibold bg-cyan-600 text-white hover:bg-cyan-500 disabled:bg-midnight-700 disabled:text-slate-500"
+                  className="px-4 py-2 rounded-lg text-sm font-semibold bg-cyan-600 text-white hover:bg-cyan-500 disabled:bg-slate-200 dark:disabled:bg-midnight-700 disabled:text-slate-400 dark:disabled:text-slate-500"
                 >
                   Save & Parse
                 </button>
@@ -150,10 +152,13 @@ export default function PastePhase({
 
             {isBedrock && (
               <div className="flex gap-2">
-                <p className="flex-1 text-xs text-slate-500">
+                <p className="flex-1 text-xs text-slate-400 dark:text-slate-500">
                   Bedrock uses server-side AWS credentials. Make sure the proxy server has
-                  access to <code className="text-cyan-500">~/.aws/credentials</code> or
-                  the appropriate environment variables.
+                  access to{' '}
+                  <code className="text-cyan-600 dark:text-cyan-500">
+                    ~/.aws/credentials
+                  </code>{' '}
+                  or the appropriate environment variables.
                 </p>
                 <button
                   onClick={() => {
@@ -161,30 +166,34 @@ export default function PastePhase({
                     onParse();
                   }}
                   disabled={!raw.trim()}
-                  className="px-4 py-2 rounded-lg text-sm font-semibold bg-cyan-600 text-white hover:bg-cyan-500 disabled:bg-midnight-700 disabled:text-slate-500"
+                  className="px-4 py-2 rounded-lg text-sm font-semibold bg-cyan-600 text-white hover:bg-cyan-500 disabled:bg-slate-200 dark:disabled:bg-midnight-700 disabled:text-slate-400 dark:disabled:text-slate-500"
                 >
                   Parse
                 </button>
               </div>
             )}
 
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-slate-400 dark:text-slate-500">
               Stored in your browser only. Or set the appropriate env var on the proxy
               server (
               {currentProviderInfo.value === 'anthropic' && (
-                <code className="text-cyan-500">ANTHROPIC_API_KEY</code>
+                <code className="text-cyan-600 dark:text-cyan-500">
+                  ANTHROPIC_API_KEY
+                </code>
               )}
               {currentProviderInfo.value === 'openai' && (
-                <code className="text-cyan-500">OPENAI_API_KEY</code>
+                <code className="text-cyan-600 dark:text-cyan-500">OPENAI_API_KEY</code>
               )}
               {currentProviderInfo.value === 'gemini' && (
-                <code className="text-cyan-500">GEMINI_API_KEY</code>
+                <code className="text-cyan-600 dark:text-cyan-500">GEMINI_API_KEY</code>
               )}
               {currentProviderInfo.value === 'perplexity' && (
-                <code className="text-cyan-500">PERPLEXITY_API_KEY</code>
+                <code className="text-cyan-600 dark:text-cyan-500">
+                  PERPLEXITY_API_KEY
+                </code>
               )}
               {currentProviderInfo.value === 'bedrock' && (
-                <code className="text-cyan-500">AWS_REGION</code>
+                <code className="text-cyan-600 dark:text-cyan-500">AWS_REGION</code>
               )}
               ).
             </p>
@@ -193,17 +202,19 @@ export default function PastePhase({
 
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <span className="text-xs text-slate-500 font-mono">
+            <span className="text-xs text-slate-400 dark:text-slate-500 font-mono">
               {raw.length > 0 ? `${raw.length.toLocaleString()} chars` : ''}
             </span>
             {/* Provider badge */}
-            <span className="text-xs text-slate-600">{currentProviderInfo.label}</span>
+            <span className="text-xs text-slate-400 dark:text-slate-600">
+              {currentProviderInfo.label}
+            </span>
             <button
               onClick={() => {
                 setNeedsKey(true);
                 setKeyValue(getApiKey());
               }}
-              className="text-xs text-slate-600 hover:text-slate-400"
+              className="text-xs text-slate-400 dark:text-slate-600 hover:text-slate-600 dark:hover:text-slate-400"
             >
               {hasKey || isBedrock ? 'Settings' : 'Set API key'}
             </button>
@@ -213,10 +224,10 @@ export default function PastePhase({
             disabled={parsing || !raw.trim()}
             className={`px-6 py-2.5 rounded-lg text-sm font-semibold transition-all ${
               parsing
-                ? 'bg-midnight-700 text-slate-500'
+                ? 'bg-slate-200 dark:bg-midnight-700 text-slate-400 dark:text-slate-500'
                 : raw.trim()
                   ? 'bg-cyan-600 text-white hover:bg-cyan-500 shadow-lg shadow-cyan-500/25'
-                  : 'bg-midnight-700 text-slate-500'
+                  : 'bg-slate-200 dark:bg-midnight-700 text-slate-400 dark:text-slate-500'
             }`}
           >
             {parsing ? 'Parsing...' : 'Parse & Extract'}
@@ -226,7 +237,7 @@ export default function PastePhase({
         {parseError && (
           <div
             role="alert"
-            className="bg-red-900/30 border border-red-800 rounded-lg p-3 text-sm text-red-400"
+            className="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg p-3 text-sm text-red-600 dark:text-red-400"
           >
             {parseError}
           </div>
@@ -234,15 +245,17 @@ export default function PastePhase({
       </div>
 
       {history.length > 0 && (
-        <div className="bg-midnight-800 border border-midnight-700 rounded-xl shadow-sm p-4">
-          <h3 className="text-sm font-semibold text-slate-500 mb-2 font-mono">
+        <div className="bg-white dark:bg-midnight-800 border border-slate-200 dark:border-midnight-700 rounded-xl shadow-sm p-4">
+          <h3 className="text-sm font-semibold text-slate-400 dark:text-slate-500 mb-2 font-mono">
             Recent Exports
           </h3>
           <div className="space-y-1">
             {history.slice(0, 5).map((h, i) => (
               <div key={i} className="flex items-center justify-between text-sm py-1">
-                <span className="text-slate-300">{h.title || '(Untitled)'}</span>
-                <span className="text-xs text-slate-500">
+                <span className="text-slate-700 dark:text-slate-300">
+                  {h.title || '(Untitled)'}
+                </span>
+                <span className="text-xs text-slate-400 dark:text-slate-500">
                   {h.stepCount} steps · {new Date(h.date).toLocaleDateString()}
                 </span>
               </div>

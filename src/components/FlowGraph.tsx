@@ -16,9 +16,10 @@ import '@xyflow/react/dist/style.css';
 import type { Flow, Step, Group } from '../types';
 import { STEP_TYPES } from '../constants';
 import { allSteps } from '../lib/flow';
+import { useTheme } from '../context/ThemeContext';
 
-/* ── colour palette per step type (dark-mode adjusted) ── */
-const TYPE_COLORS: Record<string, { bg: string; border: string; text: string }> = {
+/* ── colour palette per step type ── */
+const TYPE_COLORS_DARK: Record<string, { bg: string; border: string; text: string }> = {
   chat_agent: { bg: '#1e3a5f', border: '#3b82f6', text: '#93c5fd' },
   general_knowledge: { bg: '#1a3d2a', border: '#22c55e', text: '#86efac' },
   web_search: { bg: '#164e63', border: '#0ea5e9', text: '#7dd3fc' },
@@ -31,22 +32,43 @@ const TYPE_COLORS: Record<string, { bg: string; border: string; text: string }> 
   user_input_files: { bg: '#431407', border: '#fb923c', text: '#fed7aa' },
 };
 
-const GROUP_STYLE = { bg: '#2d1f5e', border: '#a78bfa', text: '#c4b5fd' };
+const TYPE_COLORS_LIGHT: Record<string, { bg: string; border: string; text: string }> = {
+  chat_agent: { bg: '#dbeafe', border: '#3b82f6', text: '#1e40af' },
+  general_knowledge: { bg: '#dcfce7', border: '#22c55e', text: '#166534' },
+  web_search: { bg: '#cffafe', border: '#0ea5e9', text: '#0c4a6e' },
+  ui_agent: { bg: '#fef3c7', border: '#f59e0b', text: '#92400e' },
+  create_image: { bg: '#fce7f3', border: '#ec4899', text: '#9d174d' },
+  quicksuite_data: { bg: '#ede9fe', border: '#8b5cf6', text: '#5b21b6' },
+  dashboard_topics: { bg: '#e0e7ff', border: '#6366f1', text: '#3730a3' },
+  app_actions: { bg: '#ffedd5', border: '#f97316', text: '#9a3412' },
+  user_input_text: { bg: '#fef9c3', border: '#eab308', text: '#854d0e' },
+  user_input_files: { bg: '#ffedd5', border: '#fb923c', text: '#9a3412' },
+};
 
-const DEFAULT_COLOR = { bg: '#1e293b', border: '#64748b', text: '#94a3b8' };
+const GROUP_STYLE_DARK = { bg: '#2d1f5e', border: '#a78bfa', text: '#c4b5fd' };
+const GROUP_STYLE_LIGHT = { bg: '#ede9fe', border: '#8b5cf6', text: '#5b21b6' };
+
+const DEFAULT_COLOR_DARK = { bg: '#1e293b', border: '#64748b', text: '#94a3b8' };
+const DEFAULT_COLOR_LIGHT = { bg: '#f1f5f9', border: '#94a3b8', text: '#475569' };
 
 /* ── Custom Step Node ── */
-function StepNode({ data }: { data: { step: Step; index: number } }) {
-  const { step, index } = data;
+function StepNode({ data }: { data: { step: Step; index: number; isDark: boolean } }) {
+  const { step, index, isDark } = data;
   const meta = STEP_TYPES.find((x) => x.value === step.type);
-  const colors = TYPE_COLORS[step.type] ?? DEFAULT_COLOR;
+  const palette = isDark ? TYPE_COLORS_DARK : TYPE_COLORS_LIGHT;
+  const defaultColor = isDark ? DEFAULT_COLOR_DARK : DEFAULT_COLOR_LIGHT;
+  const colors = palette[step.type] ?? defaultColor;
 
   return (
     <div
       className="rounded-xl shadow-lg px-4 py-3 min-w-[220px] max-w-[300px] border-2 transition-shadow hover:shadow-xl"
       style={{ background: colors.bg, borderColor: colors.border }}
     >
-      <Handle type="target" position={Position.Top} className="!bg-slate-500 !w-3 !h-3" />
+      <Handle
+        type="target"
+        position={Position.Top}
+        className="!bg-slate-400 dark:!bg-slate-500 !w-3 !h-3"
+      />
       <div className="flex items-center gap-2 mb-1">
         <span className="text-lg">{meta?.icon ?? '?'}</span>
         <span
@@ -56,13 +78,22 @@ function StepNode({ data }: { data: { step: Step; index: number } }) {
           {meta?.label ?? step.type}
         </span>
       </div>
-      <div className="font-semibold text-sm text-white mb-1">
+      <div
+        className="font-semibold text-sm mb-1"
+        style={{ color: isDark ? '#ffffff' : '#0f172a' }}
+      >
         {index + 1}. {step.title || '(Untitled)'}
       </div>
       {step.prompt && (
-        <div className="text-xs text-slate-400 line-clamp-3 font-mono bg-black/30 rounded p-1.5 mt-1">
+        <div
+          className="text-xs line-clamp-3 font-mono rounded p-1.5 mt-1"
+          style={{
+            background: isDark ? 'rgba(0,0,0,0.3)' : 'rgba(0,0,0,0.06)',
+            color: isDark ? '#94a3b8' : '#64748b',
+          }}
+        >
           {step.prompt.slice(0, 150)}
-          {step.prompt.length > 150 ? '…' : ''}
+          {step.prompt.length > 150 ? '\u2026' : ''}
         </div>
       )}
       {step.references && (
@@ -70,7 +101,12 @@ function StepNode({ data }: { data: { step: Step; index: number } }) {
           {step.references.split(',').map((ref, i) => (
             <span
               key={i}
-              className="text-[10px] bg-black/30 text-slate-400 rounded px-1.5 py-0.5 border border-slate-700"
+              className="text-[10px] rounded px-1.5 py-0.5"
+              style={{
+                background: isDark ? 'rgba(0,0,0,0.3)' : 'rgba(0,0,0,0.06)',
+                color: isDark ? '#94a3b8' : '#64748b',
+                border: `1px solid ${isDark ? '#334155' : '#cbd5e1'}`,
+              }}
             >
               @{ref.trim()}
             </span>
@@ -80,7 +116,7 @@ function StepNode({ data }: { data: { step: Step; index: number } }) {
       <Handle
         type="source"
         position={Position.Bottom}
-        className="!bg-slate-500 !w-3 !h-3"
+        className="!bg-slate-400 dark:!bg-slate-500 !w-3 !h-3"
       />
     </div>
   );
@@ -90,13 +126,14 @@ function StepNode({ data }: { data: { step: Step; index: number } }) {
 function GroupNode({
   data,
 }: {
-  data: { group: Group; index: number; childCount: number };
+  data: { group: Group; index: number; childCount: number; isDark: boolean };
 }) {
-  const { group, index, childCount } = data;
+  const { group, index, childCount, isDark } = data;
+  const groupStyle = isDark ? GROUP_STYLE_DARK : GROUP_STYLE_LIGHT;
   return (
     <div
       className="rounded-xl shadow-lg px-4 py-3 min-w-[260px] max-w-[320px] border-2 border-dashed"
-      style={{ background: GROUP_STYLE.bg, borderColor: GROUP_STYLE.border }}
+      style={{ background: groupStyle.bg, borderColor: groupStyle.border }}
     >
       <Handle
         type="target"
@@ -104,27 +141,45 @@ function GroupNode({
         className="!bg-purple-400 !w-3 !h-3"
       />
       <div className="flex items-center gap-2 mb-1">
-        <span className="text-lg">🔄</span>
+        <span className="text-lg">{'\uD83D\uDD04'}</span>
         <span
           className="text-xs font-bold uppercase tracking-wide"
-          style={{ color: GROUP_STYLE.text }}
+          style={{ color: groupStyle.text }}
         >
           Reasoning Group
         </span>
       </div>
-      <div className="font-semibold text-sm text-white mb-1">
+      <div
+        className="font-semibold text-sm mb-1"
+        style={{ color: isDark ? '#ffffff' : '#0f172a' }}
+      >
         {index + 1}. {group.title || '(Untitled Group)'}
       </div>
       <div className="flex items-center gap-2 mt-1">
-        <span className="text-[10px] bg-purple-900/50 text-purple-300 rounded px-2 py-0.5 font-medium border border-purple-800">
+        <span
+          className="text-[10px] rounded px-2 py-0.5 font-medium"
+          style={{
+            background: isDark ? 'rgba(88,28,135,0.5)' : 'rgba(139,92,246,0.15)',
+            color: isDark ? '#d8b4fe' : '#7c3aed',
+            border: `1px solid ${isDark ? '#6b21a8' : '#c4b5fd'}`,
+          }}
+        >
           {group.runCondition}
         </span>
-        <span className="text-[10px] text-slate-400">{childCount} steps inside</span>
+        <span style={{ color: isDark ? '#94a3b8' : '#64748b' }} className="text-[10px]">
+          {childCount} steps inside
+        </span>
       </div>
       {group.reasoningInstructions && (
-        <div className="text-xs text-slate-400 font-mono bg-black/30 rounded p-1.5 mt-1.5 line-clamp-2">
+        <div
+          className="text-xs font-mono rounded p-1.5 mt-1.5 line-clamp-2"
+          style={{
+            background: isDark ? 'rgba(0,0,0,0.3)' : 'rgba(0,0,0,0.06)',
+            color: isDark ? '#94a3b8' : '#64748b',
+          }}
+        >
           {group.reasoningInstructions.slice(0, 120)}
-          {group.reasoningInstructions.length > 120 ? '…' : ''}
+          {group.reasoningInstructions.length > 120 ? '\u2026' : ''}
         </div>
       )}
       <Handle
@@ -142,10 +197,11 @@ const nodeTypes: NodeTypes = {
 } as unknown as NodeTypes;
 
 /* ── Build nodes & edges from Flow ── */
-function buildGraph(flow: Flow) {
+function buildGraph(flow: Flow, isDark: boolean) {
   const nodes: Node[] = [];
   const edges: Edge[] = [];
   const stepTitleToId = new Map<string, string>();
+  const groupStyle = isDark ? GROUP_STYLE_DARK : GROUP_STYLE_LIGHT;
 
   let y = 0;
   const Y_GAP = 160;
@@ -161,7 +217,7 @@ function buildGraph(flow: Flow) {
         id: groupId,
         type: 'groupNode',
         position: { x: 0, y },
-        data: { group: item, index: globalIndex, childCount: item.steps.length },
+        data: { group: item, index: globalIndex, childCount: item.steps.length, isDark },
       });
       stepTitleToId.set(item.title.toLowerCase(), groupId);
 
@@ -174,7 +230,7 @@ function buildGraph(flow: Flow) {
           id: stepId,
           type: 'stepNode',
           position: { x: GROUP_CHILD_X_OFFSET, y: childY },
-          data: { step, index: globalIndex },
+          data: { step, index: globalIndex, isDark },
         });
         stepTitleToId.set(step.title.toLowerCase(), stepId);
 
@@ -183,8 +239,8 @@ function buildGraph(flow: Flow) {
           source: prevChildId,
           target: stepId,
           animated: true,
-          style: { stroke: GROUP_STYLE.border, strokeWidth: 2 },
-          markerEnd: { type: MarkerType.ArrowClosed, color: GROUP_STYLE.border },
+          style: { stroke: groupStyle.border, strokeWidth: 2 },
+          markerEnd: { type: MarkerType.ArrowClosed, color: groupStyle.border },
         });
         prevChildId = stepId;
         childY += Y_GROUP_CHILD_GAP;
@@ -198,7 +254,7 @@ function buildGraph(flow: Flow) {
         id: stepId,
         type: 'stepNode',
         position: { x: 0, y },
-        data: { step: item, index: globalIndex },
+        data: { step: item, index: globalIndex, isDark },
       });
       stepTitleToId.set(item.title.toLowerCase(), stepId);
       y += Y_GAP;
@@ -207,6 +263,7 @@ function buildGraph(flow: Flow) {
   }
 
   // Second pass: sequential edges between top-level items
+  const seqStroke = isDark ? '#64748b' : '#94a3b8';
   const topLevel = flow.items.map((item) =>
     item.isGroup ? `group-${item.id}` : `step-${item.id}`
   );
@@ -223,12 +280,13 @@ function buildGraph(flow: Flow) {
       id: `seq-${i}`,
       source: actualSrc,
       target: tgt,
-      style: { stroke: '#64748b', strokeWidth: 2 },
-      markerEnd: { type: MarkerType.ArrowClosed, color: '#64748b' },
+      style: { stroke: seqStroke, strokeWidth: 2 },
+      markerEnd: { type: MarkerType.ArrowClosed, color: seqStroke },
     });
   }
 
   // Third pass: @reference edges
+  const refColor = isDark ? '#f59e0b' : '#d97706';
   const allStepsList = allSteps(flow.items);
   for (const step of allStepsList) {
     if (!step.references) continue;
@@ -242,8 +300,8 @@ function buildGraph(flow: Flow) {
           source: targetId,
           target: stepId,
           animated: true,
-          style: { stroke: '#f59e0b', strokeWidth: 2, strokeDasharray: '5 5' },
-          markerEnd: { type: MarkerType.ArrowClosed, color: '#f59e0b' },
+          style: { stroke: refColor, strokeWidth: 2, strokeDasharray: '5 5' },
+          markerEnd: { type: MarkerType.ArrowClosed, color: refColor },
           label: '@ref',
         });
       }
@@ -255,21 +313,28 @@ function buildGraph(flow: Flow) {
 
 /* ── Detail sidebar ── */
 function DetailPanel({ step, onClose }: { step: Step | null; onClose: () => void }) {
+  const { resolved } = useTheme();
+  const isDark = resolved === 'dark';
   if (!step) return null;
   const meta = STEP_TYPES.find((x) => x.value === step.type);
-  const colors = TYPE_COLORS[step.type] ?? DEFAULT_COLOR;
+  const palette = isDark ? TYPE_COLORS_DARK : TYPE_COLORS_LIGHT;
+  const defaultColor = isDark ? DEFAULT_COLOR_DARK : DEFAULT_COLOR_LIGHT;
+  const colors = palette[step.type] ?? defaultColor;
 
   return (
-    <div className="absolute right-0 top-0 bottom-0 w-96 bg-midnight-800 shadow-2xl border-l border-midnight-700 z-20 overflow-y-auto">
-      <div className="sticky top-0 bg-midnight-800 border-b border-midnight-700 px-4 py-3 flex items-center justify-between">
+    <div className="absolute right-0 top-0 bottom-0 w-96 bg-white dark:bg-midnight-800 shadow-2xl border-l border-slate-200 dark:border-midnight-700 z-20 overflow-y-auto">
+      <div className="sticky top-0 bg-white dark:bg-midnight-800 border-b border-slate-200 dark:border-midnight-700 px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="text-lg">{meta?.icon}</span>
-          <span className="font-semibold text-sm text-white">
+          <span className="font-semibold text-sm text-slate-900 dark:text-white">
             {step.title || '(Untitled)'}
           </span>
         </div>
-        <button onClick={onClose} className="text-slate-500 hover:text-slate-300 text-lg">
-          ✕
+        <button
+          onClick={onClose}
+          className="text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 text-lg"
+        >
+          {'\u2715'}
         </button>
       </div>
       <div className="p-4 space-y-3">
@@ -283,40 +348,49 @@ function DetailPanel({ step, onClose }: { step: Step | null; onClose: () => void
         </div>
         {step.type === 'chat_agent' && step.agentName && (
           <div>
-            <div className="text-xs text-slate-500 mb-1">Chat Agent</div>
-            <div className="text-sm font-medium text-white">{step.agentName}</div>
+            <div className="text-xs text-slate-400 dark:text-slate-500 mb-1">
+              Chat Agent
+            </div>
+            <div className="text-sm font-medium text-slate-900 dark:text-white">
+              {step.agentName}
+            </div>
           </div>
         )}
         {step.type === 'general_knowledge' && (
-          <div className="flex gap-3 text-xs text-slate-400">
+          <div className="flex gap-3 text-xs text-slate-500 dark:text-slate-400">
             <div>
-              <span className="text-slate-500">Source:</span> {step.source}
+              <span className="text-slate-400 dark:text-slate-500">Source:</span>{' '}
+              {step.source}
             </div>
             <div>
-              <span className="text-slate-500">Output:</span> {step.outputPref}
+              <span className="text-slate-400 dark:text-slate-500">Output:</span>{' '}
+              {step.outputPref}
             </div>
             <div>
-              <span className="text-slate-500">Creativity:</span> {step.creativityLevel}
+              <span className="text-slate-400 dark:text-slate-500">Creativity:</span>{' '}
+              {step.creativityLevel}
               /10
             </div>
           </div>
         )}
         {step.prompt && (
           <div>
-            <div className="text-xs text-slate-500 mb-1">Prompt</div>
-            <pre className="text-sm font-mono bg-[#0d1117] rounded-lg p-3 whitespace-pre-wrap border border-midnight-700 max-h-96 overflow-y-auto text-slate-300">
+            <div className="text-xs text-slate-400 dark:text-slate-500 mb-1">Prompt</div>
+            <pre className="text-sm font-mono bg-slate-50 dark:bg-[#0d1117] rounded-lg p-3 whitespace-pre-wrap border border-slate-200 dark:border-midnight-700 max-h-96 overflow-y-auto text-slate-700 dark:text-slate-300">
               {step.prompt}
             </pre>
           </div>
         )}
         {step.references && (
           <div>
-            <div className="text-xs text-slate-500 mb-1">References</div>
+            <div className="text-xs text-slate-400 dark:text-slate-500 mb-1">
+              References
+            </div>
             <div className="flex flex-wrap gap-1">
               {step.references.split(',').map((r, i) => (
                 <span
                   key={i}
-                  className="text-xs bg-amber-900/40 text-amber-300 rounded px-2 py-0.5 border border-amber-800"
+                  className="text-xs bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300 rounded px-2 py-0.5 border border-amber-200 dark:border-amber-800"
                 >
                   @{r.trim()}
                 </span>
@@ -327,14 +401,18 @@ function DetailPanel({ step, onClose }: { step: Step | null; onClose: () => void
         {step.type === 'user_input_text' && (
           <>
             {step.placeholder && (
-              <div className="text-sm text-slate-300">
-                <span className="text-slate-500 text-xs">Placeholder:</span>{' '}
+              <div className="text-sm text-slate-700 dark:text-slate-300">
+                <span className="text-slate-400 dark:text-slate-500 text-xs">
+                  Placeholder:
+                </span>{' '}
                 {step.placeholder}
               </div>
             )}
             {step.defaultValue && (
-              <div className="text-sm text-slate-300">
-                <span className="text-slate-500 text-xs">Default:</span>{' '}
+              <div className="text-sm text-slate-700 dark:text-slate-300">
+                <span className="text-slate-400 dark:text-slate-500 text-xs">
+                  Default:
+                </span>{' '}
                 {step.defaultValue}
               </div>
             )}
@@ -342,8 +420,8 @@ function DetailPanel({ step, onClose }: { step: Step | null; onClose: () => void
         )}
         {step.config && (
           <div>
-            <div className="text-xs text-slate-500 mb-1">Config</div>
-            <pre className="text-xs font-mono bg-[#0d1117] rounded p-2 border border-midnight-700 text-slate-300">
+            <div className="text-xs text-slate-400 dark:text-slate-500 mb-1">Config</div>
+            <pre className="text-xs font-mono bg-slate-50 dark:bg-[#0d1117] rounded p-2 border border-slate-200 dark:border-midnight-700 text-slate-700 dark:text-slate-300">
               {step.config}
             </pre>
           </div>
@@ -355,16 +433,26 @@ function DetailPanel({ step, onClose }: { step: Step | null; onClose: () => void
 
 /* ── Legend ── */
 function Legend() {
+  const { resolved } = useTheme();
+  const isDark = resolved === 'dark';
+  const palette = isDark ? TYPE_COLORS_DARK : TYPE_COLORS_LIGHT;
+  const defaultColor = isDark ? DEFAULT_COLOR_DARK : DEFAULT_COLOR_LIGHT;
+  const groupStyle = isDark ? GROUP_STYLE_DARK : GROUP_STYLE_LIGHT;
+  const refColor = isDark ? '#f59e0b' : '#d97706';
+
   const items = STEP_TYPES.map((t) => ({
     icon: t.icon,
     label: t.label,
-    color: (TYPE_COLORS[t.value] ?? DEFAULT_COLOR).border,
+    color: (palette[t.value] ?? defaultColor).border,
   }));
   return (
-    <div className="bg-midnight-800/90 backdrop-blur rounded-lg shadow-lg p-3 text-xs space-y-1.5 max-h-80 overflow-y-auto border border-midnight-700">
-      <div className="font-bold text-slate-300 mb-1">Legend</div>
+    <div className="bg-white/90 dark:bg-midnight-800/90 backdrop-blur rounded-lg shadow-lg p-3 text-xs space-y-1.5 max-h-80 overflow-y-auto border border-slate-200 dark:border-midnight-700">
+      <div className="font-bold text-slate-700 dark:text-slate-300 mb-1">Legend</div>
       {items.map((it) => (
-        <div key={it.label} className="flex items-center gap-2 text-slate-400">
+        <div
+          key={it.label}
+          className="flex items-center gap-2 text-slate-500 dark:text-slate-400"
+        >
           <div
             className="w-3 h-3 rounded-sm border-2"
             style={{ borderColor: it.color, background: it.color + '33' }}
@@ -374,17 +462,17 @@ function Legend() {
           </span>
         </div>
       ))}
-      <div className="flex items-center gap-2 mt-1 pt-1 border-t border-midnight-700 text-slate-400">
+      <div className="flex items-center gap-2 mt-1 pt-1 border-t border-slate-200 dark:border-midnight-700 text-slate-500 dark:text-slate-400">
         <div
           className="w-3 h-3 rounded-sm border-2 border-dashed"
-          style={{ borderColor: GROUP_STYLE.border, background: GROUP_STYLE.bg }}
+          style={{ borderColor: groupStyle.border, background: groupStyle.bg }}
         />
-        <span>🔄 Reasoning Group</span>
+        <span>{'\uD83D\uDD04'} Reasoning Group</span>
       </div>
-      <div className="flex items-center gap-2 text-slate-400">
+      <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400">
         <div
           className="w-6 h-0 border-t-2 border-dashed"
-          style={{ borderColor: '#f59e0b' }}
+          style={{ borderColor: refColor }}
         />
         <span>@reference link</span>
       </div>
@@ -399,9 +487,12 @@ interface FlowGraphProps {
 }
 
 export default function FlowGraph({ flow, onBack }: FlowGraphProps) {
+  const { resolved } = useTheme();
+  const isDark = resolved === 'dark';
+
   const { nodes: initialNodes, edges: initialEdges } = useMemo(
-    () => buildGraph(flow),
-    [flow]
+    () => buildGraph(flow, isDark),
+    [flow, isDark]
   );
   const [selectedStep, setSelectedStep] = useState<Step | null>(null);
 
@@ -412,25 +503,30 @@ export default function FlowGraph({ flow, onBack }: FlowGraphProps) {
   }, []);
 
   const steps = allSteps(flow.items);
+  const groupStyle = isDark ? GROUP_STYLE_DARK : GROUP_STYLE_LIGHT;
 
   if (flow.items.length === 0) {
     return (
       <div className="space-y-4">
-        <div className="bg-midnight-800 border border-midnight-700 rounded-xl shadow-sm p-4 flex items-center gap-3">
-          <span className="text-2xl">🔀</span>
-          <span className="font-semibold text-sm text-white">Flow Graph</span>
+        <div className="bg-white dark:bg-midnight-800 border border-slate-200 dark:border-midnight-700 rounded-xl shadow-sm p-4 flex items-center gap-3">
+          <span className="text-2xl">{'\uD83D\uDD00'}</span>
+          <span className="font-semibold text-sm text-slate-900 dark:text-white">
+            Flow Graph
+          </span>
           <div className="flex-1" />
           <button
             onClick={onBack}
-            className="text-sm text-slate-500 hover:text-slate-300"
+            className="text-sm text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
           >
-            ← Back
+            &larr; Back
           </button>
         </div>
-        <div className="bg-midnight-800 border border-midnight-700 rounded-xl shadow-sm p-12 text-center">
-          <div className="text-4xl mb-3">📋</div>
-          <div className="font-semibold text-slate-300">No flow loaded</div>
-          <div className="text-sm text-slate-500 mt-1">
+        <div className="bg-white dark:bg-midnight-800 border border-slate-200 dark:border-midnight-700 rounded-xl shadow-sm p-12 text-center">
+          <div className="text-4xl mb-3">{'\uD83D\uDCCB'}</div>
+          <div className="font-semibold text-slate-700 dark:text-slate-300">
+            No flow loaded
+          </div>
+          <div className="text-sm text-slate-400 dark:text-slate-500 mt-1">
             Parse a flow first, then come back here to see the interactive graph.
           </div>
         </div>
@@ -440,26 +536,30 @@ export default function FlowGraph({ flow, onBack }: FlowGraphProps) {
 
   return (
     <div className="space-y-4">
-      <div className="bg-midnight-800 border border-midnight-700 rounded-xl shadow-sm p-4 flex flex-wrap gap-3 items-center">
+      <div className="bg-white dark:bg-midnight-800 border border-slate-200 dark:border-midnight-700 rounded-xl shadow-sm p-4 flex flex-wrap gap-3 items-center">
         <div className="flex items-center gap-2">
-          <span className="text-2xl">🔀</span>
+          <span className="text-2xl">{'\uD83D\uDD00'}</span>
           <div>
-            <div className="font-semibold text-sm text-white">
+            <div className="font-semibold text-sm text-slate-900 dark:text-white">
               {flow.title || '(Untitled)'}
             </div>
-            <div className="text-xs text-slate-500">
-              Interactive flow graph · {steps.length} steps · Click any node for details
+            <div className="text-xs text-slate-400 dark:text-slate-500">
+              Interactive flow graph &middot; {steps.length} steps &middot; Click any node
+              for details
             </div>
           </div>
         </div>
         <div className="flex-1" />
-        <button onClick={onBack} className="text-sm text-slate-500 hover:text-slate-300">
-          ← Back
+        <button
+          onClick={onBack}
+          className="text-sm text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
+        >
+          &larr; Back
         </button>
       </div>
 
       <div
-        className="bg-midnight-800 border border-midnight-700 rounded-xl shadow-sm overflow-hidden relative"
+        className="bg-white dark:bg-midnight-800 border border-slate-200 dark:border-midnight-700 rounded-xl shadow-sm overflow-hidden relative"
         style={{ height: '70vh' }}
       >
         <ReactFlow
@@ -473,17 +573,19 @@ export default function FlowGraph({ flow, onBack }: FlowGraphProps) {
           maxZoom={2}
           proOptions={{ hideAttribution: true }}
         >
-          <Background color="#334155" gap={20} />
+          <Background color={isDark ? '#334155' : '#cbd5e1'} gap={20} />
           <Controls position="bottom-left" />
           <MiniMap
             nodeColor={(node) => {
-              if (node.type === 'groupNode') return GROUP_STYLE.border;
+              if (node.type === 'groupNode') return groupStyle.border;
               const step = (node.data as { step: Step }).step;
-              return (TYPE_COLORS[step.type] ?? DEFAULT_COLOR).border;
+              const palette = isDark ? TYPE_COLORS_DARK : TYPE_COLORS_LIGHT;
+              const defaultColor = isDark ? DEFAULT_COLOR_DARK : DEFAULT_COLOR_LIGHT;
+              return (palette[step.type] ?? defaultColor).border;
             }}
-            maskColor="rgba(0,0,0,0.3)"
+            maskColor={isDark ? 'rgba(0,0,0,0.3)' : 'rgba(255,255,255,0.5)'}
             position="bottom-right"
-            style={{ background: '#0f172a' }}
+            style={{ background: isDark ? '#0f172a' : '#f1f5f9' }}
           />
           <Panel position="top-left">
             <Legend />
