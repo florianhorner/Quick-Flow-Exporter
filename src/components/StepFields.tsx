@@ -7,9 +7,9 @@ interface StepFieldsProps {
 }
 
 const inputClass =
-  'w-full border border-midnight-700 rounded px-2 py-1 text-sm bg-midnight-900 text-slate-300 placeholder-slate-600 focus:border-cyan-500';
+  'w-full border border-slate-200 dark:border-midnight-700 rounded px-2 py-1 text-sm bg-slate-100 dark:bg-midnight-900 text-slate-700 dark:text-slate-300 placeholder-slate-400 dark:placeholder-slate-600 focus:border-cyan-500';
 const selectClass =
-  'border border-midnight-700 rounded px-2 py-1 text-xs bg-midnight-900 text-slate-300';
+  'border border-slate-200 dark:border-midnight-700 rounded px-2 py-1 text-xs bg-slate-100 dark:bg-midnight-900 text-slate-700 dark:text-slate-300';
 
 export default function StepFields({ step, onChange }: StepFieldsProps) {
   const update = <K extends keyof Step>(field: K, value: Step[K]) =>
@@ -80,7 +80,7 @@ export default function StepFields({ step, onChange }: StepFieldsProps) {
           </div>
           <label
             htmlFor={`creativity-${uid}`}
-            className="flex items-center gap-1 text-xs text-slate-400"
+            className="flex items-center gap-1 text-xs text-slate-500 dark:text-slate-400"
           >
             Creativity:
             <input
@@ -107,7 +107,7 @@ export default function StepFields({ step, onChange }: StepFieldsProps) {
           </label>
           <textarea
             id={`prompt-${uid}`}
-            className="w-full border border-midnight-700 rounded px-2 py-1 text-sm bg-[#0d1117] text-slate-300 font-mono placeholder-slate-600 focus:border-cyan-500"
+            className="w-full border border-slate-200 dark:border-midnight-700 rounded px-2 py-1 text-sm bg-slate-50 dark:bg-[#0d1117] text-slate-700 dark:text-slate-300 font-mono placeholder-slate-400 dark:placeholder-slate-600 focus:border-cyan-500"
             rows={4}
             placeholder="Prompt / Instructions"
             value={step.prompt}
@@ -149,7 +149,7 @@ export default function StepFields({ step, onChange }: StepFieldsProps) {
           </label>
           <textarea
             id={`config-${uid}`}
-            className="w-full border border-midnight-700 rounded px-2 py-1 text-sm bg-[#0d1117] text-slate-300 font-mono placeholder-slate-600 focus:border-cyan-500"
+            className="w-full border border-slate-200 dark:border-midnight-700 rounded px-2 py-1 text-sm bg-slate-50 dark:bg-[#0d1117] text-slate-700 dark:text-slate-300 font-mono placeholder-slate-400 dark:placeholder-slate-600 focus:border-cyan-500"
             rows={3}
             placeholder="Configuration"
             value={step.config}
@@ -163,7 +163,7 @@ export default function StepFields({ step, onChange }: StepFieldsProps) {
       </label>
       <input
         id={`refs-${uid}`}
-        className="w-full border border-midnight-700 rounded px-2 py-1 text-xs bg-midnight-900 text-slate-500 placeholder-slate-600"
+        className="w-full border border-slate-200 dark:border-midnight-700 rounded px-2 py-1 text-xs bg-slate-100 dark:bg-midnight-900 text-slate-400 dark:text-slate-500 placeholder-slate-400 dark:placeholder-slate-600"
         placeholder="@References (comma-separated)"
         value={step.references}
         onChange={(e) => update('references', e.target.value)}

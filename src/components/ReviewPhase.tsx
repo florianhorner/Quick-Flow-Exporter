@@ -35,14 +35,16 @@ export default function ReviewPhase({ flow, onFlowChange, onExport }: ReviewPhas
 
   return (
     <div className="space-y-4">
-      <div className="bg-midnight-800 border border-midnight-700 rounded-xl shadow-sm p-4 flex flex-wrap gap-4 items-center">
+      <div className="bg-white dark:bg-midnight-800 border border-slate-200 dark:border-midnight-700 rounded-xl shadow-sm p-4 flex flex-wrap gap-4 items-center">
         <div className="flex items-center gap-2">
-          <span className="text-sm font-bold text-cyan-400 font-mono">REVIEW</span>
+          <span className="text-sm font-bold text-cyan-600 dark:text-cyan-400 font-mono">
+            REVIEW
+          </span>
           <div>
-            <div className="font-semibold text-sm text-white">
+            <div className="font-semibold text-sm text-slate-900 dark:text-white">
               {flow.title || '(Untitled)'}
             </div>
-            <div className="text-xs text-slate-500">
+            <div className="text-xs text-slate-400 dark:text-slate-500">
               {steps.length} steps · {groups.length} groups · {flow.status}
             </div>
           </div>
@@ -56,16 +58,16 @@ export default function ReviewPhase({ flow, onFlowChange, onExport }: ReviewPhas
         </button>
       </div>
 
-      <div className="bg-midnight-800 border border-midnight-700 rounded-lg shadow-sm p-4 space-y-2">
+      <div className="bg-white dark:bg-midnight-800 border border-slate-200 dark:border-midnight-700 rounded-lg shadow-sm p-4 space-y-2">
         <div className="flex gap-2 flex-wrap">
           <input
-            className="flex-1 min-w-48 border border-midnight-700 rounded px-3 py-2 text-sm font-semibold bg-midnight-900 text-white placeholder-slate-600 focus:border-cyan-500"
+            className="flex-1 min-w-48 border border-slate-200 dark:border-midnight-700 rounded px-3 py-2 text-sm font-semibold bg-slate-100 dark:bg-midnight-900 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-600 focus:border-cyan-500"
             placeholder="Flow Title"
             value={flow.title}
             onChange={(e) => onFlowChange({ ...flow, title: e.target.value })}
           />
           <select
-            className="border border-midnight-700 rounded px-2 py-1 text-sm bg-midnight-900 text-slate-300"
+            className="border border-slate-200 dark:border-midnight-700 rounded px-2 py-1 text-sm bg-slate-100 dark:bg-midnight-900 text-slate-700 dark:text-slate-300"
             value={flow.status}
             onChange={(e) =>
               onFlowChange({
@@ -77,7 +79,7 @@ export default function ReviewPhase({ flow, onFlowChange, onExport }: ReviewPhas
             <option>Draft</option>
             <option>Published</option>
           </select>
-          <label className="flex items-center gap-1 text-sm text-slate-400">
+          <label className="flex items-center gap-1 text-sm text-slate-500 dark:text-slate-400">
             <input
               type="checkbox"
               checked={flow.shared}
@@ -88,7 +90,7 @@ export default function ReviewPhase({ flow, onFlowChange, onExport }: ReviewPhas
           </label>
         </div>
         <textarea
-          className="w-full border border-midnight-700 rounded px-3 py-2 text-sm bg-midnight-900 text-slate-300 placeholder-slate-600 focus:border-cyan-500"
+          className="w-full border border-slate-200 dark:border-midnight-700 rounded px-3 py-2 text-sm bg-slate-100 dark:bg-midnight-900 text-slate-700 dark:text-slate-300 placeholder-slate-400 dark:placeholder-slate-600 focus:border-cyan-500"
           rows={2}
           placeholder="Description"
           value={flow.description}
@@ -124,9 +126,9 @@ export default function ReviewPhase({ flow, onFlowChange, onExport }: ReviewPhas
         )}
       </div>
 
-      <div className="bg-midnight-800 border border-midnight-700 rounded-lg shadow-sm p-3 flex flex-wrap gap-2 items-center">
+      <div className="bg-white dark:bg-midnight-800 border border-slate-200 dark:border-midnight-700 rounded-lg shadow-sm p-3 flex flex-wrap gap-2 items-center">
         <select
-          className="border border-midnight-700 rounded px-2 py-1 text-sm bg-midnight-900 text-slate-300"
+          className="border border-slate-200 dark:border-midnight-700 rounded px-2 py-1 text-sm bg-slate-100 dark:bg-midnight-900 text-slate-700 dark:text-slate-300"
           value={addType}
           onChange={(e) => setAddType(e.target.value as StepType)}
         >
