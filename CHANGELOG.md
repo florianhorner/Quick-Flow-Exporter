@@ -4,6 +4,27 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.2.0] - 2026-03-30
+
+### Added
+
+- Multi-provider support: OpenAI, Google Gemini, and Perplexity alongside existing Anthropic and AWS Bedrock
+- Provider selector in the UI — switch providers without restarting the proxy
+- Per-request provider override — a single proxy instance can serve all providers simultaneously
+- OpenAI-compatible shared caller (used by both OpenAI and Perplexity providers)
+- Google Gemini provider via the Generative Language API
+- Configurable models per provider via environment variables (OPENAI_MODEL, GEMINI_MODEL, PERPLEXITY_MODEL)
+- Provider preference persisted in localStorage
+- Full environment variable reference table in README
+- Health endpoint now returns available providers list
+
+### Changed
+
+- Provider selection is now dynamic per-request (was fixed at server startup)
+- Health endpoint returns `defaultProvider` and `providers` array (was `provider` string)
+- API key prompt in UI now shows provider-specific placeholder text
+- "Change key" link replaced with "Settings" link that opens full provider configuration
+
 ## [1.1.1] - 2026-03-29
 
 ### Added

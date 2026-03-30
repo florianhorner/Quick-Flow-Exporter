@@ -1,7 +1,18 @@
+export type Provider = 'anthropic' | 'bedrock' | 'openai' | 'gemini' | 'perplexity';
+
+export const VALID_PROVIDERS: Provider[] = [
+  'anthropic',
+  'bedrock',
+  'openai',
+  'gemini',
+  'perplexity',
+];
+
 export interface ProxyRequest {
   system: string;
   userMessage: string;
   maxTokens: number;
+  provider?: Provider;
 }
 
 export function validateProxyRequest(body: unknown): ProxyRequest {
@@ -29,11 +40,19 @@ export function validateProxyRequest(body: unknown): ProxyRequest {
   ) {
     throw new Error("'maxTokens' must be a number between 1 and 16000");
   }
+  if (
+    obj.provider !== undefined &&
+    (typeof obj.provider !== 'string' ||
+      !VALID_PROVIDERS.includes(obj.provider as Provider))
+  ) {
+    throw new Error(`'provider' must be one of: ${VALID_PROVIDERS.join(', ')}`);
+  }
 
   return {
     system: obj.system,
     userMessage: obj.userMessage,
     maxTokens: (obj.maxTokens as number | undefined) ?? 4096,
+    provider: obj.provider as Provider | undefined,
   };
 }
 

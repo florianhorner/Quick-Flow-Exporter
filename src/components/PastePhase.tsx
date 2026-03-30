@@ -1,7 +1,14 @@
 import { useState } from 'react';
 import type { HistoryEntry } from '../types';
 import BookmarkletPanel from './BookmarkletPanel';
-import { getApiKey, setApiKey } from '../lib/ai';
+import {
+  getApiKey,
+  setApiKey,
+  getProvider,
+  setProvider,
+  PROVIDERS,
+  type Provider,
+} from '../lib/ai';
 
 interface PastePhaseProps {
   raw: string;
@@ -22,10 +29,22 @@ export default function PastePhase({
 }: PastePhaseProps) {
   const [needsKey, setNeedsKey] = useState(false);
   const [keyValue, setKeyValue] = useState('');
+  const [selectedProvider, setSelectedProvider] = useState<Provider>(getProvider());
   const hasKey = !!getApiKey();
 
+  const currentProviderInfo = PROVIDERS.find((p) => p.value === selectedProvider)!;
+  const isBedrock = selectedProvider === 'bedrock';
+
+  const handleProviderChange = (provider: Provider) => {
+    setSelectedProvider(provider);
+    setProvider(provider);
+    // Clear the key input when switching — stored key persists until overwritten
+    setKeyValue('');
+  };
+
   const handleParse = () => {
-    if (!getApiKey()) {
+    // Bedrock uses server-side AWS credentials, no client key needed
+    if (!isBedrock && !getApiKey()) {
       setNeedsKey(true);
       return;
     }
@@ -78,54 +97,116 @@ export default function PastePhase({
           <div className="bg-midnight-900 border border-cyan-800/50 rounded-lg p-4 space-y-3">
             <div className="flex items-center gap-2">
               <span className="text-sm font-semibold text-slate-300">
-                Enter your Anthropic API key to continue
+                Configure AI provider
               </span>
             </div>
-            <div className="flex gap-2">
-              <input
-                type="password"
-                value={keyValue}
-                onChange={(e) => setKeyValue(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' && keyValue.trim() && raw.trim())
-                    handleKeySaveAndParse();
-                }}
-                placeholder="sk-ant-..."
-                autoFocus
-                className="flex-1 border border-midnight-700 rounded-lg px-3 py-2 text-sm font-mono bg-[#0d1117] text-slate-300 placeholder-slate-600 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/30"
-              />
-              <button
-                onClick={handleKeySaveAndParse}
-                disabled={!keyValue.trim() || !raw.trim()}
-                className="px-4 py-2 rounded-lg text-sm font-semibold bg-cyan-600 text-white hover:bg-cyan-500 disabled:bg-midnight-700 disabled:text-slate-500"
+
+            {/* Provider selector */}
+            <div className="space-y-2">
+              <label
+                htmlFor="provider-select"
+                className="text-xs font-medium text-slate-500"
               >
-                Save & Parse
-              </button>
+                Provider
+              </label>
+              <select
+                id="provider-select"
+                value={selectedProvider}
+                onChange={(e) => handleProviderChange(e.target.value as Provider)}
+                className="w-full border border-midnight-700 rounded-lg px-3 py-2 text-sm bg-[#0d1117] text-slate-300 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/30"
+              >
+                {PROVIDERS.map((p) => (
+                  <option key={p.value} value={p.value}>
+                    {p.label}
+                  </option>
+                ))}
+              </select>
             </div>
+
+            {/* API key input (hidden for Bedrock) */}
+            {!isBedrock && (
+              <div className="flex gap-2">
+                <input
+                  type="password"
+                  value={keyValue}
+                  onChange={(e) => setKeyValue(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && keyValue.trim() && raw.trim())
+                      handleKeySaveAndParse();
+                  }}
+                  placeholder={currentProviderInfo.keyPlaceholder}
+                  autoFocus
+                  className="flex-1 border border-midnight-700 rounded-lg px-3 py-2 text-sm font-mono bg-[#0d1117] text-slate-300 placeholder-slate-600 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/30"
+                />
+                <button
+                  onClick={handleKeySaveAndParse}
+                  disabled={!keyValue.trim() || !raw.trim()}
+                  className="px-4 py-2 rounded-lg text-sm font-semibold bg-cyan-600 text-white hover:bg-cyan-500 disabled:bg-midnight-700 disabled:text-slate-500"
+                >
+                  Save & Parse
+                </button>
+              </div>
+            )}
+
+            {isBedrock && (
+              <div className="flex gap-2">
+                <p className="flex-1 text-xs text-slate-500">
+                  Bedrock uses server-side AWS credentials. Make sure the proxy server has
+                  access to <code className="text-cyan-500">~/.aws/credentials</code> or
+                  the appropriate environment variables.
+                </p>
+                <button
+                  onClick={() => {
+                    setNeedsKey(false);
+                    onParse();
+                  }}
+                  disabled={!raw.trim()}
+                  className="px-4 py-2 rounded-lg text-sm font-semibold bg-cyan-600 text-white hover:bg-cyan-500 disabled:bg-midnight-700 disabled:text-slate-500"
+                >
+                  Parse
+                </button>
+              </div>
+            )}
+
             <p className="text-xs text-slate-500">
-              Stored in your browser only. Or set{' '}
-              <code className="text-cyan-500">ANTHROPIC_API_KEY</code> on the proxy
-              server.
+              Stored in your browser only. Or set the appropriate env var on the proxy
+              server (
+              {currentProviderInfo.value === 'anthropic' && (
+                <code className="text-cyan-500">ANTHROPIC_API_KEY</code>
+              )}
+              {currentProviderInfo.value === 'openai' && (
+                <code className="text-cyan-500">OPENAI_API_KEY</code>
+              )}
+              {currentProviderInfo.value === 'gemini' && (
+                <code className="text-cyan-500">GEMINI_API_KEY</code>
+              )}
+              {currentProviderInfo.value === 'perplexity' && (
+                <code className="text-cyan-500">PERPLEXITY_API_KEY</code>
+              )}
+              {currentProviderInfo.value === 'bedrock' && (
+                <code className="text-cyan-500">AWS_REGION</code>
+              )}
+              ).
             </p>
           </div>
         )}
 
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <span className="text-xs text-slate-500 font-mono">
               {raw.length > 0 ? `${raw.length.toLocaleString()} chars` : ''}
             </span>
-            {hasKey && !needsKey && (
-              <button
-                onClick={() => {
-                  setNeedsKey(true);
-                  setKeyValue(getApiKey());
-                }}
-                className="text-xs text-slate-600 hover:text-slate-400"
-              >
-                Change key
-              </button>
-            )}
+            {/* Provider badge */}
+            <span className="text-xs text-slate-600">{currentProviderInfo.label}</span>
+            <button
+              onClick={() => {
+                setNeedsKey(true);
+                setKeyValue(getApiKey());
+              }}
+              className="text-xs text-slate-600 hover:text-slate-400"
+            >
+              {hasKey || isBedrock ? 'Settings' : 'Set API key'}
+            </button>
           </div>
           <button
             onClick={handleParse}
