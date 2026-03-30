@@ -22,13 +22,13 @@ This tool fills that gap.
 
 ### Paste & Parse
 
-Ctrl+A your flow in the Quick Flows editor, paste it here, and AI extracts the full structure.
+Ctrl+A your flow in the Quick Flows editor, paste it here, and AI extracts the full structure. Choose from five AI providers (Anthropic, OpenAI, Gemini, Perplexity, or AWS Bedrock) and switch between them at any time.
 
 ![Paste Phase](docs/screenshots/01-paste-phase.png)
 
 ### Flow Diff
 
-Compare two versions of a flow side-by-side with word-level inline diffs on prompts.
+Compare two versions of a flow with word-level inline diffs on prompts. Added, removed, and modified steps are highlighted, and you can expand any change to see exactly what changed.
 
 ![Diff Phase](docs/screenshots/02-diff-phase.png)
 
@@ -40,7 +40,7 @@ Visualize your flow as a color-coded directed graph. Each step type has its own 
 
 ### Multi-Format Export
 
-Export to Markdown (documentation), Mermaid (flowchart diagrams for GitHub/Quip), or JSON (canonical, re-importable).
+Export to Markdown (documentation), Mermaid (flowchart diagrams for GitHub/Quip), or JSON (canonical, re-importable). Copy to clipboard or download as a file.
 
 ![Export Phase](docs/screenshots/04-export-phase.png)
 
@@ -158,14 +158,15 @@ ANTHROPIC_API_KEY=sk-... OPENAI_API_KEY=sk-... PERPLEXITY_API_KEY=pplx-... npx t
 ## How It Works
 
 ```
-┌─────────────┐     ┌──────────────┐     ┌──────────────┐     ┌──────────────┐
-│  Paste raw   │────▶│  AI parses   │────▶│  Review &    │────▶│  Export as   │
-│  flow text   │     │  structure   │     │  edit flow   │     │  MD/Mermaid  │
-└─────────────┘     └──────────────┘     └──────────────┘     └──────────────┘
+┌─────────────┐     ┌──────────────┐     ┌──────────────┐     ┌───────────────┐
+│  Paste raw   │────▶│  AI parses   │────▶│  Review &    │────▶│  Export as    │
+│  flow text   │     │  structure   │     │  edit flow   │     │  MD/MMD/JSON  │
+└─────────────┘     └──────────────┘     └──────────────┘     └───────────────┘
                                                 │
                                           ┌─────┴─────┐
                                           │ View as   │
-                                          │ graph     │
+                                          │ graph /   │
+                                          │ diff      │
                                           └───────────┘
 ```
 
