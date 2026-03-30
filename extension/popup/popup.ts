@@ -95,9 +95,14 @@ copyBtn.addEventListener('click', async () => {
 });
 
 // Open in exporter app
-openBtn.addEventListener('click', () => {
-  chrome.runtime.sendMessage({
-    type: 'OPEN_EXPORTER',
-    text: extractedText,
-  });
+openBtn.addEventListener('click', async () => {
+  try {
+    await chrome.runtime.sendMessage({
+      type: 'OPEN_EXPORTER',
+      text: extractedText,
+    });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    setStatus(`Failed to open exporter: ${message}`, 'error');
+  }
 });

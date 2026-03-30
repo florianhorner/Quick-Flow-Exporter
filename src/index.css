@@ -26,12 +26,12 @@
     z-index: 0;
   }
 
-  /* Dark mode */
-  .dark body {
+  /* Dark mode — .dark is applied to <html> by ThemeProvider */
+  html.dark body {
     background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
   }
 
-  .dark body::before {
+  html.dark body::before {
     background-image: radial-gradient(
       circle,
       rgba(6, 182, 212, 0.08) 1px,

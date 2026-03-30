@@ -24,7 +24,7 @@ await esbuild.build({
   entryPoints: [resolve(ext, 'popup/popup.ts'), resolve(ext, 'background/background.ts')],
   outdir: dist,
   bundle: true,
-  format: 'esm',
+  format: 'iife',
   target: 'chrome120',
   minify: process.argv.includes('--minify'),
 });
