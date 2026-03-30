@@ -1,30 +1,34 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quick Flow Exporter</title>
-  <link rel="stylesheet" href="popup.css">
-</head>
-<body>
-  <div class="container">
-    <header>
-      <h1>Quick Flow Exporter</h1>
-    </header>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quick Flow Exporter</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>Quick Flow Exporter</h1>
+      </header>
 
-    <div id="status" class="status">Click "Extract" on any Quick Flows editor page.</div>
+      <div id="status" class="status">
+        Click "Extract" on any Quick Flows editor page.
+      </div>
 
-    <div class="actions">
-      <button id="extract-btn" class="btn btn-primary">Extract Flow</button>
-      <button id="copy-btn" class="btn btn-secondary" disabled>Copy to Clipboard</button>
-      <button id="open-btn" class="btn btn-secondary" disabled>Open in Exporter</button>
+      <div class="actions">
+        <button id="extract-btn" class="btn btn-primary">Extract Flow</button>
+        <button id="copy-btn" class="btn btn-secondary" disabled>
+          Copy to Clipboard
+        </button>
+        <button id="open-btn" class="btn btn-secondary" disabled>Open in Exporter</button>
+      </div>
+
+      <div id="preview-container" class="preview-container hidden">
+        <div class="preview-header">Preview</div>
+        <pre id="preview"></pre>
+      </div>
     </div>
-
-    <div id="preview-container" class="preview-container hidden">
-      <div class="preview-header">Preview</div>
-      <pre id="preview"></pre>
-    </div>
-  </div>
-  <script src="popup.js"></script>
-</body>
+    <script src="popup.js"></script>
+  </body>
 </html>
