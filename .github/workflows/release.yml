@@ -1,0 +1,158 @@
+name: Release
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Determine version bump
+        id: bump
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_NUM: ${{ github.event.pull_request.number }}
+        run: |
+          # Use env vars (not ${{ }}) to prevent script injection via PR title
+          if echo "$PR_TITLE" | grep -qiE '^feat(\(|:)'; then
+            echo "type=minor" >> "$GITHUB_OUTPUT"
+          elif echo "$PR_TITLE" | grep -qiE '^fix(\(|:)'; then
+            echo "type=patch" >> "$GITHUB_OUTPUT"
+          elif echo "$PR_TITLE" | grep -qiE '^docs(\(|:)'; then
+            echo "type=none" >> "$GITHUB_OUTPUT"
+          elif echo "$PR_TITLE" | grep -qiE '^(chore|ci|refactor|style|test|build|perf)(\(|:)'; then
+            echo "type=patch" >> "$GITHUB_OUTPUT"
+          else
+            echo "type=patch" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Compute version
+        if: steps.bump.outputs.type != 'none'
+        id: version
+        run: |
+          # Read version from latest git tag (authoritative source), fall back to package.json
+          LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          if [ -n "$LATEST_TAG" ]; then
+            CURRENT="${LATEST_TAG#v}"
+          else
+            CURRENT=$(node -p "require('./package.json').version")
+          fi
+
+          BUMP_TYPE="${{ steps.bump.outputs.type }}"
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$CURRENT"
+          if [ "$BUMP_TYPE" = "minor" ]; then
+            MINOR=$((MINOR + 1))
+            PATCH=0
+          elif [ "$BUMP_TYPE" = "patch" ]; then
+            PATCH=$((PATCH + 1))
+          fi
+
+          NEW_VERSION="${MAJOR}.${MINOR}.${PATCH}"
+          echo "version=$NEW_VERSION" >> "$GITHUB_OUTPUT"
+          echo "current=$CURRENT" >> "$GITHUB_OUTPUT"
+
+          # Check if this version tag already exists (idempotency)
+          if git rev-parse "v${NEW_VERSION}" >/dev/null 2>&1; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Update package.json
+        if: steps.bump.outputs.type != 'none' && steps.version.outputs.exists == 'false'
+        env:
+          NEW_VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          node -e "
+            const fs = require('fs');
+            const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+            pkg.version = process.env.NEW_VERSION;
+            fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
+          "
+
+      - name: Update CHANGELOG
+        if: steps.bump.outputs.type != 'none' && steps.version.outputs.exists == 'false'
+        env:
+          NEW_VERSION: ${{ steps.version.outputs.version }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_NUM: ${{ github.event.pull_request.number }}
+        run: |
+          DATE=$(date +%Y-%m-%d)
+
+          # Determine changelog section from PR title prefix
+          if echo "$PR_TITLE" | grep -qiE '^feat'; then
+            SECTION="Added"
+          elif echo "$PR_TITLE" | grep -qiE '^fix'; then
+            SECTION="Fixed"
+          else
+            SECTION="Changed"
+          fi
+
+          # Strip conventional commit prefix for clean changelog entry
+          CLEAN_TITLE=$(echo "$PR_TITLE" | sed -E 's/^[a-z]+(\([^)]*\))?:\s*//')
+
+          # Insert new entry before the first version header (only first match)
+          HEADER="## [$NEW_VERSION] - $DATE\n\n### $SECTION\n\n- $CLEAN_TITLE (#$PR_NUM)"
+          sed -i "0,/^## \[/{s/^## \[/${HEADER}\n\n## [/}" CHANGELOG.md
+
+          # Verify the entry was inserted
+          if ! grep -q "## \[$NEW_VERSION\]" CHANGELOG.md; then
+            echo "ERROR: CHANGELOG entry was not inserted" >&2
+            exit 1
+          fi
+
+      - name: Commit and tag
+        if: steps.bump.outputs.type != 'none' && steps.version.outputs.exists == 'false'
+        env:
+          NEW_VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add package.json CHANGELOG.md
+          git commit -m "release: v${NEW_VERSION}"
+          git tag "v${NEW_VERSION}"
+          git push origin main --tags
+
+      - name: Create GitHub Release
+        if: steps.bump.outputs.type != 'none' && steps.version.outputs.exists == 'false'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NEW_VERSION: ${{ steps.version.outputs.version }}
+          CURRENT_VERSION: ${{ steps.version.outputs.current }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_NUM: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+        run: |
+          # Strip conventional commit prefix for clean release title
+          CLEAN_TITLE=$(echo "$PR_TITLE" | sed -E 's/^[a-z]+(\([^)]*\))?:\s*//')
+
+          gh release create "v${NEW_VERSION}" \
+            --title "v${NEW_VERSION}" \
+            --notes "## What's new
+
+          ${CLEAN_TITLE} (#${PR_NUM})
+
+          **Full Changelog:** https://github.com/${REPO}/compare/v${CURRENT_VERSION}...v${NEW_VERSION}"
