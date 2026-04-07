@@ -332,7 +332,8 @@ function DetailPanel({ step, onClose }: { step: Step | null; onClose: () => void
         </div>
         <button
           onClick={onClose}
-          className="text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 text-lg"
+          aria-label="Close detail panel"
+          className="text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 text-lg p-1"
         >
           {'\u2715'}
         </button>

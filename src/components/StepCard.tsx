@@ -62,7 +62,7 @@ export default function StepCard({
                 e.stopPropagation();
                 onMoveUp();
               }}
-              className="text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 text-xs px-1"
+              className="text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 text-xs p-2 min-w-[36px] min-h-[36px] flex items-center justify-center"
               aria-label={`Move ${label} up`}
             >
               {'\u25B2'}
@@ -74,7 +74,7 @@ export default function StepCard({
                 e.stopPropagation();
                 onMoveDown();
               }}
-              className="text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 text-xs px-1"
+              className="text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 text-xs p-2 min-w-[36px] min-h-[36px] flex items-center justify-center"
               aria-label={`Move ${label} down`}
             >
               {'\u25BC'}
@@ -91,7 +91,7 @@ export default function StepCard({
               e.stopPropagation();
               onRemove();
             }}
-            className="text-red-500 hover:text-red-400 text-xs ml-1"
+            className="text-red-500 hover:text-red-400 text-xs ml-1 p-2 min-w-[36px] min-h-[36px] flex items-center justify-center"
             aria-label={`Remove ${label}`}
           >
             {'\u2715'}
