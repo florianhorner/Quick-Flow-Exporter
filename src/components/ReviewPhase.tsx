@@ -37,7 +37,7 @@ export default function ReviewPhase({ flow, onFlowChange, onExport }: ReviewPhas
     <div className="space-y-4">
       <div className="bg-white dark:bg-midnight-800 border border-slate-200 dark:border-midnight-700 rounded-xl shadow-sm p-4 flex flex-wrap gap-4 items-center">
         <div className="flex items-center gap-2">
-          <span className="text-sm font-bold text-cyan-600 dark:text-cyan-400 font-mono">
+          <span className="text-sm font-bold text-blue-600 dark:text-blue-400 font-mono">
             REVIEW
           </span>
           <div>
@@ -52,7 +52,7 @@ export default function ReviewPhase({ flow, onFlowChange, onExport }: ReviewPhas
         <div className="flex-1" />
         <button
           onClick={onExport}
-          className="bg-cyan-600 text-white px-5 py-2 rounded-lg text-sm font-semibold hover:bg-cyan-500 shadow-lg shadow-cyan-500/20"
+          className="bg-blue-600 text-white px-5 py-2 rounded-lg text-sm font-semibold hover:bg-blue-500 shadow-lg shadow-blue-500/20"
         >
           Export
         </button>
@@ -61,7 +61,7 @@ export default function ReviewPhase({ flow, onFlowChange, onExport }: ReviewPhas
       <div className="bg-white dark:bg-midnight-800 border border-slate-200 dark:border-midnight-700 rounded-lg shadow-sm p-4 space-y-2">
         <div className="flex gap-2 flex-wrap">
           <input
-            className="flex-1 min-w-48 border border-slate-200 dark:border-midnight-700 rounded px-3 py-2 text-sm font-semibold bg-slate-100 dark:bg-midnight-900 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-600 focus:border-cyan-500"
+            className="flex-1 min-w-48 border border-slate-200 dark:border-midnight-700 rounded px-3 py-2 text-sm font-semibold bg-slate-100 dark:bg-midnight-900 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-600 focus:border-blue-500"
             placeholder="Flow Title"
             value={flow.title}
             onChange={(e) => onFlowChange({ ...flow, title: e.target.value })}
@@ -84,13 +84,13 @@ export default function ReviewPhase({ flow, onFlowChange, onExport }: ReviewPhas
               type="checkbox"
               checked={flow.shared}
               onChange={(e) => onFlowChange({ ...flow, shared: e.target.checked })}
-              className="accent-cyan-500"
+              className="accent-blue-500"
             />
             Shared
           </label>
         </div>
         <textarea
-          className="w-full border border-slate-200 dark:border-midnight-700 rounded px-3 py-2 text-sm bg-slate-100 dark:bg-midnight-900 text-slate-700 dark:text-slate-300 placeholder-slate-400 dark:placeholder-slate-600 focus:border-cyan-500"
+          className="w-full border border-slate-200 dark:border-midnight-700 rounded px-3 py-2 text-sm bg-slate-100 dark:bg-midnight-900 text-slate-700 dark:text-slate-300 placeholder-slate-400 dark:placeholder-slate-600 focus:border-blue-500"
           rows={2}
           placeholder="Description"
           value={flow.description}
@@ -145,7 +145,7 @@ export default function ReviewPhase({ flow, onFlowChange, onExport }: ReviewPhas
               items: [...flow.items, createEmptyStep(addType)],
             })
           }
-          className="bg-cyan-600 text-white text-sm px-4 py-1.5 rounded hover:bg-cyan-500"
+          className="bg-blue-600 text-white text-sm px-4 py-1.5 rounded hover:bg-blue-500"
         >
           + Step
         </button>

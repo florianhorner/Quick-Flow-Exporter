@@ -61,7 +61,7 @@ export default function GroupsPhase({
             </button>
             <button
               onClick={onContinue}
-              className="px-6 py-2.5 rounded-lg text-sm font-semibold bg-cyan-600 text-white hover:bg-cyan-500 shadow-lg shadow-cyan-500/20"
+              className="px-6 py-2.5 rounded-lg text-sm font-semibold bg-blue-600 text-white hover:bg-blue-500 shadow-lg shadow-blue-500/20"
             >
               Continue to Review &rarr;
             </button>

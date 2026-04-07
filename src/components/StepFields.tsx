@@ -7,7 +7,7 @@ interface StepFieldsProps {
 }
 
 const inputClass =
-  'w-full border border-slate-200 dark:border-midnight-700 rounded px-2 py-1 text-sm bg-slate-100 dark:bg-midnight-900 text-slate-700 dark:text-slate-300 placeholder-slate-400 dark:placeholder-slate-600 focus:border-cyan-500';
+  'w-full border border-slate-200 dark:border-midnight-700 rounded px-2 py-1 text-sm bg-slate-100 dark:bg-midnight-900 text-slate-700 dark:text-slate-300 placeholder-slate-400 dark:placeholder-slate-600 focus:border-blue-500';
 const selectClass =
   'border border-slate-200 dark:border-midnight-700 rounded px-2 py-1 text-xs bg-slate-100 dark:bg-midnight-900 text-slate-700 dark:text-slate-300';
 
@@ -90,7 +90,7 @@ export default function StepFields({ step, onChange }: StepFieldsProps) {
               max="10"
               value={step.creativityLevel}
               onChange={(e) => update('creativityLevel', +e.target.value)}
-              className="w-20 accent-cyan-500"
+              className="w-20 accent-blue-500"
               aria-valuemin={0}
               aria-valuemax={10}
               aria-valuenow={step.creativityLevel}
@@ -107,7 +107,7 @@ export default function StepFields({ step, onChange }: StepFieldsProps) {
           </label>
           <textarea
             id={`prompt-${uid}`}
-            className="w-full border border-slate-200 dark:border-midnight-700 rounded px-2 py-1 text-sm bg-slate-50 dark:bg-[#0d1117] text-slate-700 dark:text-slate-300 font-mono placeholder-slate-400 dark:placeholder-slate-600 focus:border-cyan-500"
+            className="w-full border border-slate-200 dark:border-midnight-700 rounded px-2 py-1 text-sm bg-slate-50 dark:bg-[#0d1117] text-slate-700 dark:text-slate-300 font-mono placeholder-slate-400 dark:placeholder-slate-600 focus:border-blue-500"
             rows={4}
             placeholder="Prompt / Instructions"
             value={step.prompt}
@@ -149,7 +149,7 @@ export default function StepFields({ step, onChange }: StepFieldsProps) {
           </label>
           <textarea
             id={`config-${uid}`}
-            className="w-full border border-slate-200 dark:border-midnight-700 rounded px-2 py-1 text-sm bg-slate-50 dark:bg-[#0d1117] text-slate-700 dark:text-slate-300 font-mono placeholder-slate-400 dark:placeholder-slate-600 focus:border-cyan-500"
+            className="w-full border border-slate-200 dark:border-midnight-700 rounded px-2 py-1 text-sm bg-slate-50 dark:bg-[#0d1117] text-slate-700 dark:text-slate-300 font-mono placeholder-slate-400 dark:placeholder-slate-600 focus:border-blue-500"
             rows={3}
             placeholder="Configuration"
             value={step.config}
