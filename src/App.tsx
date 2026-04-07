@@ -82,7 +82,7 @@ export default function App() {
   const themeLabel = mode === 'light' ? 'Light' : mode === 'dark' ? 'Dark' : 'System';
 
   const navBtn = (active: boolean, activeColor: string) =>
-    `px-3 py-1.5 text-sm rounded font-medium transition-colors ${
+    `px-3 py-2 text-sm rounded font-medium transition-colors ${
       active
         ? `${activeColor} text-white`
         : 'bg-white dark:bg-midnight-800 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-midnight-700 border border-slate-200 dark:border-midnight-700'
@@ -94,7 +94,7 @@ export default function App() {
       <div className="bg-white dark:bg-midnight-800 border-b border-slate-200 dark:border-midnight-700 sticky top-0 z-10">
         <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between flex-wrap gap-2">
           <div className="flex items-center gap-3">
-            <span className="text-lg font-bold font-mono text-cyan-600 dark:text-cyan-400">
+            <span className="text-lg font-bold font-mono text-blue-600 dark:text-blue-400">
               Quick Flow Exporter
             </span>
             {phase !== 'paste' && flow.title && (
@@ -121,7 +121,7 @@ export default function App() {
                 )}
                 <button
                   onClick={() => setPhase('review')}
-                  className={navBtn(phase === 'review', 'bg-cyan-700')}
+                  className={navBtn(phase === 'review', 'bg-blue-700')}
                 >
                   Review
                 </button>
@@ -133,7 +133,7 @@ export default function App() {
                 </button>
                 <button
                   onClick={() => setPhase('export')}
-                  className={navBtn(phase === 'export', 'bg-cyan-700')}
+                  className={navBtn(phase === 'export', 'bg-blue-700')}
                 >
                   Export
                 </button>
@@ -147,7 +147,7 @@ export default function App() {
             </button>
             <button
               onClick={resetToNew}
-              className="px-3 py-1.5 text-sm rounded font-medium bg-cyan-600 text-white hover:bg-cyan-500 shadow-lg shadow-cyan-500/20"
+              className="px-3 py-2 text-sm rounded font-medium bg-blue-600 text-white hover:bg-blue-500 shadow-lg shadow-blue-500/20"
             >
               {phase === 'paste' ? 'Paste Mode' : 'New Export'}
             </button>
