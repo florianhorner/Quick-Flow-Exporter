@@ -52,7 +52,7 @@ export default function GroupCard({
       aria-label={label}
     >
       <div
-        className="flex items-center justify-between px-3 py-2 bg-purple-50 dark:bg-purple-900/20 rounded-t-lg cursor-pointer"
+        className="flex items-center justify-between px-3 py-2 bg-purple-50 dark:bg-purple-900/20 rounded-t-lg cursor-pointer hover:bg-purple-100 dark:hover:bg-purple-900/40 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-inset"
         role="button"
         tabIndex={0}
         aria-expanded={open}

@@ -79,7 +79,7 @@ export default function ExportPhase({ flow, onDownload, onBack }: ExportPhasePro
             <button
               key={f.key}
               onClick={() => setFormat(f.key)}
-              className={`px-3 py-1.5 text-sm rounded-md transition-all ${
+              className={`px-3 py-2 text-sm rounded-md transition-all ${
                 format === f.key
                   ? 'bg-white dark:bg-midnight-700 shadow font-semibold text-slate-900 dark:text-white'
                   : 'text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
@@ -114,7 +114,7 @@ export default function ExportPhase({ flow, onDownload, onBack }: ExportPhasePro
         </button>
         <button
           onClick={onBack}
-          className="text-sm text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
+          className="text-sm text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:rounded"
         >
           &larr; Back
         </button>

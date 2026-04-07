@@ -109,7 +109,7 @@ export default function DiffPhase({ currentFlow, onBack }: DiffPhaseProps) {
           <div className="flex items-center justify-between">
             <button
               onClick={onBack}
-              className="text-sm text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
+              className="text-sm text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:rounded"
             >
               &larr; Back
             </button>
@@ -192,7 +192,7 @@ export default function DiffPhase({ currentFlow, onBack }: DiffPhaseProps) {
         </button>
         <button
           onClick={onBack}
-          className="text-sm text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
+          className="text-sm text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:rounded"
         >
           &larr; Back
         </button>

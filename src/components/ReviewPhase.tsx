@@ -145,7 +145,7 @@ export default function ReviewPhase({ flow, onFlowChange, onExport }: ReviewPhas
               items: [...flow.items, createEmptyStep(addType)],
             })
           }
-          className="bg-blue-600 text-white text-sm px-4 py-1.5 rounded hover:bg-blue-500"
+          className="bg-blue-600 text-white text-sm px-4 py-2 rounded hover:bg-blue-500"
         >
           + Step
         </button>
@@ -156,7 +156,7 @@ export default function ReviewPhase({ flow, onFlowChange, onExport }: ReviewPhas
               items: [...flow.items, createEmptyGroup()],
             })
           }
-          className="bg-purple-600 text-white text-sm px-4 py-1.5 rounded hover:bg-purple-700"
+          className="bg-purple-600 text-white text-sm px-4 py-2 rounded hover:bg-purple-700"
         >
           + Group
         </button>

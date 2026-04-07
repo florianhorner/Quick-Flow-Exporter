@@ -34,7 +34,7 @@ export default function StepCard({
       aria-label={label}
     >
       <div
-        className="flex items-center justify-between px-3 py-2 bg-slate-50 dark:bg-midnight-900/50 rounded-t-lg cursor-pointer"
+        className="flex items-center justify-between px-3 py-2 bg-slate-50 dark:bg-midnight-900/50 rounded-t-lg cursor-pointer hover:bg-slate-100 dark:hover:bg-midnight-800 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-inset"
         role="button"
         tabIndex={0}
         aria-expanded={open}

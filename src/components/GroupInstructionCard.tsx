@@ -89,7 +89,7 @@ export default function GroupInstructionCard({
           <button
             onClick={handleParse}
             disabled={parsing || !rawInput.trim()}
-            className={`px-4 py-1.5 rounded text-sm font-medium ${
+            className={`px-4 py-2 rounded text-sm font-medium ${
               parsing
                 ? 'bg-slate-200 dark:bg-midnight-700 text-slate-400 dark:text-slate-500'
                 : rawInput.trim()
