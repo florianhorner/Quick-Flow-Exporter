@@ -52,7 +52,7 @@ export default function GroupCard({
       aria-label={label}
     >
       <div
-        className="flex items-center justify-between px-3 py-2 bg-purple-50 dark:bg-purple-900/20 rounded-t-lg cursor-pointer"
+        className="flex items-center justify-between px-3 py-2 bg-purple-50 dark:bg-purple-900/20 rounded-t-lg cursor-pointer hover:bg-purple-100 dark:hover:bg-purple-900/40 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-inset"
         role="button"
         tabIndex={0}
         aria-expanded={open}
@@ -81,7 +81,7 @@ export default function GroupCard({
                 e.stopPropagation();
                 onMoveUp();
               }}
-              className="text-purple-400 dark:text-purple-500 hover:text-purple-600 dark:hover:text-purple-300 text-xs px-1"
+              className="text-purple-400 dark:text-purple-500 hover:text-purple-600 dark:hover:text-purple-300 text-xs p-2 min-w-[36px] min-h-[36px] flex items-center justify-center"
               aria-label={`Move ${label} up`}
             >
               {'\u25B2'}
@@ -93,7 +93,7 @@ export default function GroupCard({
                 e.stopPropagation();
                 onMoveDown();
               }}
-              className="text-purple-400 dark:text-purple-500 hover:text-purple-600 dark:hover:text-purple-300 text-xs px-1"
+              className="text-purple-400 dark:text-purple-500 hover:text-purple-600 dark:hover:text-purple-300 text-xs p-2 min-w-[36px] min-h-[36px] flex items-center justify-center"
               aria-label={`Move ${label} down`}
             >
               {'\u25BC'}
@@ -110,7 +110,7 @@ export default function GroupCard({
               e.stopPropagation();
               onRemove();
             }}
-            className="text-red-500 hover:text-red-400 text-xs ml-1"
+            className="text-red-500 hover:text-red-400 text-xs ml-1 p-2 min-w-[36px] min-h-[36px] flex items-center justify-center"
             aria-label={`Remove ${label}`}
           >
             {'\u2715'}

@@ -4,6 +4,25 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.3.1] - 2026-04-07
+
+### Added
+
+- Component tests for DiffPhase, ExportPhase, PastePhase, and ThemeContext (159 tests total)
+- ThemeContext test suite covering localStorage persistence, system preference detection, toggle cycle, and error boundary
+
+### Changed
+
+- All cyan/teal accent colors replaced with blue (#2563EB / `blue-600`) across every component for red-green colorblind accessibility
+- Red-only and green-only status signals in DiffPhase replaced with amber (removed) and blue (added) so states are distinguishable without color
+- "NO CHANGES" state and success badges now include shape indicators (✓ checkmark) paired with color
+- Nav buttons, Compare Flows button, bookmarklet link, and CTA buttons updated from cyan to blue
+- Dot-grid background updated from cyan-500 to blue-600
+- Icon buttons in StepCard and GroupCard enlarged to 36×36px minimum touch target (WCAG 2.5.5)
+- FlowGraph close button gains `aria-label` for screen reader access
+- Back and New Diff links gain `focus-visible:ring` keyboard focus indicators
+- Error banners gain ⚠ icon prefix for non-color error signal
+
 ## [1.3.0] - 2026-03-30
 
 ### Added

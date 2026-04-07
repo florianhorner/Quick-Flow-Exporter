@@ -65,7 +65,7 @@ export default function BookmarkletPanel() {
   return (
     <div className="bg-white dark:bg-midnight-800 border border-slate-200 dark:border-midnight-700 rounded-xl shadow-sm p-5 space-y-3">
       <div className="flex items-center gap-2">
-        <span className="font-semibold text-sm text-cyan-600 dark:text-cyan-400 font-mono">
+        <span className="font-semibold text-sm text-blue-600 dark:text-blue-400 font-mono">
           Bookmarklet
         </span>
       </div>
@@ -80,7 +80,7 @@ export default function BookmarkletPanel() {
           ref={linkRef}
           href="#"
           onClick={(e) => e.preventDefault()}
-          className="inline-flex items-center gap-2 bg-cyan-600 text-white px-4 py-2 rounded-lg text-sm font-semibold shadow-lg shadow-cyan-500/20 hover:bg-cyan-500 cursor-grab active:cursor-grabbing select-none"
+          className="inline-flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold shadow-lg shadow-blue-500/20 hover:bg-blue-500 cursor-grab active:cursor-grabbing select-none"
           title="Drag this to your bookmarks bar"
         >
           {'\u26A1'} Quick Flow Export
@@ -93,13 +93,13 @@ export default function BookmarkletPanel() {
       <div className="flex gap-2">
         <button
           onClick={() => setShowCode(!showCode)}
-          className="text-xs text-cyan-600 dark:text-cyan-500 hover:text-cyan-500 dark:hover:text-cyan-400 underline py-1"
+          className="text-xs text-blue-600 dark:text-blue-500 hover:text-blue-500 dark:hover:text-blue-400 underline py-1"
         >
           {showCode ? 'Hide source' : 'View source'}
         </button>
         <button
           onClick={copyCode}
-          className="text-xs text-cyan-600 dark:text-cyan-500 hover:text-cyan-500 dark:hover:text-cyan-400 underline py-1"
+          className="text-xs text-blue-600 dark:text-blue-500 hover:text-blue-500 dark:hover:text-blue-400 underline py-1"
         >
           {copied ? 'Copied!' : 'Copy bookmarklet URL'}
         </button>

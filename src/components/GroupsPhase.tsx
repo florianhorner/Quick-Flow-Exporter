@@ -48,7 +48,7 @@ export default function GroupsPhase({
         <div className="flex items-center justify-between pt-2">
           <button
             onClick={onBack}
-            className="text-sm text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
+            className="text-sm text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:rounded"
           >
             &larr; Back
           </button>
@@ -61,7 +61,7 @@ export default function GroupsPhase({
             </button>
             <button
               onClick={onContinue}
-              className="px-6 py-2.5 rounded-lg text-sm font-semibold bg-cyan-600 text-white hover:bg-cyan-500 shadow-lg shadow-cyan-500/20"
+              className="px-6 py-2.5 rounded-lg text-sm font-semibold bg-blue-600 text-white hover:bg-blue-500 shadow-lg shadow-blue-500/20"
             >
               Continue to Review &rarr;
             </button>

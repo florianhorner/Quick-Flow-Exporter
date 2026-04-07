@@ -72,18 +72,18 @@ export default function DiffPhase({ currentFlow, onBack }: DiffPhaseProps) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <div className="flex items-center gap-2">
-                <span className="text-sm font-semibold text-red-500 dark:text-red-400">
+                <span className="text-sm font-semibold text-amber-500 dark:text-amber-400">
                   &laquo; Before
                 </span>
                 {currentFlow && (
-                  <span className="text-xs bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 px-2 py-0.5 rounded border border-green-200 dark:border-green-800">
-                    Using current flow: {currentFlow.title}
+                  <span className="text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 px-2 py-0.5 rounded border border-blue-200 dark:border-blue-800">
+                    ✓ Using current flow: {currentFlow.title}
                   </span>
                 )}
               </div>
               {!currentFlow && (
                 <textarea
-                  className="w-full border border-red-200 dark:border-red-900/50 rounded-lg px-4 py-3 text-sm font-mono bg-slate-50 dark:bg-[#0d1117] text-slate-700 dark:text-slate-300 placeholder-slate-400 dark:placeholder-slate-600 focus:border-red-500 focus:ring-1 focus:ring-red-500/30 transition-colors"
+                  className="w-full border border-amber-200 dark:border-amber-900/50 rounded-lg px-4 py-3 text-sm font-mono bg-slate-50 dark:bg-[#0d1117] text-slate-700 dark:text-slate-300 placeholder-slate-400 dark:placeholder-slate-600 focus:border-amber-500 focus:ring-1 focus:ring-amber-500/30 transition-colors"
                   rows={10}
                   placeholder="Paste the BEFORE version of the flow here..."
                   value={leftRaw}
@@ -92,11 +92,11 @@ export default function DiffPhase({ currentFlow, onBack }: DiffPhaseProps) {
               )}
             </div>
             <div className="space-y-2">
-              <span className="text-sm font-semibold text-green-600 dark:text-green-400">
+              <span className="text-sm font-semibold text-blue-600 dark:text-blue-400">
                 After &raquo;
               </span>
               <textarea
-                className="w-full border border-green-200 dark:border-green-900/50 rounded-lg px-4 py-3 text-sm font-mono bg-slate-50 dark:bg-[#0d1117] text-slate-700 dark:text-slate-300 placeholder-slate-400 dark:placeholder-slate-600 focus:border-green-500 focus:ring-1 focus:ring-green-500/30 transition-colors"
+                className="w-full border border-blue-200 dark:border-blue-900/50 rounded-lg px-4 py-3 text-sm font-mono bg-slate-50 dark:bg-[#0d1117] text-slate-700 dark:text-slate-300 placeholder-slate-400 dark:placeholder-slate-600 focus:border-blue-500 focus:ring-1 focus:ring-blue-500/30 transition-colors"
                 rows={10}
                 placeholder="Paste the AFTER version of the flow here..."
                 value={rightRaw}
@@ -109,7 +109,7 @@ export default function DiffPhase({ currentFlow, onBack }: DiffPhaseProps) {
           <div className="flex items-center justify-between">
             <button
               onClick={onBack}
-              className="text-sm text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
+              className="text-sm text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:rounded"
             >
               &larr; Back
             </button>
@@ -121,7 +121,7 @@ export default function DiffPhase({ currentFlow, onBack }: DiffPhaseProps) {
                   ? 'bg-slate-200 dark:bg-midnight-700 text-slate-400 dark:text-slate-500'
                   : (!currentFlow && !leftRaw.trim()) || !rightRaw.trim()
                     ? 'bg-slate-200 dark:bg-midnight-700 text-slate-400 dark:text-slate-500'
-                    : 'bg-cyan-600 text-white hover:bg-cyan-500 shadow-lg shadow-cyan-500/25'
+                    : 'bg-blue-600 text-white hover:bg-blue-500 shadow-lg shadow-blue-500/25'
               }`}
             >
               {parsing ? 'Parsing...' : 'Compare Flows'}
@@ -130,7 +130,7 @@ export default function DiffPhase({ currentFlow, onBack }: DiffPhaseProps) {
 
           {error && (
             <div className="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg p-3 text-sm text-red-600 dark:text-red-400">
-              {error}
+              ⚠ {error}
             </div>
           )}
         </div>
@@ -148,7 +148,7 @@ export default function DiffPhase({ currentFlow, onBack }: DiffPhaseProps) {
       {/* Summary bar */}
       <div className="bg-white dark:bg-midnight-800 border border-slate-200 dark:border-midnight-700 rounded-xl shadow-sm p-4 flex flex-wrap gap-4 items-center">
         <div className="flex items-center gap-2">
-          <span className="text-sm font-bold text-cyan-600 dark:text-cyan-400 font-mono">
+          <span className="text-sm font-bold text-blue-600 dark:text-blue-400 font-mono">
             DIFF
           </span>
           <div>
@@ -164,7 +164,7 @@ export default function DiffPhase({ currentFlow, onBack }: DiffPhaseProps) {
         </div>
         <div className="flex gap-3 text-xs">
           {summary.added > 0 && (
-            <span className="bg-green-100 dark:bg-green-900/40 text-green-600 dark:text-green-400 px-2 py-1 rounded-full font-medium border border-green-200 dark:border-green-800">
+            <span className="bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 px-2 py-1 rounded-full font-medium border border-blue-200 dark:border-blue-800">
               +{summary.added} added
             </span>
           )}
@@ -186,27 +186,27 @@ export default function DiffPhase({ currentFlow, onBack }: DiffPhaseProps) {
             setRightFlow(null);
             setRightRaw('');
           }}
-          className="text-sm text-cyan-600 dark:text-cyan-500 hover:text-cyan-500 dark:hover:text-cyan-400"
+          className="text-sm text-blue-600 dark:text-blue-500 hover:text-blue-500 dark:hover:text-blue-400"
         >
           &orarr; New Diff
         </button>
         <button
           onClick={onBack}
-          className="text-sm text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
+          className="text-sm text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:rounded"
         >
           &larr; Back
         </button>
       </div>
 
       {noChanges ? (
-        <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl shadow-sm p-8 text-center">
-          <div className="text-sm font-bold text-green-600 dark:text-green-400 font-mono mb-2">
-            NO CHANGES
+        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl shadow-sm p-8 text-center">
+          <div className="text-sm font-bold text-blue-600 dark:text-blue-400 font-mono mb-2">
+            ✓ NO CHANGES
           </div>
-          <div className="font-semibold text-green-600 dark:text-green-400">
+          <div className="font-semibold text-blue-600 dark:text-blue-400">
             Flows are identical
           </div>
-          <div className="text-sm text-green-500 mt-1">
+          <div className="text-sm text-blue-500 mt-1">
             No differences found between the two versions.
           </div>
         </div>
@@ -225,7 +225,7 @@ export default function DiffPhase({ currentFlow, onBack }: DiffPhaseProps) {
                 key={change.path}
                 className={`bg-white dark:bg-midnight-800 rounded-lg shadow-sm border-l-4 border border-slate-200 dark:border-midnight-700 ${
                   change.type === 'added'
-                    ? 'border-l-green-500'
+                    ? 'border-l-blue-500'
                     : change.type === 'removed'
                       ? 'border-l-red-500'
                       : 'border-l-amber-500'
@@ -238,7 +238,7 @@ export default function DiffPhase({ currentFlow, onBack }: DiffPhaseProps) {
                   <span
                     className={`text-xs font-bold uppercase px-2 py-0.5 rounded ${
                       change.type === 'added'
-                        ? 'bg-green-100 dark:bg-green-900/40 text-green-600 dark:text-green-400'
+                        ? 'bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400'
                         : change.type === 'removed'
                           ? 'bg-red-100 dark:bg-red-900/40 text-red-600 dark:text-red-400'
                           : 'bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400'
@@ -263,11 +263,11 @@ export default function DiffPhase({ currentFlow, onBack }: DiffPhaseProps) {
                 {/* Inline preview for short values */}
                 {!isPromptChange && !hasLongContent && change.type === 'modified' && (
                   <div className="px-4 pb-3 flex items-center gap-2 text-sm">
-                    <span className="bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 px-2 py-0.5 rounded line-through">
+                    <span className="bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 px-2 py-0.5 rounded line-through">
                       {change.leftValue}
                     </span>
                     <span className="text-slate-400 dark:text-slate-500">&rarr;</span>
-                    <span className="bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 px-2 py-0.5 rounded">
+                    <span className="bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 px-2 py-0.5 rounded">
                       {change.rightValue}
                     </span>
                   </div>
@@ -285,14 +285,14 @@ export default function DiffPhase({ currentFlow, onBack }: DiffPhaseProps) {
                             seg.op === 'delete' ? (
                               <span
                                 key={i}
-                                className="bg-red-100 dark:bg-red-900/50 text-red-600 dark:text-red-300 line-through"
+                                className="bg-amber-100 dark:bg-amber-900/50 text-amber-600 dark:text-amber-300 line-through"
                               >
                                 {seg.text}
                               </span>
                             ) : seg.op === 'insert' ? (
                               <span
                                 key={i}
-                                className="bg-green-100 dark:bg-green-900/50 text-green-600 dark:text-green-300"
+                                className="bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-300"
                               >
                                 {seg.text}
                               </span>
@@ -310,7 +310,7 @@ export default function DiffPhase({ currentFlow, onBack }: DiffPhaseProps) {
                     <pre
                       className={`text-sm font-mono rounded-lg p-3 border whitespace-pre-wrap ${
                         change.type === 'added'
-                          ? 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 border-green-200 dark:border-green-800'
+                          ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800'
                           : 'bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 border-red-200 dark:border-red-800'
                       }`}
                     >

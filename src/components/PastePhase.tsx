@@ -67,13 +67,13 @@ export default function PastePhase({
           </h2>
           <p className="text-slate-500 dark:text-slate-400 text-sm">
             Open your flow in the Quick Flows editor, then{' '}
-            <kbd className="px-1.5 py-0.5 bg-slate-100 dark:bg-midnight-900 border border-slate-200 dark:border-midnight-700 rounded text-xs font-mono text-cyan-600 dark:text-cyan-400">
+            <kbd className="px-1.5 py-0.5 bg-slate-100 dark:bg-midnight-900 border border-slate-200 dark:border-midnight-700 rounded text-xs font-mono text-blue-600 dark:text-blue-400">
               Ctrl+A
             </kbd>{' '}
-            <kbd className="px-1.5 py-0.5 bg-slate-100 dark:bg-midnight-900 border border-slate-200 dark:border-midnight-700 rounded text-xs font-mono text-cyan-600 dark:text-cyan-400">
+            <kbd className="px-1.5 py-0.5 bg-slate-100 dark:bg-midnight-900 border border-slate-200 dark:border-midnight-700 rounded text-xs font-mono text-blue-600 dark:text-blue-400">
               Ctrl+C
             </kbd>{' '}
-            <kbd className="px-1.5 py-0.5 bg-slate-100 dark:bg-midnight-900 border border-slate-200 dark:border-midnight-700 rounded text-xs font-mono text-cyan-600 dark:text-cyan-400">
+            <kbd className="px-1.5 py-0.5 bg-slate-100 dark:bg-midnight-900 border border-slate-200 dark:border-midnight-700 rounded text-xs font-mono text-blue-600 dark:text-blue-400">
               Ctrl+V
             </kbd>
             {' here.'}
@@ -85,7 +85,7 @@ export default function PastePhase({
         </label>
         <textarea
           id="paste-input"
-          className="w-full border border-slate-200 dark:border-midnight-700 rounded-lg px-4 py-3 text-sm font-mono bg-slate-50 dark:bg-[#0d1117] text-slate-700 dark:text-slate-300 placeholder-slate-400 dark:placeholder-slate-600 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/30 transition-colors"
+          className="w-full border border-slate-200 dark:border-midnight-700 rounded-lg px-4 py-3 text-sm font-mono bg-slate-50 dark:bg-[#0d1117] text-slate-700 dark:text-slate-300 placeholder-slate-400 dark:placeholder-slate-600 focus:border-blue-500 focus:ring-1 focus:ring-blue-500/30 transition-colors"
           rows={12}
           placeholder={
             '// Paste your flow content here...\n\nTip: In the Quick Flows editor, press Ctrl+A to select all, then Ctrl+C to copy.'
@@ -96,7 +96,7 @@ export default function PastePhase({
         />
 
         {needsKey && (
-          <div className="bg-slate-100 dark:bg-midnight-900 border border-cyan-300/50 dark:border-cyan-800/50 rounded-lg p-4 space-y-3">
+          <div className="bg-slate-100 dark:bg-midnight-900 border border-blue-300/50 dark:border-blue-800/50 rounded-lg p-4 space-y-3">
             <div className="flex items-center gap-2">
               <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">
                 Configure AI provider
@@ -115,7 +115,7 @@ export default function PastePhase({
                 id="provider-select"
                 value={selectedProvider}
                 onChange={(e) => handleProviderChange(e.target.value as Provider)}
-                className="w-full border border-slate-200 dark:border-midnight-700 rounded-lg px-3 py-2 text-sm bg-slate-50 dark:bg-[#0d1117] text-slate-700 dark:text-slate-300 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/30"
+                className="w-full border border-slate-200 dark:border-midnight-700 rounded-lg px-3 py-2 text-sm bg-slate-50 dark:bg-[#0d1117] text-slate-700 dark:text-slate-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500/30"
               >
                 {PROVIDERS.map((p) => (
                   <option key={p.value} value={p.value}>
@@ -138,12 +138,12 @@ export default function PastePhase({
                   }}
                   placeholder={currentProviderInfo.keyPlaceholder}
                   autoFocus
-                  className="flex-1 border border-slate-200 dark:border-midnight-700 rounded-lg px-3 py-2 text-sm font-mono bg-slate-50 dark:bg-[#0d1117] text-slate-700 dark:text-slate-300 placeholder-slate-400 dark:placeholder-slate-600 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/30"
+                  className="flex-1 border border-slate-200 dark:border-midnight-700 rounded-lg px-3 py-2 text-sm font-mono bg-slate-50 dark:bg-[#0d1117] text-slate-700 dark:text-slate-300 placeholder-slate-400 dark:placeholder-slate-600 focus:border-blue-500 focus:ring-1 focus:ring-blue-500/30"
                 />
                 <button
                   onClick={handleKeySaveAndParse}
                   disabled={!keyValue.trim() || !raw.trim()}
-                  className="px-4 py-2 rounded-lg text-sm font-semibold bg-cyan-600 text-white hover:bg-cyan-500 disabled:bg-slate-200 dark:disabled:bg-midnight-700 disabled:text-slate-400 dark:disabled:text-slate-500"
+                  className="px-4 py-2 rounded-lg text-sm font-semibold bg-blue-600 text-white hover:bg-blue-500 disabled:bg-slate-200 dark:disabled:bg-midnight-700 disabled:text-slate-400 dark:disabled:text-slate-500"
                 >
                   Save & Parse
                 </button>
@@ -155,7 +155,7 @@ export default function PastePhase({
                 <p className="flex-1 text-xs text-slate-400 dark:text-slate-500">
                   Bedrock uses server-side AWS credentials. Make sure the proxy server has
                   access to{' '}
-                  <code className="text-cyan-600 dark:text-cyan-500">
+                  <code className="text-blue-600 dark:text-blue-500">
                     ~/.aws/credentials
                   </code>{' '}
                   or the appropriate environment variables.
@@ -166,7 +166,7 @@ export default function PastePhase({
                     onParse();
                   }}
                   disabled={!raw.trim()}
-                  className="px-4 py-2 rounded-lg text-sm font-semibold bg-cyan-600 text-white hover:bg-cyan-500 disabled:bg-slate-200 dark:disabled:bg-midnight-700 disabled:text-slate-400 dark:disabled:text-slate-500"
+                  className="px-4 py-2 rounded-lg text-sm font-semibold bg-blue-600 text-white hover:bg-blue-500 disabled:bg-slate-200 dark:disabled:bg-midnight-700 disabled:text-slate-400 dark:disabled:text-slate-500"
                 >
                   Parse
                 </button>
@@ -177,23 +177,23 @@ export default function PastePhase({
               Stored in your browser only. Or set the appropriate env var on the proxy
               server (
               {currentProviderInfo.value === 'anthropic' && (
-                <code className="text-cyan-600 dark:text-cyan-500">
+                <code className="text-blue-600 dark:text-blue-500">
                   ANTHROPIC_API_KEY
                 </code>
               )}
               {currentProviderInfo.value === 'openai' && (
-                <code className="text-cyan-600 dark:text-cyan-500">OPENAI_API_KEY</code>
+                <code className="text-blue-600 dark:text-blue-500">OPENAI_API_KEY</code>
               )}
               {currentProviderInfo.value === 'gemini' && (
-                <code className="text-cyan-600 dark:text-cyan-500">GEMINI_API_KEY</code>
+                <code className="text-blue-600 dark:text-blue-500">GEMINI_API_KEY</code>
               )}
               {currentProviderInfo.value === 'perplexity' && (
-                <code className="text-cyan-600 dark:text-cyan-500">
+                <code className="text-blue-600 dark:text-blue-500">
                   PERPLEXITY_API_KEY
                 </code>
               )}
               {currentProviderInfo.value === 'bedrock' && (
-                <code className="text-cyan-600 dark:text-cyan-500">AWS_REGION</code>
+                <code className="text-blue-600 dark:text-blue-500">AWS_REGION</code>
               )}
               ).
             </p>
@@ -226,7 +226,7 @@ export default function PastePhase({
               parsing
                 ? 'bg-slate-200 dark:bg-midnight-700 text-slate-400 dark:text-slate-500'
                 : raw.trim()
-                  ? 'bg-cyan-600 text-white hover:bg-cyan-500 shadow-lg shadow-cyan-500/25'
+                  ? 'bg-blue-600 text-white hover:bg-blue-500 shadow-lg shadow-blue-500/25'
                   : 'bg-slate-200 dark:bg-midnight-700 text-slate-400 dark:text-slate-500'
             }`}
           >
@@ -239,7 +239,7 @@ export default function PastePhase({
             role="alert"
             className="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg p-3 text-sm text-red-600 dark:text-red-400"
           >
-            {parseError}
+            ⚠ {parseError}
           </div>
         )}
       </div>

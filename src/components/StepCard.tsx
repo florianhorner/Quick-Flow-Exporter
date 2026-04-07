@@ -34,7 +34,7 @@ export default function StepCard({
       aria-label={label}
     >
       <div
-        className="flex items-center justify-between px-3 py-2 bg-slate-50 dark:bg-midnight-900/50 rounded-t-lg cursor-pointer"
+        className="flex items-center justify-between px-3 py-2 bg-slate-50 dark:bg-midnight-900/50 rounded-t-lg cursor-pointer hover:bg-slate-100 dark:hover:bg-midnight-800 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-inset"
         role="button"
         tabIndex={0}
         aria-expanded={open}
@@ -62,7 +62,7 @@ export default function StepCard({
                 e.stopPropagation();
                 onMoveUp();
               }}
-              className="text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 text-xs px-1"
+              className="text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 text-xs p-2 min-w-[36px] min-h-[36px] flex items-center justify-center"
               aria-label={`Move ${label} up`}
             >
               {'\u25B2'}
@@ -74,7 +74,7 @@ export default function StepCard({
                 e.stopPropagation();
                 onMoveDown();
               }}
-              className="text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 text-xs px-1"
+              className="text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 text-xs p-2 min-w-[36px] min-h-[36px] flex items-center justify-center"
               aria-label={`Move ${label} down`}
             >
               {'\u25BC'}
@@ -91,7 +91,7 @@ export default function StepCard({
               e.stopPropagation();
               onRemove();
             }}
-            className="text-red-500 hover:text-red-400 text-xs ml-1"
+            className="text-red-500 hover:text-red-400 text-xs ml-1 p-2 min-w-[36px] min-h-[36px] flex items-center justify-center"
             aria-label={`Remove ${label}`}
           >
             {'\u2715'}
