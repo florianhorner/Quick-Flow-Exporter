@@ -138,7 +138,7 @@ describe('DiffPhase', () => {
       vi.mocked(parseFlow).mockResolvedValue(flow);
       const user = userEvent.setup();
       await driveToResult(user, flow);
-      expect(await screen.findByText('NO CHANGES')).toBeInTheDocument();
+      expect(await screen.findByText('✓ NO CHANGES')).toBeInTheDocument();
     });
 
     it('shows change count when flows differ', async () => {
