@@ -46,7 +46,7 @@ export default function GroupInstructionCard({
           ({item.steps.length} steps inside)
         </span>
         {extracted && item.reasoningInstructions && (
-          <span className="text-xs text-green-600 dark:text-green-400 font-medium">
+          <span className="text-xs text-blue-600 dark:text-blue-400 font-medium">
             {'\u2713'} extracted
           </span>
         )}

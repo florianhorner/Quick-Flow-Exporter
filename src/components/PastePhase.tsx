@@ -239,7 +239,7 @@ export default function PastePhase({
             role="alert"
             className="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg p-3 text-sm text-red-600 dark:text-red-400"
           >
-            {parseError}
+            ⚠ {parseError}
           </div>
         )}
       </div>

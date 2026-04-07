@@ -97,10 +97,10 @@ export default function ExportPhase({ flow, onDownload, onBack }: ExportPhasePro
           onClick={copyContent}
           className={`px-5 py-2 rounded-lg text-sm font-semibold shadow ${
             formatCopied
-              ? 'bg-green-600 text-white'
+              ? 'bg-blue-600 text-white'
               : copyError
                 ? 'bg-red-600 text-white'
-                : 'bg-cyan-600 text-white hover:bg-cyan-500 shadow-cyan-500/20'
+                : 'bg-blue-600 text-white hover:bg-blue-500 shadow-blue-500/20'
           }`}
           aria-live="polite"
         >
