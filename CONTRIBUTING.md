@@ -4,10 +4,15 @@ Thanks for your interest in contributing to Quick Flow Exporter.
 
 ## Getting Started
 
+Prerequisites:
+
+- Node.js 22 or newer
+- npm 10 or newer
+
 1. Fork the repo
 2. Clone your fork and install dependencies:
    ```bash
-   npm install
+   npm ci
    ```
 3. Create a branch for your change:
    ```bash
