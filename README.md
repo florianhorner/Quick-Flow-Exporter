@@ -81,10 +81,15 @@ Drag the bookmarklet to your bookmarks bar. One click on any Quick Flows editor 
 
 ## Quick Start
 
+### Prerequisites
+
+- Node.js 22 or newer
+- npm 10 or newer
+
 ```bash
 git clone https://github.com/florianhorner/Quick-Flow-Exporter.git
 cd Quick-Flow-Exporter
-npm install
+npm ci
 npm run dev
 ```
 

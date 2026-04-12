@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.3.2] - 2026-04-12
+
+### Changed
+
+- Updated all dependencies to latest patch/minor versions (zero vulnerabilities)
+- Added `engines` field requiring Node >=22 and npm >=10
+- Added `overrides.brace-expansion` to resolve audit vulnerability
+- README and CONTRIBUTING updated with Node/npm prerequisites and `npm ci` install step
+- Added `.nvmrc` pinned to Node 22
+
 ## [1.3.1] - 2026-04-07
 
 ### Added
