@@ -183,3 +183,27 @@ export function createRateLimiter(limit: number, windowMs: number): RateLimiter 
 
   return { isRateLimited, prune };
 }
+
+/** Validates a Gemini model name to prevent path traversal via env var injection. */
+export function validateGeminiModel(model: string): string {
+  if (!/^[a-zA-Z0-9._-]+$/.test(model)) {
+    throw new Error(`Invalid GEMINI_MODEL value: ${model}`);
+  }
+  return model;
+}
+
+/**
+ * Extracts the client IP from headers when behind a trusted reverse proxy.
+ * Uses the LAST segment of X-Forwarded-For (appended by the proxy) rather
+ * than the first (client-supplied and forgeable), preventing rate-limit bypass.
+ */
+export function extractTrustedIp(
+  xForwardedFor: string | undefined,
+  fallback: string | undefined
+): string {
+  const segments = (xForwardedFor ?? '')
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean);
+  return segments[segments.length - 1] ?? fallback ?? 'unknown';
+}

@@ -2,8 +2,10 @@ import { describe, it, expect } from 'vitest';
 import {
   createProviderHttpError,
   createRateLimiter,
+  extractTrustedIp,
   getRateLimitIp,
   ProxyHttpError,
+  validateGeminiModel,
   validateProxyRequest,
   VALID_PROVIDERS,
 } from '../proxy-utils';
@@ -111,8 +113,8 @@ describe('rate limiter logic', () => {
 
   it('blocks requests over the limit', () => {
     const limiter = createRateLimiter(2, 60_000);
-    limiter.isRateLimited('1.2.3.4');
-    limiter.isRateLimited('1.2.3.4');
+    expect(limiter.isRateLimited('1.2.3.4')).toBe(false);
+    expect(limiter.isRateLimited('1.2.3.4')).toBe(false);
     expect(limiter.isRateLimited('1.2.3.4')).toBe(true);
   });
 
@@ -187,5 +189,68 @@ describe('provider error mapping', () => {
     const err = createProviderHttpError('gemini', 503);
     expect(err.status).toBe(503);
     expect(err.message).toContain('API request failed (503)');
+  });
+});
+
+describe('extractTrustedIp', () => {
+  // Regression: ISSUE-001 — rate-limit bypass via forged X-Forwarded-For
+  // Found by /qa on 2026-04-14
+  // Report: .gstack/qa-reports/qa-report-localhost-2026-04-14.md
+  //
+  // Bug: the server was reading split(',')[0] (client-controlled first segment).
+  // An attacker could send "attacker-ip, real-proxy-ip" and get a fresh rate-limit
+  // bucket each request by rotating the first segment.
+  // Fix: use the last segment — that's the one the trusted proxy appended.
+
+  it('returns the LAST segment of X-Forwarded-For, not the first', () => {
+    // client sends "fake-ip, real-ip" — must use real-ip (last, proxy-appended)
+    expect(extractTrustedIp('1.1.1.1, 2.2.2.2, 3.3.3.3', '4.4.4.4')).toBe('3.3.3.3');
+  });
+
+  it('with a single IP returns that IP', () => {
+    expect(extractTrustedIp('5.5.5.5', '6.6.6.6')).toBe('5.5.5.5');
+  });
+
+  it('trims whitespace from the IP segments', () => {
+    expect(extractTrustedIp('  1.1.1.1  ,  2.2.2.2  ', '9.9.9.9')).toBe('2.2.2.2');
+  });
+
+  it('falls back to socket address when header is undefined', () => {
+    expect(extractTrustedIp(undefined, '7.7.7.7')).toBe('7.7.7.7');
+  });
+
+  it('falls back to "unknown" when both header and socket are absent', () => {
+    expect(extractTrustedIp(undefined, undefined)).toBe('unknown');
+  });
+
+  it('handles empty header string by falling back to socket address', () => {
+    expect(extractTrustedIp('', '8.8.8.8')).toBe('8.8.8.8');
+  });
+
+  it('handles whitespace-only header by falling back to socket address', () => {
+    expect(extractTrustedIp('   ', '8.8.8.8')).toBe('8.8.8.8');
+  });
+});
+
+describe('validateGeminiModel', () => {
+  it('accepts valid model names', () => {
+    expect(validateGeminiModel('gemini-2.5-flash')).toBe('gemini-2.5-flash');
+    expect(validateGeminiModel('gemini-1.5-pro')).toBe('gemini-1.5-pro');
+    expect(validateGeminiModel('gemini-pro')).toBe('gemini-pro');
+  });
+
+  it('rejects path traversal attempts', () => {
+    expect(() => validateGeminiModel('gemini-2.5-flash/../../../evil')).toThrow(
+      'Invalid GEMINI_MODEL'
+    );
+  });
+
+  it('rejects shell injection characters', () => {
+    expect(() => validateGeminiModel('gemini;rm -rf /')).toThrow('Invalid GEMINI_MODEL');
+    expect(() => validateGeminiModel('gemini&evil')).toThrow('Invalid GEMINI_MODEL');
+  });
+
+  it('rejects empty string', () => {
+    expect(() => validateGeminiModel('')).toThrow('Invalid GEMINI_MODEL');
   });
 });

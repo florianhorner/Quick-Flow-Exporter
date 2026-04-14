@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import type { Flow, FlowItem, Phase, HistoryEntry } from './types';
 import { createEmptyFlow, allGroups, allSteps } from './lib/flow';
+import { MAX_HISTORY_ENTRIES } from './constants';
 import { parseFlow } from './lib/parser';
 import { loadHistory, saveHistory } from './lib/storage';
 import { useTheme } from './context/ThemeContext';
@@ -50,7 +51,7 @@ export default function App() {
       date: new Date().toISOString(),
       stepCount: allSteps(flow.items).length,
     };
-    const next = [entry, ...history].slice(0, 20);
+    const next = [entry, ...history].slice(0, MAX_HISTORY_ENTRIES);
     setHistory(next);
     await saveHistory(next);
   }, [flow, history]);

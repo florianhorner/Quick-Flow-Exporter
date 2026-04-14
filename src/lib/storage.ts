@@ -1,5 +1,5 @@
 import type { HistoryEntry } from '../types';
-import { STORAGE_KEY_HISTORY } from '../constants';
+import { STORAGE_KEY_HISTORY, MAX_HISTORY_ENTRIES } from '../constants';
 
 /**
  * Persist and retrieve export history.
@@ -9,13 +9,13 @@ import { STORAGE_KEY_HISTORY } from '../constants';
  * runtime we use it; otherwise we fall back to localStorage.
  */
 
-interface QuickSuiteStorage {
+interface QuickFlowStorage {
   get(key: string): Promise<{ value: string } | null>;
   set(key: string, value: string): Promise<void>;
 }
 
-function getBackend(): QuickSuiteStorage | null {
-  const win = window as unknown as { storage?: QuickSuiteStorage };
+function getBackend(): QuickFlowStorage | null {
+  const win = window as unknown as { storage?: QuickFlowStorage };
   return win.storage ?? null;
 }
 
@@ -59,7 +59,7 @@ export async function loadHistory(): Promise<HistoryEntry[]> {
 
 export async function saveHistory(entries: HistoryEntry[]): Promise<void> {
   // Sanitize before persisting — strip anything unexpected
-  const clean = validateHistory(entries).slice(0, 50);
+  const clean = validateHistory(entries).slice(0, MAX_HISTORY_ENTRIES);
   const json = JSON.stringify(clean);
   try {
     const backend = getBackend();
