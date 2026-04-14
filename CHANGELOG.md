@@ -19,6 +19,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 - You can now deploy Quick Flow Exporter to Vercel with zero config — `vercel.json` sets up the build command, output directory, and SPA rewrites so every route resolves correctly
 
+### Security
+
+- Fixed rate limit bypass via forged `X-Forwarded-For` header when `TRUST_PROXY=true`, and restored correct per-client limiting behind multi-hop proxy chains via configurable trusted hop depth (`server/proxy.ts`)
+
 ## [1.3.1] - 2026-04-07
 
 ### Added

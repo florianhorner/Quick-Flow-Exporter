@@ -58,6 +58,24 @@ interface ParseRequest {
   maxTokens?: number;
 }
 
+function extractProxyErrorMessage(raw: string): string | null {
+  if (!raw.trim()) return null;
+  try {
+    const parsed: unknown = JSON.parse(raw);
+    if (
+      typeof parsed === 'object' &&
+      parsed !== null &&
+      'error' in parsed &&
+      typeof (parsed as { error?: unknown }).error === 'string'
+    ) {
+      return (parsed as { error: string }).error;
+    }
+  } catch {
+    return null;
+  }
+  return null;
+}
+
 export async function parseWithAI({
   system,
   userMessage,
@@ -83,8 +101,12 @@ export async function parseWithAI({
     });
 
     if (!res.ok) {
-      const body = await res.text().catch(() => '');
-      throw new Error(`AI proxy returned ${res.status}: ${body}`);
+      const rawBody = await res.text().catch(() => '');
+      const proxyError = extractProxyErrorMessage(rawBody);
+      if (proxyError) {
+        throw new Error(proxyError);
+      }
+      throw new Error(`AI proxy request failed (${res.status}).`);
     }
 
     const data: unknown = await res.json();

@@ -172,4 +172,17 @@ describe('PastePhase', () => {
     expect(screen.queryByPlaceholderText('sk-ant-...')).not.toBeInTheDocument();
     expect(screen.getByText(/server-side AWS credentials/i)).toBeInTheDocument();
   });
+
+  it('renders a feedback link to the issue chooser', () => {
+    render(<PastePhase {...defaultProps} />);
+    const link = screen.getByRole('link', {
+      name: /report a bug \/ share feedback/i,
+    });
+    expect(link).toHaveAttribute(
+      'href',
+      'https://github.com/florianhorner/Quick-Flow-Exporter/issues/new/choose'
+    );
+    expect(link).toHaveAttribute('target', '_blank');
+    expect(link).toHaveAttribute('rel', 'noopener noreferrer');
+  });
 });

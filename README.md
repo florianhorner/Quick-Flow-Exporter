@@ -90,10 +90,21 @@ Drag the bookmarklet to your bookmarks bar. One click on any Quick Flows editor 
 git clone https://github.com/florianhorner/Quick-Flow-Exporter.git
 cd Quick-Flow-Exporter
 npm ci
-npm run dev
 ```
 
-Open `http://localhost:5173` in your browser.
+Start both required processes:
+
+```bash
+# Terminal 1 — frontend
+npm run dev
+
+# Terminal 2 — AI proxy (Anthropic default)
+ANTHROPIC_API_KEY=sk-... npx tsx server/proxy.ts
+```
+
+Open `http://localhost:5173` in your browser. Parsing requires both frontend and proxy to be running.
+
+If `Parse & Extract` is disabled or parsing fails, verify the proxy is running and review [AI Proxy Setup](#ai-proxy-setup) for provider-specific key configuration.
 
 > **Note:** `npm run dev` starts the Vite frontend only. To use AI parsing, you also need the proxy running in a separate terminal — see [AI Proxy Setup](#ai-proxy-setup) below.
 
@@ -165,25 +176,28 @@ ANTHROPIC_API_KEY=sk-... OPENAI_API_KEY=sk-... PERPLEXITY_API_KEY=pplx-... npx t
 
 ### Environment variables
 
-| Variable             | Default                                     | Description                  |
-| -------------------- | ------------------------------------------- | ---------------------------- |
-| `PROVIDER`           | `anthropic`                                 | Default AI provider          |
-| `ANTHROPIC_API_KEY`  | —                                           | Anthropic API key            |
-| `ANTHROPIC_MODEL`    | `claude-sonnet-4-20250514`                  | Anthropic model ID           |
-| `OPENAI_API_KEY`     | —                                           | OpenAI API key               |
-| `OPENAI_MODEL`       | `gpt-4o`                                    | OpenAI model ID              |
-| `GEMINI_API_KEY`     | —                                           | Google Gemini API key        |
-| `GEMINI_MODEL`       | `gemini-2.5-flash`                          | Gemini model ID              |
-| `PERPLEXITY_API_KEY` | —                                           | Perplexity API key           |
-| `PERPLEXITY_MODEL`   | `sonar-pro`                                 | Perplexity model ID          |
-| `AWS_REGION`         | `us-east-1`                                 | AWS region for Bedrock       |
-| `BEDROCK_MODEL_ID`   | `anthropic.claude-3-5-sonnet-20241022-v2:0` | Bedrock model ID             |
-| `PORT`               | `3001`                                      | Proxy server port            |
-| `RATE_LIMIT`         | `20`                                        | Requests per 60s per IP      |
-| `TRUST_PROXY`        | `false`                                     | Trust X-Forwarded-For header |
-| `CORS_ORIGIN`        | `http://localhost:5173`                     | Allowed CORS origin          |
+| Variable             | Default                                     | Description                   |
+| -------------------- | ------------------------------------------- | ----------------------------- |
+| `PROVIDER`           | `anthropic`                                 | Default AI provider           |
+| `ANTHROPIC_API_KEY`  | —                                           | Anthropic API key             |
+| `ANTHROPIC_MODEL`    | `claude-sonnet-4-20250514`                  | Anthropic model ID            |
+| `OPENAI_API_KEY`     | —                                           | OpenAI API key                |
+| `OPENAI_MODEL`       | `gpt-4o`                                    | OpenAI model ID               |
+| `GEMINI_API_KEY`     | —                                           | Google Gemini API key         |
+| `GEMINI_MODEL`       | `gemini-2.5-flash`                          | Gemini model ID               |
+| `PERPLEXITY_API_KEY` | —                                           | Perplexity API key            |
+| `PERPLEXITY_MODEL`   | `sonar-pro`                                 | Perplexity model ID           |
+| `AWS_REGION`         | `us-east-1`                                 | AWS region for Bedrock        |
+| `BEDROCK_MODEL_ID`   | `anthropic.claude-3-5-sonnet-20241022-v2:0` | Bedrock model ID              |
+| `PORT`               | `3001`                                      | Proxy server port             |
+| `RATE_LIMIT`         | `20`                                        | Requests per 60s per IP       |
+| `TRUST_PROXY`        | `false`                                     | Trust X-Forwarded-For header  |
+| `TRUST_PROXY_HOPS`   | `1`                                         | Trusted proxy hops from right |
+| `CORS_ORIGIN`        | `http://localhost:5173`                     | Allowed CORS origin           |
 
 > The Vite dev server proxies `/api` requests to `http://localhost:3001` automatically.
+>
+> If `TRUST_PROXY=true`, set `TRUST_PROXY_HOPS` to the number of trusted proxies that append to `X-Forwarded-For` between the browser and this app. `1` fits a single reverse proxy; larger chains such as CDN + ingress typically need `2` or more.
 
 ## How It Works
 
