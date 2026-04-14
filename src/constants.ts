@@ -31,6 +31,9 @@ export const RUN_CONDITIONS: RunCondition[] = [
   'Validate data range',
 ];
 
+// Intentionally kept as 'qs-export-history' (old QuickSuite prefix) for backward
+// compatibility with existing users' localStorage data. Changing this key would
+// silently lose all prior export history for anyone who has used the tool before.
 export const STORAGE_KEY_HISTORY = 'qs-export-history';
 
 export const PROMPT_STEP_TYPES: string[] = [

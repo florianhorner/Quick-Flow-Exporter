@@ -212,6 +212,9 @@ async function callGemini(req: ProxyRequest, clientKey?: string): Promise<string
 
   const model = process.env.GEMINI_MODEL ?? 'gemini-2.5-flash';
 
+  // The Generative Language API requires the key as a URL query param (?key=).
+  // This is Google's documented authentication pattern for this API — it cannot
+  // be sent as an Authorization header. The key is only visible server-side.
   const res = await fetch(
     `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`,
     {
