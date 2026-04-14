@@ -51,7 +51,7 @@ ok "npm $(npm --version)"
 
 # ─── 3. Dependencies ───────────────────────────────────────────────────────────
 info "Installing npm dependencies..."
-npm install --prefer-offline 2>&1 | tail -5
+npm install --prefer-offline || die "npm install failed"
 ok "npm install done"
 
 # ─── 4. .env file ──────────────────────────────────────────────────────────────
@@ -84,8 +84,8 @@ echo "${BOLD}── Tool wishlist status ─────────────
 
 check_tool() {
   local name=$1; local cmd=$2
-  if command -v $cmd &>/dev/null; then
-    ok "$name ($(command -v $cmd))"
+  if command -v "$cmd" &>/dev/null; then
+    ok "$name ($(command -v "$cmd"))"
   else
     warn "$name not found — install with: $3"
   fi
@@ -107,8 +107,8 @@ echo "  Build:       npm run build"
 echo "  Extension:   npm run build:extension"
 echo ""
 
-if ! grep -q "ANTHROPIC_API_KEY=sk-ant-" .env 2>/dev/null; then
-  echo "${YELLOW}${BOLD}  ACTION REQUIRED:${RESET} Set ANTHROPIC_API_KEY in .env"
-  echo "  The proxy server (server/proxy.ts) won't start without it."
+if ! grep -qE "^[A-Z_]+_API_KEY=.+" .env 2>/dev/null; then
+  echo "${YELLOW}${BOLD}  ACTION REQUIRED:${RESET} Set at least one API key in .env"
+  echo "  The proxy server (server/proxy.ts) needs an API key for at least one provider."
   echo ""
 fi
