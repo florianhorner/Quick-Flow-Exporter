@@ -189,7 +189,7 @@ ANTHROPIC_API_KEY=sk-... OPENAI_API_KEY=sk-... PERPLEXITY_API_KEY=pplx-... npx t
 
 The app is a six-phase pipeline. Each phase is a tab in the navigation header — you can jump between them freely once a flow is parsed.
 
-```
+```text
 ┌──────────┐   ┌──────────┐   ┌──────────┐   ┌──────────┐   ┌──────────┐
 │  1. Paste │──▶│ 2. Groups│──▶│ 3. Review│──▶│ 4. Export│   │  5. Diff │
 │  & Parse  │   │ (if any) │   │  & Edit  │   │MD/MMD/JSON│   │ (any two │
@@ -202,13 +202,12 @@ The app is a six-phase pipeline. Each phase is a tab in the navigation header �
                                └───────────┘
 ```
 
-1. **Paste** — Copy the raw content from the Quick Flows editor (Ctrl+A → Ctrl+C) and paste it here. Select a provider and enter your API key.
-2. **Parse** — The proxy sends the text to your chosen AI provider (up to 500 KB, 60s timeout). The AI returns a structured JSON flow.
-3. **Groups** — If reasoning groups are detected, the app prompts you to paste their instructions for a second extraction pass. Skip this step if there are no groups.
-4. **Review** — Edit steps, reorder, tweak prompts, and adjust settings. Changes here propagate to all exports.
-5. **Graph** — Visualize the flow as an interactive directed acyclic graph. Color-coded nodes, dashed `@reference` edges, subgraphs for groups. Click any node for a detail panel.
-6. **Export** — Copy or download as Markdown (human-readable docs), Mermaid (renders in GitHub/Quip), or JSON (version-control friendly).
-7. **Diff** — Paste any two raw flow versions and compare them. Word-level inline diffs highlight exactly what changed in each prompt. Diff is independent — you don't need a parsed flow loaded first.
+1. **Paste & Parse** — Copy the raw content from the Quick Flows editor (Ctrl+A → Ctrl+C), paste it, select a provider, and parse. The proxy sends the text to your chosen AI provider (up to 500 KB, 60s timeout) and returns structured JSON.
+2. **Groups** — If reasoning groups are detected, the app prompts you to paste their instructions for a second extraction pass. Skip this step if there are no groups.
+3. **Review** — Edit steps, reorder, tweak prompts, and adjust settings. Changes here propagate to all exports.
+4. **Graph** — Visualize the flow as an interactive directed acyclic graph. Color-coded nodes, dashed `@reference` edges, subgraphs for groups. Click any node for a detail panel.
+5. **Export** — Copy or download as Markdown (human-readable docs), Mermaid (renders in GitHub/Quip), or JSON (version-control friendly).
+6. **Diff** — Paste any two raw flow versions and compare them. Word-level inline diffs highlight exactly what changed in each prompt. Diff is independent — you don't need a parsed flow loaded first.
 
 ## Project Structure
 
@@ -244,7 +243,7 @@ src/
 ├── main.tsx                      # Entry point
 └── index.css                     # Tailwind imports + light/dark body styles
 server/
-├── proxy.ts                      # AI proxy server (Anthropic / Bedrock)
+├── proxy.ts                      # AI proxy server (Anthropic, OpenAI, Gemini, Perplexity, Bedrock)
 └── proxy-utils.ts                # Shared proxy utilities (rate limiter, validation, IP extraction)
 extension/
 ├── manifest.json                 # Chrome/Edge Manifest V3 config
@@ -253,7 +252,11 @@ extension/
 └── icons/                        # Extension icons (16/48/128 px)
 scripts/
 ├── build-extension.mjs           # esbuild bundler for the extension
-└── generate-icons.mjs            # Programmatic icon generation
+├── generate-icons.mjs            # Programmatic extension icon generation
+├── take-screenshots.mjs          # Automated screenshot capture for docs
+└── conductor-setup.sh            # Conductor workspace setup script
+vercel.json                       # Vercel SPA deployment config
+conductor.json                    # Conductor multi-agent workspace config
 ```
 
 ## Tech Stack

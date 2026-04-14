@@ -17,7 +17,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
-- `vercel.json` configuration for deploying as a static SPA on Vercel (build command, output directory, and SPA rewrites)
+- You can now deploy Quick Flow Exporter to Vercel with zero config — `vercel.json` sets up the build command, output directory, and SPA rewrites so every route resolves correctly
 
 ## [1.3.1] - 2026-04-07
 

@@ -59,15 +59,15 @@ describe('saveHistory', () => {
     expect(stored).toEqual(entries);
   });
 
-  it('caps at 50 entries', async () => {
-    const entries = Array.from({ length: 60 }, (_, i) => ({
+  it('caps at 20 entries', async () => {
+    const entries = Array.from({ length: 30 }, (_, i) => ({
       title: `Flow ${i}`,
       date: '2025-01-01',
       stepCount: i,
     }));
     await saveHistory(entries);
     const stored = JSON.parse(localStorage.getItem('qs-export-history')!);
-    expect(stored).toHaveLength(50);
+    expect(stored).toHaveLength(20);
   });
 
   it('strips invalid entries before saving', async () => {
