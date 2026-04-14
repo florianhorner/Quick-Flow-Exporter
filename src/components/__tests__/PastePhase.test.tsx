@@ -20,6 +20,7 @@ const defaultProps = {
 describe('PastePhase', () => {
   beforeEach(() => {
     localStorage.clear();
+    sessionStorage.clear();
     vi.clearAllMocks();
   });
 
@@ -66,7 +67,7 @@ describe('PastePhase', () => {
   });
 
   it('does not show API key prompt when key is already stored', async () => {
-    localStorage.setItem('qf-api-key', 'sk-test-key');
+    sessionStorage.setItem('qf-api-key', 'sk-test-key');
     const user = userEvent.setup();
     render(<PastePhase {...defaultProps} raw="some content" />);
     await user.click(screen.getByText('Parse & Extract'));
@@ -74,7 +75,7 @@ describe('PastePhase', () => {
   });
 
   it('calls onParse directly when API key is already stored', async () => {
-    localStorage.setItem('qf-api-key', 'sk-test-key');
+    sessionStorage.setItem('qf-api-key', 'sk-test-key');
     const user = userEvent.setup();
     const onParse = vi.fn();
     render(<PastePhase {...defaultProps} raw="some content" onParse={onParse} />);
@@ -89,7 +90,7 @@ describe('PastePhase', () => {
     await user.click(screen.getByText('Parse & Extract'));
     await user.type(screen.getByPlaceholderText('sk-ant-...'), 'my-new-key');
     await user.click(screen.getByText('Save & Parse'));
-    expect(localStorage.getItem('qf-api-key')).toBe('my-new-key');
+    expect(sessionStorage.getItem('qf-api-key')).toBe('my-new-key');
     expect(onParse).toHaveBeenCalledOnce();
   });
 
@@ -146,7 +147,7 @@ describe('PastePhase', () => {
   });
 
   it('shows "Settings" link when API key is already stored', () => {
-    localStorage.setItem('qf-api-key', 'sk-existing');
+    sessionStorage.setItem('qf-api-key', 'sk-existing');
     render(<PastePhase {...defaultProps} />);
     expect(screen.getByText('Settings')).toBeInTheDocument();
   });

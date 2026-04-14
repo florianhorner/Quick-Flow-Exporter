@@ -70,7 +70,7 @@ async function callAnthropic(req: ProxyRequest, clientKey?: string): Promise<str
   });
 
   if (!res.ok) {
-    throw new Error(`Anthropic API ${res.status}: ${await res.text()}`);
+    throw new Error(`Anthropic API error ${res.status}`);
   }
 
   const data = (await res.json()) as {
@@ -163,7 +163,7 @@ async function callOpenAICompatible(
   });
 
   if (!res.ok) {
-    throw new Error(`${config.name} API ${res.status}: ${await res.text()}`);
+    throw new Error(`${config.name} API error ${res.status}`);
   }
 
   const data = (await res.json()) as {
@@ -226,7 +226,7 @@ async function callGemini(req: ProxyRequest, clientKey?: string): Promise<string
   );
 
   if (!res.ok) {
-    throw new Error(`Gemini API ${res.status}: ${await res.text()}`);
+    throw new Error(`Gemini API error ${res.status}`);
   }
 
   const data = (await res.json()) as {
@@ -299,6 +299,7 @@ const server = http.createServer(async (req, res) => {
   res.setHeader('X-Content-Type-Options', 'nosniff');
   res.setHeader('X-Frame-Options', 'DENY');
   res.setHeader('Cache-Control', 'no-store');
+  res.setHeader('Content-Security-Policy', "default-src 'none'");
 
   // CORS
   const origin = process.env.CORS_ORIGIN ?? 'http://localhost:5173';

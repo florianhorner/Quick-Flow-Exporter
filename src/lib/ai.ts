@@ -25,15 +25,18 @@ export const PROVIDERS: { value: Provider; label: string; keyPlaceholder: string
   },
 ];
 
+// API keys use sessionStorage (cleared on tab close) to reduce the exposure
+// window compared to localStorage. Provider preference is non-sensitive and
+// uses localStorage for convenience.
 export function getApiKey(): string {
-  return localStorage.getItem(API_KEY_STORAGE_KEY) ?? '';
+  return sessionStorage.getItem(API_KEY_STORAGE_KEY) ?? '';
 }
 
 export function setApiKey(key: string): void {
   if (key) {
-    localStorage.setItem(API_KEY_STORAGE_KEY, key);
+    sessionStorage.setItem(API_KEY_STORAGE_KEY, key);
   } else {
-    localStorage.removeItem(API_KEY_STORAGE_KEY);
+    sessionStorage.removeItem(API_KEY_STORAGE_KEY);
   }
 }
 
