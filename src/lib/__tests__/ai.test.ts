@@ -44,12 +44,27 @@ describe('parseWithAI', () => {
       vi.fn().mockResolvedValue({
         ok: false,
         status: 500,
-        text: () => Promise.resolve('Internal error'),
+        text: () => Promise.resolve(JSON.stringify({ error: 'Proxy says no' })),
       })
     );
 
     await expect(parseWithAI({ system: 's', userMessage: 'm' })).rejects.toThrow(
-      'AI proxy returned 500: Internal error'
+      'Proxy says no'
+    );
+  });
+
+  it('falls back to status-only error when non-JSON body is returned', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        ok: false,
+        status: 502,
+        text: () => Promise.resolve('upstream exploded'),
+      })
+    );
+
+    await expect(parseWithAI({ system: 's', userMessage: 'm' })).rejects.toThrow(
+      'AI proxy request failed (502).'
     );
   });
 

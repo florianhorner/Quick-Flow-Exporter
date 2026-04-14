@@ -264,6 +264,18 @@ export default function PastePhase({
         </div>
       )}
 
+      <div className="text-xs text-slate-400 dark:text-slate-500 px-1">
+        <a
+          href="https://github.com/florianhorner/Quick-Flow-Exporter/issues/new/choose"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Report a bug / Share feedback"
+          className="hover:text-slate-600 dark:hover:text-slate-300 underline underline-offset-2"
+        >
+          Report a bug / Share feedback
+        </a>
+      </div>
+
       <BookmarkletPanel />
     </div>
   );

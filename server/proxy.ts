@@ -21,7 +21,11 @@
 
 import http from 'node:http';
 import {
+  createClientConfigError,
+  createProviderHttpError,
   createRateLimiter,
+  getRateLimitIp,
+  ProxyHttpError,
   validateProxyRequest,
   VALID_PROVIDERS,
   type Provider,
@@ -37,6 +41,10 @@ const DEFAULT_PROVIDER: Provider = VALID_PROVIDERS.includes(
 const MAX_BODY_BYTES = 512_000; // 500 KB
 const RATE_WINDOW_MS = 60_000;
 const RATE_LIMIT = Number(process.env.RATE_LIMIT ?? 20);
+const TRUST_PROXY_HOPS = Math.max(
+  1,
+  Number.parseInt(process.env.TRUST_PROXY_HOPS ?? '1', 10) || 1
+);
 
 // ── Rate limiter (per-IP, sliding window) ────────────────────────────────────
 
@@ -52,7 +60,9 @@ setInterval(() => {
 async function callAnthropic(req: ProxyRequest, clientKey?: string): Promise<string> {
   const key = process.env.ANTHROPIC_API_KEY || clientKey;
   if (!key)
-    throw new Error('No API key. Set ANTHROPIC_API_KEY or provide one in the UI.');
+    throw createClientConfigError(
+      'No API key. Set ANTHROPIC_API_KEY or provide one in the UI.'
+    );
 
   const res = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
@@ -70,7 +80,7 @@ async function callAnthropic(req: ProxyRequest, clientKey?: string): Promise<str
   });
 
   if (!res.ok) {
-    throw new Error(`Anthropic API error ${res.status}`);
+    throw createProviderHttpError('anthropic', res.status);
   }
 
   const data = (await res.json()) as {
@@ -80,6 +90,20 @@ async function callAnthropic(req: ProxyRequest, clientKey?: string): Promise<str
 }
 
 // ── AWS Bedrock provider ─────────────────────────────────────────────────────
+
+function extractBedrockStatusCode(err: unknown): number | null {
+  if (typeof err !== 'object' || err === null) return null;
+  if (!('$metadata' in err)) return null;
+  const metadata = (err as { $metadata?: { httpStatusCode?: unknown } }).$metadata;
+  return typeof metadata?.httpStatusCode === 'number' ? metadata.httpStatusCode : null;
+}
+
+function extractBedrockErrorName(err: unknown): string {
+  if (typeof err !== 'object' || err === null || !('name' in err)) return '';
+  return typeof (err as { name?: unknown }).name === 'string'
+    ? ((err as { name: string }).name ?? '')
+    : '';
+}
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function callBedrock(req: ProxyRequest, _clientKey?: string): Promise<string> {
@@ -118,12 +142,30 @@ async function callBedrock(req: ProxyRequest, _clientKey?: string): Promise<stri
     body: new TextEncoder().encode(body),
   });
 
-  const response = await client.send(command);
-  const decoded = new TextDecoder().decode(response.body);
-  const data = JSON.parse(decoded) as {
-    content: Array<{ text?: string }>;
-  };
-  return data.content.map((c) => c.text ?? '').join('');
+  try {
+    const response = await client.send(command);
+    const decoded = new TextDecoder().decode(response.body);
+    const data = JSON.parse(decoded) as {
+      content: Array<{ text?: string }>;
+    };
+    return data.content.map((c) => c.text ?? '').join('');
+  } catch (err) {
+    const status = extractBedrockStatusCode(err);
+    if (status !== null) throw createProviderHttpError('bedrock', status);
+
+    const errorName = extractBedrockErrorName(err);
+    if (errorName.includes('Throttling')) throw createProviderHttpError('bedrock', 429);
+    if (errorName.includes('AccessDenied')) throw createProviderHttpError('bedrock', 403);
+    if (
+      errorName.includes('ExpiredToken') ||
+      errorName.includes('UnrecognizedClient') ||
+      errorName.includes('InvalidSignature')
+    ) {
+      throw createProviderHttpError('bedrock', 401);
+    }
+
+    throw err;
+  }
 }
 
 // ── OpenAI-compatible provider (shared by OpenAI & Perplexity) ──────────────
@@ -133,7 +175,7 @@ interface OpenAICompatibleConfig {
   envKey: string;
   defaultModel: string;
   envModel: string;
-  name: string;
+  provider: Provider;
 }
 
 async function callOpenAICompatible(
@@ -142,7 +184,11 @@ async function callOpenAICompatible(
   clientKey?: string
 ): Promise<string> {
   const key = process.env[config.envKey] || clientKey;
-  if (!key) throw new Error(`No API key. Set ${config.envKey} or provide one in the UI.`);
+  if (!key) {
+    throw createClientConfigError(
+      `No API key. Set ${config.envKey} or provide one in the UI.`
+    );
+  }
 
   const model = process.env[config.envModel] ?? config.defaultModel;
 
@@ -163,7 +209,7 @@ async function callOpenAICompatible(
   });
 
   if (!res.ok) {
-    throw new Error(`${config.name} API error ${res.status}`);
+    throw createProviderHttpError(config.provider, res.status);
   }
 
   const data = (await res.json()) as {
@@ -181,7 +227,7 @@ async function callOpenAI(req: ProxyRequest, clientKey?: string): Promise<string
       envKey: 'OPENAI_API_KEY',
       defaultModel: 'gpt-4o',
       envModel: 'OPENAI_MODEL',
-      name: 'OpenAI',
+      provider: 'openai',
     },
     req,
     clientKey
@@ -197,7 +243,7 @@ async function callPerplexity(req: ProxyRequest, clientKey?: string): Promise<st
       envKey: 'PERPLEXITY_API_KEY',
       defaultModel: 'sonar-pro',
       envModel: 'PERPLEXITY_MODEL',
-      name: 'Perplexity',
+      provider: 'perplexity',
     },
     req,
     clientKey
@@ -208,7 +254,11 @@ async function callPerplexity(req: ProxyRequest, clientKey?: string): Promise<st
 
 async function callGemini(req: ProxyRequest, clientKey?: string): Promise<string> {
   const key = process.env.GEMINI_API_KEY || clientKey;
-  if (!key) throw new Error('No API key. Set GEMINI_API_KEY or provide one in the UI.');
+  if (!key) {
+    throw createClientConfigError(
+      'No API key. Set GEMINI_API_KEY or provide one in the UI.'
+    );
+  }
 
   const model = process.env.GEMINI_MODEL ?? 'gemini-2.5-flash';
 
@@ -226,7 +276,7 @@ async function callGemini(req: ProxyRequest, clientKey?: string): Promise<string
   );
 
   if (!res.ok) {
-    throw new Error(`Gemini API error ${res.status}`);
+    throw createProviderHttpError('gemini', res.status);
   }
 
   const data = (await res.json()) as {
@@ -335,13 +385,15 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  // Rate limit — only trust X-Forwarded-For behind a known reverse proxy
+  // Rate limit — only trust X-Forwarded-For behind known trusted proxies.
+  // Select the configured hop from the right so client-supplied prefixes do not win.
   const trustProxy = process.env.TRUST_PROXY === 'true';
-  const ip = trustProxy
-    ? ((req.headers['x-forwarded-for'] as string)?.split(',')[0]?.trim() ??
-      req.socket.remoteAddress ??
-      'unknown')
-    : (req.socket.remoteAddress ?? 'unknown');
+  const ip = getRateLimitIp({
+    trustProxy,
+    forwardedFor: req.headers['x-forwarded-for'],
+    remoteAddress: req.socket.remoteAddress,
+    trustedProxyHops: TRUST_PROXY_HOPS,
+  });
 
   if (rateLimiter.isRateLimited(ip)) {
     json(res, 429, { error: 'Too many requests. Try again in a minute.' });
@@ -372,6 +424,11 @@ const server = http.createServer(async (req, res) => {
     json(res, 200, { text });
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e);
+    if (e instanceof ProxyHttpError) {
+      console.error(`[${new Date().toISOString()}] Provider error ${e.status}:`, msg);
+      json(res, e.status, { error: e.message });
+      return;
+    }
     console.error(`[${new Date().toISOString()}] Error:`, msg);
     json(res, 500, { error: 'Internal server error' });
   }
@@ -383,4 +440,7 @@ server.listen(PORT, () => {
   );
   console.log(`Available providers: ${VALID_PROVIDERS.join(', ')}`);
   console.log(`Rate limit: ${RATE_LIMIT} requests per ${RATE_WINDOW_MS / 1000}s`);
+  if (process.env.TRUST_PROXY === 'true') {
+    console.log(`Trusted proxy hops: ${TRUST_PROXY_HOPS}`);
+  }
 });

@@ -1,5 +1,12 @@
 import { describe, it, expect } from 'vitest';
-import { createRateLimiter, validateProxyRequest, VALID_PROVIDERS } from '../proxy-utils';
+import {
+  createProviderHttpError,
+  createRateLimiter,
+  getRateLimitIp,
+  ProxyHttpError,
+  validateProxyRequest,
+  VALID_PROVIDERS,
+} from '../proxy-utils';
 
 describe('proxy request validation', () => {
   it('accepts valid request', () => {
@@ -114,5 +121,71 @@ describe('rate limiter logic', () => {
     limiter.isRateLimited('1.1.1.1');
     expect(limiter.isRateLimited('1.1.1.1')).toBe(true);
     expect(limiter.isRateLimited('2.2.2.2')).toBe(false);
+  });
+});
+
+describe('rate limit IP resolution', () => {
+  it('uses remoteAddress when proxy trust is disabled', () => {
+    expect(
+      getRateLimitIp({
+        trustProxy: false,
+        forwardedFor: '198.51.100.8',
+        remoteAddress: '203.0.113.4',
+      })
+    ).toBe('203.0.113.4');
+  });
+
+  it('uses the rightmost forwarded hop for a single trusted proxy', () => {
+    expect(
+      getRateLimitIp({
+        trustProxy: true,
+        forwardedFor: '203.0.113.200, 198.51.100.8',
+        remoteAddress: '10.0.0.5',
+        trustedProxyHops: 1,
+      })
+    ).toBe('198.51.100.8');
+  });
+
+  it('can select the client behind multiple trusted proxy hops', () => {
+    expect(
+      getRateLimitIp({
+        trustProxy: true,
+        forwardedFor: '198.51.100.8, 203.0.113.4',
+        remoteAddress: '10.0.0.5',
+        trustedProxyHops: 2,
+      })
+    ).toBe('198.51.100.8');
+  });
+
+  it('falls back to remoteAddress when the forwarded chain is shorter than configured', () => {
+    expect(
+      getRateLimitIp({
+        trustProxy: true,
+        forwardedFor: '198.51.100.8',
+        remoteAddress: '10.0.0.5',
+        trustedProxyHops: 2,
+      })
+    ).toBe('10.0.0.5');
+  });
+});
+
+describe('provider error mapping', () => {
+  it('maps 401 to actionable unauthorized guidance', () => {
+    const err = createProviderHttpError('anthropic', 401);
+    expect(err).toBeInstanceOf(ProxyHttpError);
+    expect(err.status).toBe(401);
+    expect(err.message).toContain('invalid or expired');
+  });
+
+  it('maps 429 to rate-limit guidance', () => {
+    const err = createProviderHttpError('openai', 429);
+    expect(err.status).toBe(429);
+    expect(err.message).toContain('rate limit');
+  });
+
+  it('maps unknown statuses to safe fallback guidance', () => {
+    const err = createProviderHttpError('gemini', 503);
+    expect(err.status).toBe(503);
+    expect(err.message).toContain('API request failed (503)');
   });
 });
