@@ -22,6 +22,7 @@
 import http from 'node:http';
 import {
   createRateLimiter,
+  extractTrustedIp,
   validateProxyRequest,
   VALID_PROVIDERS,
   type Provider,
@@ -36,7 +37,8 @@ const DEFAULT_PROVIDER: Provider = VALID_PROVIDERS.includes(
   : 'anthropic';
 const MAX_BODY_BYTES = 512_000; // 500 KB
 const RATE_WINDOW_MS = 60_000;
-const RATE_LIMIT = Number(process.env.RATE_LIMIT ?? 20);
+const rawRateLimit = Number(process.env.RATE_LIMIT);
+const RATE_LIMIT = Number.isFinite(rawRateLimit) && rawRateLimit > 0 ? rawRateLimit : 20;
 
 // ── Rate limiter (per-IP, sliding window) ────────────────────────────────────
 
@@ -216,10 +218,10 @@ async function callGemini(req: ProxyRequest, clientKey?: string): Promise<string
   // This is Google's documented authentication pattern for this API — it cannot
   // be sent as an Authorization header. The key is only visible server-side.
   const res = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`,
+    `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
     {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'x-goog-api-key': key },
       body: JSON.stringify({
         systemInstruction: { parts: [{ text: req.system }] },
         contents: [{ role: 'user', parts: [{ text: req.userMessage }] }],
@@ -338,15 +340,17 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  // Rate limit — only trust X-Forwarded-For behind a known reverse proxy
+  // Rate limit — only trust X-Forwarded-For behind a known reverse proxy.
   const trustProxy = process.env.TRUST_PROXY === 'true';
   const ip = trustProxy
-    ? ((req.headers['x-forwarded-for'] as string)?.split(',')[0]?.trim() ??
-      req.socket.remoteAddress ??
-      'unknown')
+    ? extractTrustedIp(
+        req.headers['x-forwarded-for'] as string | undefined,
+        req.socket.remoteAddress
+      )
     : (req.socket.remoteAddress ?? 'unknown');
 
   if (rateLimiter.isRateLimited(ip)) {
+    res.setHeader('Retry-After', String(RATE_WINDOW_MS / 1000));
     json(res, 429, { error: 'Too many requests. Try again in a minute.' });
     return;
   }
