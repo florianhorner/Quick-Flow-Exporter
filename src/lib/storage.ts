@@ -1,5 +1,5 @@
 import type { HistoryEntry } from '../types';
-import { STORAGE_KEY_HISTORY } from '../constants';
+import { STORAGE_KEY_HISTORY, MAX_HISTORY_ENTRIES } from '../constants';
 
 /**
  * Persist and retrieve export history.
@@ -59,7 +59,7 @@ export async function loadHistory(): Promise<HistoryEntry[]> {
 
 export async function saveHistory(entries: HistoryEntry[]): Promise<void> {
   // Sanitize before persisting — strip anything unexpected
-  const clean = validateHistory(entries).slice(0, 20);
+  const clean = validateHistory(entries).slice(0, MAX_HISTORY_ENTRIES);
   const json = JSON.stringify(clean);
   try {
     const backend = getBackend();
