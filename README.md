@@ -245,7 +245,7 @@ src/
 └── index.css                     # Tailwind imports + light/dark body styles
 server/
 ├── proxy.ts                      # AI proxy server (Anthropic / Bedrock)
-└── proxy-utils.ts                # Shared proxy utilities (rate limiter, validation)
+└── proxy-utils.ts                # Shared proxy utilities (rate limiter, validation, IP extraction)
 extension/
 ├── manifest.json                 # Chrome/Edge Manifest V3 config
 ├── popup/                        # Extension popup (HTML, CSS, TypeScript)
