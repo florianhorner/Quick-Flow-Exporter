@@ -338,7 +338,6 @@ const server = http.createServer(async (req, res) => {
   }
 
   // Rate limit — only trust X-Forwarded-For behind a known reverse proxy.
-  // Use the LAST segment (appended by the proxy) not the first (client-supplied and forgeable).
   const trustProxy = process.env.TRUST_PROXY === 'true';
   const ip = trustProxy
     ? extractTrustedIp(

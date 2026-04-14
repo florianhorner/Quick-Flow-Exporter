@@ -109,8 +109,8 @@ describe('rate limiter logic', () => {
 
   it('blocks requests over the limit', () => {
     const limiter = createRateLimiter(2, 60_000);
-    limiter.isRateLimited('1.2.3.4');
-    limiter.isRateLimited('1.2.3.4');
+    expect(limiter.isRateLimited('1.2.3.4')).toBe(false);
+    expect(limiter.isRateLimited('1.2.3.4')).toBe(false);
     expect(limiter.isRateLimited('1.2.3.4')).toBe(true);
   });
 
