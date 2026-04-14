@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.3.3] - 2026-04-14
+
+### Security
+
+- Fixed rate-limit bypass via forged `X-Forwarded-For` header when `TRUST_PROXY=true`: proxy now uses the last (proxy-appended) segment instead of the first (client-controlled, forgeable) segment. Extracted as `extractTrustedIp()` with 7 regression tests.
+- Moved Gemini API key from URL query parameter (`?key=...`) to `x-goog-api-key` request header, preventing key exposure in server access logs and CDN caches.
+- Guarded `RATE_LIMIT` env var against `NaN`: invalid strings now fall back to the default of 20 rather than silently disabling the rate limiter.
+- Added `Retry-After: 60` header on 429 responses so clients know when to retry.
+
 ## [1.3.2] - 2026-04-12
 
 ### Added
