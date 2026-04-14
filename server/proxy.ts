@@ -37,7 +37,8 @@ const DEFAULT_PROVIDER: Provider = VALID_PROVIDERS.includes(
   : 'anthropic';
 const MAX_BODY_BYTES = 512_000; // 500 KB
 const RATE_WINDOW_MS = 60_000;
-const RATE_LIMIT = Number(process.env.RATE_LIMIT ?? 20);
+const rawRateLimit = Number(process.env.RATE_LIMIT);
+const RATE_LIMIT = Number.isFinite(rawRateLimit) && rawRateLimit > 0 ? rawRateLimit : 20;
 
 // ── Rate limiter (per-IP, sliding window) ────────────────────────────────────
 
@@ -214,10 +215,10 @@ async function callGemini(req: ProxyRequest, clientKey?: string): Promise<string
   const model = process.env.GEMINI_MODEL ?? 'gemini-2.5-flash';
 
   const res = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`,
+    `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
     {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'x-goog-api-key': key },
       body: JSON.stringify({
         systemInstruction: { parts: [{ text: req.system }] },
         contents: [{ role: 'user', parts: [{ text: req.userMessage }] }],
@@ -347,6 +348,7 @@ const server = http.createServer(async (req, res) => {
     : (req.socket.remoteAddress ?? 'unknown');
 
   if (rateLimiter.isRateLimited(ip)) {
+    res.setHeader('Retry-After', String(RATE_WINDOW_MS / 1000));
     json(res, 429, { error: 'Too many requests. Try again in a minute.' });
     return;
   }

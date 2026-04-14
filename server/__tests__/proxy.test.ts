@@ -156,4 +156,8 @@ describe('extractTrustedIp', () => {
   it('handles empty header string by falling back to socket address', () => {
     expect(extractTrustedIp('', '8.8.8.8')).toBe('8.8.8.8');
   });
+
+  it('handles whitespace-only header by falling back to socket address', () => {
+    expect(extractTrustedIp('   ', '8.8.8.8')).toBe('8.8.8.8');
+  });
 });
