@@ -1,5 +1,10 @@
 import { describe, it, expect } from 'vitest';
-import { createRateLimiter, validateProxyRequest, VALID_PROVIDERS } from '../proxy-utils';
+import {
+  createRateLimiter,
+  extractTrustedIp,
+  validateProxyRequest,
+  VALID_PROVIDERS,
+} from '../proxy-utils';
 
 describe('proxy request validation', () => {
   it('accepts valid request', () => {
@@ -114,5 +119,41 @@ describe('rate limiter logic', () => {
     limiter.isRateLimited('1.1.1.1');
     expect(limiter.isRateLimited('1.1.1.1')).toBe(true);
     expect(limiter.isRateLimited('2.2.2.2')).toBe(false);
+  });
+});
+
+describe('extractTrustedIp', () => {
+  // Regression: ISSUE-001 — rate-limit bypass via forged X-Forwarded-For
+  // Found by /qa on 2026-04-14
+  // Report: .gstack/qa-reports/qa-report-localhost-2026-04-14.md
+  //
+  // Bug: the server was reading split(',')[0] (client-controlled first segment).
+  // An attacker could send "attacker-ip, real-proxy-ip" and get a fresh rate-limit
+  // bucket each request by rotating the first segment.
+  // Fix: use the last segment — that's the one the trusted proxy appended.
+
+  it('returns the LAST segment of X-Forwarded-For, not the first', () => {
+    // client sends "fake-ip, real-ip" — must use real-ip (last, proxy-appended)
+    expect(extractTrustedIp('1.1.1.1, 2.2.2.2, 3.3.3.3', '4.4.4.4')).toBe('3.3.3.3');
+  });
+
+  it('with a single IP returns that IP', () => {
+    expect(extractTrustedIp('5.5.5.5', '6.6.6.6')).toBe('5.5.5.5');
+  });
+
+  it('trims whitespace from the IP segments', () => {
+    expect(extractTrustedIp('  1.1.1.1  ,  2.2.2.2  ', '9.9.9.9')).toBe('2.2.2.2');
+  });
+
+  it('falls back to socket address when header is undefined', () => {
+    expect(extractTrustedIp(undefined, '7.7.7.7')).toBe('7.7.7.7');
+  });
+
+  it('falls back to "unknown" when both header and socket are absent', () => {
+    expect(extractTrustedIp(undefined, undefined)).toBe('unknown');
+  });
+
+  it('handles empty header string by falling back to socket address', () => {
+    expect(extractTrustedIp('', '8.8.8.8')).toBe('8.8.8.8');
   });
 });

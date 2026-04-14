@@ -22,6 +22,7 @@
 import http from 'node:http';
 import {
   createRateLimiter,
+  extractTrustedIp,
   validateProxyRequest,
   VALID_PROVIDERS,
   type Provider,
@@ -335,12 +336,14 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  // Rate limit — only trust X-Forwarded-For behind a known reverse proxy
+  // Rate limit — only trust X-Forwarded-For behind a known reverse proxy.
+  // Use the LAST segment (appended by the proxy) not the first (client-supplied and forgeable).
   const trustProxy = process.env.TRUST_PROXY === 'true';
   const ip = trustProxy
-    ? ((req.headers['x-forwarded-for'] as string)?.split(',')[0]?.trim() ??
-      req.socket.remoteAddress ??
-      'unknown')
+    ? extractTrustedIp(
+        req.headers['x-forwarded-for'] as string | undefined,
+        req.socket.remoteAddress
+      )
     : (req.socket.remoteAddress ?? 'unknown');
 
   if (rateLimiter.isRateLimited(ip)) {
