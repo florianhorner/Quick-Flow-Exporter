@@ -23,6 +23,7 @@ import http from 'node:http';
 import {
   createRateLimiter,
   extractTrustedIp,
+  validateGeminiModel,
   validateProxyRequest,
   VALID_PROVIDERS,
   type Provider,
@@ -212,7 +213,7 @@ async function callGemini(req: ProxyRequest, clientKey?: string): Promise<string
   const key = process.env.GEMINI_API_KEY || clientKey;
   if (!key) throw new Error('No API key. Set GEMINI_API_KEY or provide one in the UI.');
 
-  const model = process.env.GEMINI_MODEL ?? 'gemini-2.5-flash';
+  const model = validateGeminiModel(process.env.GEMINI_MODEL ?? 'gemini-2.5-flash');
 
   // The Generative Language API requires the key as a URL query param (?key=).
   // This is Google's documented authentication pattern for this API — it cannot

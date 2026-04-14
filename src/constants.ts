@@ -36,6 +36,8 @@ export const RUN_CONDITIONS: RunCondition[] = [
 // silently lose all prior export history for anyone who has used the tool before.
 export const STORAGE_KEY_HISTORY = 'qs-export-history';
 
+export const MAX_HISTORY_ENTRIES = 20;
+
 export const PROMPT_STEP_TYPES: string[] = [
   'chat_agent',
   'general_knowledge',
