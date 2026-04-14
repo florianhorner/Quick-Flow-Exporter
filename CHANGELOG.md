@@ -8,7 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
-- `vercel.json` configuration for deploying as a static SPA on Vercel (build command, output directory, and SPA rewrites)
+- You can now deploy Quick Flow Exporter to Vercel with zero config — `vercel.json` sets up the build command, output directory, and SPA rewrites so every route resolves correctly
 
 ## [1.3.1] - 2026-04-07
 
@@ -116,10 +116,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Added
 
 - Initial release
-- AI-powered parsing of raw Quick Flows editor content
-- Support for all Quick Flows step types
-- Reasoning Group instruction extraction
-- Visual flow review and editing
-- Markdown export (copy to clipboard and file download)
-- Export history with localStorage persistence
-- AI proxy server with Anthropic and AWS Bedrock support
+- AI-powered parsing of raw Quick Flows editor content via local proxy
+- Support for all 10 Quick Flows step types (Chat Agent, General Knowledge, Web Search, UI Agent, Create Image, Quick Suite Data, Dashboards & Topics, Application Actions, User Input Text, User Input Files)
+- Reasoning Group instruction extraction (second-pass AI parse for group metadata)
+- Visual flow review and editing — reorder steps, edit prompts, adjust settings inline
+- Interactive React Flow graph (DAG) with color-coded nodes by step type, dashed `@reference` edges, and subgraphs for reasoning groups
+- Flow diffing — side-by-side comparison of two raw flow versions with word-level inline diffs
+- Markdown export with full prompt text, tables, and step summaries
+- Mermaid export (`flowchart TD`) that renders in GitHub, Quip, and mermaid.live
+- JSON export for version control and re-import
+- Export history with localStorage persistence (last 20 exports)
+- One-click bookmarklet for extracting flow content from the Quick Flows editor
+- AI proxy server with Anthropic (claude-sonnet) and AWS Bedrock support
+- Rate limiting (20 req/60s per IP), input validation, CORS, and XSS hardening

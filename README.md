@@ -95,6 +95,8 @@ npm run dev
 
 Open `http://localhost:5173` in your browser.
 
+> **Note:** `npm run dev` starts the Vite frontend only. To use AI parsing, you also need the proxy running in a separate terminal — see [AI Proxy Setup](#ai-proxy-setup) below.
+
 ## Browser Extension (Chrome / Edge)
 
 A Manifest V3 browser extension is included for one-click flow extraction — no bookmarklet needed.
@@ -185,26 +187,28 @@ ANTHROPIC_API_KEY=sk-... OPENAI_API_KEY=sk-... PERPLEXITY_API_KEY=pplx-... npx t
 
 ## How It Works
 
+The app is a six-phase pipeline. Each phase is a tab in the navigation header — you can jump between them freely once a flow is parsed.
+
 ```
-┌─────────────┐     ┌──────────────┐     ┌──────────────┐     ┌───────────────┐
-│  Paste raw   │────▶│  AI parses   │────▶│  Review &    │────▶│  Export as    │
-│  flow text   │     │  structure   │     │  edit flow   │     │  MD/MMD/JSON  │
-└─────────────┘     └──────────────┘     └──────────────┘     └───────────────┘
-                                                │
-                                          ┌─────┴─────┐
-                                          │ View as   │
-                                          │ graph /   │
-                                          │ diff      │
-                                          └───────────┘
+┌──────────┐   ┌──────────┐   ┌──────────┐   ┌──────────┐   ┌──────────┐
+│  1. Paste │──▶│ 2. Groups│──▶│ 3. Review│──▶│ 4. Export│   │  5. Diff │
+│  & Parse  │   │ (if any) │   │  & Edit  │   │MD/MMD/JSON│   │ (any two │
+└──────────┘   └──────────┘   └──────────┘   └──────────┘   │  flows)  │
+                                     │                        └──────────┘
+                               ┌─────┴─────┐
+                               │  6. Graph  │
+                               │(interactive│
+                               │    DAG)    │
+                               └───────────┘
 ```
 
-1. **Paste** — Copy the raw content from the Quick Flows editor (Ctrl+A → Ctrl+C) and paste it
-2. **Parse** — AI extracts the structured flow: steps, groups, conditions, prompts, references
-3. **Groups** — If reasoning groups are detected, optionally paste their instructions for extraction
-4. **Review** — Edit steps, reorder, tweak prompts, adjust settings
-5. **Graph** — Visualize the flow as an interactive directed graph
-6. **Export** — Copy or download as Markdown, Mermaid, or JSON
-7. **Diff** — Compare two flow versions to see exactly what changed
+1. **Paste** — Copy the raw content from the Quick Flows editor (Ctrl+A → Ctrl+C) and paste it here. Select a provider and enter your API key.
+2. **Parse** — The proxy sends the text to your chosen AI provider (up to 500 KB, 60s timeout). The AI returns a structured JSON flow.
+3. **Groups** — If reasoning groups are detected, the app prompts you to paste their instructions for a second extraction pass. Skip this step if there are no groups.
+4. **Review** — Edit steps, reorder, tweak prompts, and adjust settings. Changes here propagate to all exports.
+5. **Graph** — Visualize the flow as an interactive directed acyclic graph. Color-coded nodes, dashed `@reference` edges, subgraphs for groups. Click any node for a detail panel.
+6. **Export** — Copy or download as Markdown (human-readable docs), Mermaid (renders in GitHub/Quip), or JSON (version-control friendly).
+7. **Diff** — Paste any two raw flow versions and compare them. Word-level inline diffs highlight exactly what changed in each prompt. Diff is independent — you don't need a parsed flow loaded first.
 
 ## Project Structure
 
@@ -240,7 +244,7 @@ src/
 ├── main.tsx                      # Entry point
 └── index.css                     # Tailwind imports + light/dark body styles
 server/
-├── proxy.ts                      # AI proxy server (Anthropic / Bedrock)
+├── proxy.ts                      # AI proxy server (Anthropic, OpenAI, Gemini, Perplexity, Bedrock)
 └── proxy-utils.ts                # Shared proxy utilities (rate limiter, validation)
 extension/
 ├── manifest.json                 # Chrome/Edge Manifest V3 config
@@ -249,7 +253,11 @@ extension/
 └── icons/                        # Extension icons (16/48/128 px)
 scripts/
 ├── build-extension.mjs           # esbuild bundler for the extension
-└── generate-icons.mjs            # Programmatic icon generation
+├── generate-icons.mjs            # Programmatic extension icon generation
+├── take-screenshots.mjs          # Automated screenshot capture for docs
+└── conductor-setup.sh            # Conductor workspace setup script
+vercel.json                       # Vercel SPA deployment config
+conductor.json                    # Conductor multi-agent workspace config
 ```
 
 ## Tech Stack
@@ -262,16 +270,17 @@ scripts/
 
 ## Scripts
 
-| Command                   | Description                                  |
-| ------------------------- | -------------------------------------------- |
-| `npm run dev`             | Start dev server at localhost:5173           |
-| `npm run build`           | Type-check and build for production          |
-| `npm run build:extension` | Bundle browser extension to `extension/dist` |
-| `npm run preview`         | Preview production build                     |
-| `npm run lint`            | Run ESLint                                   |
-| `npm run test`            | Run tests with Vitest                        |
-| `npm run format:check`    | Check formatting with Prettier               |
-| `npm run typecheck`       | Type-check without emitting (`tsc --noEmit`) |
+| Command                   | Description                                        |
+| ------------------------- | -------------------------------------------------- |
+| `npm run dev`             | Start Vite frontend at localhost:5173              |
+| `npm run build`           | Type-check and build for production                |
+| `npm run build:extension` | Bundle browser extension to `extension/dist`       |
+| `npm run preview`         | Preview production build                           |
+| `npm run lint`            | Run ESLint                                         |
+| `npm run test`            | Run Vitest test suite once                         |
+| `npm run test:watch`      | Run Vitest in watch mode (re-runs on file changes) |
+| `npm run format:check`    | Check formatting with Prettier                     |
+| `npm run typecheck`       | Type-check without emitting (`tsc --noEmit`)       |
 
 ## Roadmap
 
