@@ -95,3 +95,19 @@ export function createRateLimiter(limit: number, windowMs: number): RateLimiter 
 
   return { isRateLimited, prune };
 }
+
+/**
+ * Extracts the client IP from headers when behind a trusted reverse proxy.
+ * Uses the LAST segment of X-Forwarded-For (appended by the proxy) rather
+ * than the first (client-supplied and forgeable), preventing rate-limit bypass.
+ */
+export function extractTrustedIp(
+  xForwardedFor: string | undefined,
+  fallback: string | undefined
+): string {
+  const segments = (xForwardedFor ?? '')
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean);
+  return segments[segments.length - 1] ?? fallback ?? 'unknown';
+}

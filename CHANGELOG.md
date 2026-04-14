@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.3.3] - 2026-04-14
+
+### Security
+
+- Fixed rate-limit bypass via forged `X-Forwarded-For` header when `TRUST_PROXY=true`: proxy now uses the last (proxy-appended) segment instead of the first (client-controlled, forgeable) segment. Extracted as `extractTrustedIp()` with 7 regression tests.
+- Moved Gemini API key from URL query parameter (`?key=...`) to `x-goog-api-key` request header, preventing key exposure in server access logs and CDN caches.
+- Guarded `RATE_LIMIT` env var against `NaN`: invalid strings now fall back to the default of 20 rather than silently disabling the rate limiter.
+- Added `Retry-After: 60` header on 429 responses so clients know when to retry.
+
 ## [1.3.2] - 2026-04-12
 
 ### Added
@@ -116,10 +125,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Added
 
 - Initial release
-- AI-powered parsing of raw Quick Flows editor content
-- Support for all Quick Flows step types
-- Reasoning Group instruction extraction
-- Visual flow review and editing
-- Markdown export (copy to clipboard and file download)
-- Export history with localStorage persistence
-- AI proxy server with Anthropic and AWS Bedrock support
+- AI-powered parsing of raw Quick Flows editor content via local proxy
+- Support for all 10 Quick Flows step types (Chat Agent, General Knowledge, Web Search, UI Agent, Create Image, Quick Suite Data, Dashboards & Topics, Application Actions, User Input Text, User Input Files)
+- Reasoning Group instruction extraction (second-pass AI parse for group metadata)
+- Visual flow review and editing — reorder steps, edit prompts, adjust settings inline
+- Interactive React Flow graph (DAG) with color-coded nodes by step type, dashed `@reference` edges, and subgraphs for reasoning groups
+- Flow diffing — side-by-side comparison of two raw flow versions with word-level inline diffs
+- Markdown export with full prompt text, tables, and step summaries
+- Mermaid export (`flowchart TD`) that renders in GitHub, Quip, and mermaid.live
+- JSON export for version control and re-import
+- Export history with localStorage persistence (last 20 exports)
+- One-click bookmarklet for extracting flow content from the Quick Flows editor
+- AI proxy server with Anthropic (claude-sonnet) and AWS Bedrock support
+- Rate limiting (20 req/60s per IP), input validation, CORS, and XSS hardening
