@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import {
   createRateLimiter,
   extractTrustedIp,
+  validateGeminiModel,
   validateProxyRequest,
   VALID_PROVIDERS,
 } from '../proxy-utils';
@@ -159,5 +160,28 @@ describe('extractTrustedIp', () => {
 
   it('handles whitespace-only header by falling back to socket address', () => {
     expect(extractTrustedIp('   ', '8.8.8.8')).toBe('8.8.8.8');
+  });
+});
+
+describe('validateGeminiModel', () => {
+  it('accepts valid model names', () => {
+    expect(validateGeminiModel('gemini-2.5-flash')).toBe('gemini-2.5-flash');
+    expect(validateGeminiModel('gemini-1.5-pro')).toBe('gemini-1.5-pro');
+    expect(validateGeminiModel('gemini-pro')).toBe('gemini-pro');
+  });
+
+  it('rejects path traversal attempts', () => {
+    expect(() => validateGeminiModel('gemini-2.5-flash/../../../evil')).toThrow(
+      'Invalid GEMINI_MODEL'
+    );
+  });
+
+  it('rejects shell injection characters', () => {
+    expect(() => validateGeminiModel('gemini;rm -rf /')).toThrow('Invalid GEMINI_MODEL');
+    expect(() => validateGeminiModel('gemini&evil')).toThrow('Invalid GEMINI_MODEL');
+  });
+
+  it('rejects empty string', () => {
+    expect(() => validateGeminiModel('')).toThrow('Invalid GEMINI_MODEL');
   });
 });
