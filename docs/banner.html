@@ -1,0 +1,226 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1280px;
+        height: 640px;
+        background: #0a1a2f;
+        font-family: 'Inter', -apple-system, system-ui, sans-serif;
+        color: #e6edf7;
+        overflow: hidden;
+      }
+      .stage {
+        width: 1280px;
+        height: 640px;
+        display: grid;
+        grid-template-columns: 1.05fr 0.95fr;
+        position: relative;
+        background:
+          radial-gradient(1100px 700px at 20% 15%, rgba(37, 99, 235, 0.22), transparent 60%),
+          radial-gradient(900px 600px at 90% 95%, rgba(37, 99, 235, 0.16), transparent 65%),
+          linear-gradient(135deg, #0a1a2f 0%, #0d2240 60%, #0a1a2f 100%);
+      }
+      .grid-bg {
+        position: absolute; inset: 0;
+        background-image:
+          linear-gradient(rgba(37, 99, 235, 0.06) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(37, 99, 235, 0.06) 1px, transparent 1px);
+        background-size: 40px 40px;
+        mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%);
+      }
+      .left {
+        position: relative;
+        padding: 72px 64px 72px 80px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 28px;
+      }
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 14px;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: #7aa2ff;
+        width: fit-content;
+        padding: 8px 14px;
+        border: 1px solid rgba(122, 162, 255, 0.35);
+        border-radius: 999px;
+        background: rgba(37, 99, 235, 0.08);
+      }
+      .dot { width: 8px; height: 8px; border-radius: 50%; background: #2563eb; box-shadow: 0 0 12px #2563eb; }
+      h1 {
+        font-size: 76px;
+        line-height: 1.02;
+        font-weight: 800;
+        letter-spacing: -0.025em;
+        color: #ffffff;
+      }
+      h1 .accent {
+        background: linear-gradient(120deg, #e6edf7 0%, #2563eb 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      .tagline {
+        font-size: 22px;
+        line-height: 1.45;
+        color: #a8b8cf;
+        max-width: 500px;
+      }
+      .tagline strong { color: #e6edf7; font-weight: 600; }
+      .chips { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
+      .chip {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 13px;
+        padding: 8px 14px;
+        border-radius: 8px;
+        border: 1px solid rgba(122, 162, 255, 0.25);
+        background: rgba(10, 26, 47, 0.7);
+        color: #c6d4ea;
+      }
+      .chip strong { color: #7aa2ff; font-weight: 600; }
+
+      .right {
+        position: relative;
+        padding: 64px 80px 64px 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .window {
+        width: 100%;
+        max-width: 460px;
+        background: #0d2240;
+        border: 1px solid rgba(122, 162, 255, 0.25);
+        border-radius: 14px;
+        box-shadow:
+          0 30px 60px -20px rgba(0, 0, 0, 0.6),
+          0 0 0 1px rgba(37, 99, 235, 0.1);
+        overflow: hidden;
+      }
+      .win-bar {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 16px;
+        background: #0a1a2f;
+        border-bottom: 1px solid rgba(122, 162, 255, 0.15);
+      }
+      .win-bar .b { width: 12px; height: 12px; border-radius: 50%; }
+      .b1 { background: #ef4444; }
+      .b2 { background: #f59e0b; }
+      .b3 { background: #2563eb; }
+      .win-title {
+        margin-left: 12px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 12px;
+        color: #7aa2ff;
+      }
+      .graph { padding: 28px 24px; display: flex; flex-direction: column; gap: 14px; }
+      .node {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 16px;
+        border-radius: 10px;
+        background: rgba(37, 99, 235, 0.08);
+        border: 1px solid rgba(122, 162, 255, 0.3);
+      }
+      .node .icon {
+        width: 30px; height: 30px;
+        display: flex; align-items: center; justify-content: center;
+        border-radius: 8px;
+        background: rgba(37, 99, 235, 0.25);
+        font-size: 16px;
+      }
+      .node .label {
+        font-size: 14px; font-weight: 600; color: #e6edf7;
+      }
+      .node .kind {
+        margin-left: auto;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        color: #7aa2ff;
+        padding: 3px 8px;
+        border-radius: 4px;
+        background: rgba(37, 99, 235, 0.15);
+      }
+      .arrow {
+        align-self: center;
+        color: #7aa2ff;
+        font-size: 16px;
+        line-height: 1;
+      }
+      .node.accent {
+        background: linear-gradient(135deg, rgba(37, 99, 235, 0.25), rgba(37, 99, 235, 0.08));
+        border-color: #2563eb;
+        box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.3), 0 8px 24px -8px rgba(37, 99, 235, 0.45);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="stage">
+      <div class="grid-bg"></div>
+      <div class="left">
+        <div class="eyebrow"><span class="dot"></span> AI Workflow Tooling · Open Source</div>
+        <h1>Quick Flow<br /><span class="accent">Exporter</span></h1>
+        <div class="tagline">
+          <strong>Paste a flow. Get structure.</strong><br />
+          Markdown, Mermaid, JSON, an interactive graph, and word-level diffs — for flows the native editor can't export.
+        </div>
+        <div class="chips">
+          <span class="chip"><strong>→</strong> 5 AI providers</span>
+          <span class="chip"><strong>→</strong> MD / MMD / JSON</span>
+          <span class="chip"><strong>→</strong> Flow diffs</span>
+        </div>
+      </div>
+      <div class="right">
+        <div class="window">
+          <div class="win-bar">
+            <span class="b b1"></span><span class="b b2"></span><span class="b b3"></span>
+            <span class="win-title">exporter.pipeline</span>
+          </div>
+          <div class="graph">
+            <div class="node">
+              <div class="icon">📋</div>
+              <div class="label">Paste raw flow</div>
+              <div class="kind">INPUT</div>
+            </div>
+            <div class="arrow">↓</div>
+            <div class="node accent">
+              <div class="icon">🧠</div>
+              <div class="label">AI parse</div>
+              <div class="kind">STRUCTURE</div>
+            </div>
+            <div class="arrow">↓</div>
+            <div class="node">
+              <div class="icon">🔀</div>
+              <div class="label">Review &amp; graph</div>
+              <div class="kind">EDIT</div>
+            </div>
+            <div class="arrow">↓</div>
+            <div class="node">
+              <div class="icon">📄</div>
+              <div class="label">Export</div>
+              <div class="kind">MD · MMD · JSON</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
