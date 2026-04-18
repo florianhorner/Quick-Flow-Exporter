@@ -27,3 +27,6 @@ Thumbs.db
 *.log
 npm-debug.log*
 .gstack/
+
+# Cross-project workspace artifacts
+.steamroll/

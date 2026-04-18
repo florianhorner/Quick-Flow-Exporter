@@ -1,100 +1,52 @@
-# ⚡ Quick Flow Exporter
+<p align="center">
+  <img src="docs/banner.png" alt="Quick Flow Exporter — extract, visualize, diff, and document Amazon Quick Flows" width="880" />
+</p>
 
-Extract, visualize, diff, and document your [Amazon Quick Flows](https://aws.amazon.com/quick/flows/) — because the tool doesn't come with a native way to do it.
+<h1 align="center">Quick Flow Exporter</h1>
 
-![License](https://img.shields.io/badge/license-MIT-blue)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.7-blue)
-![React](https://img.shields.io/badge/React-19-61dafb)
-![React Flow](https://img.shields.io/badge/React_Flow-12-ff0072)
+<p align="center">
+  <strong>Export, diff, and visualize <a href="https://aws.amazon.com/quick/flows/">Amazon Quick Flows</a>.</strong><br />
+  Paste a flow. Get Markdown, Mermaid, JSON, an interactive graph, and side-by-side diffs.
+</p>
 
-## Why This Exists
+<p align="center">
+  <a href="https://quick-flow-exporter.vercel.app/"><img alt="Live demo" src="https://img.shields.io/badge/Live%20demo-→-2563eb?style=for-the-badge" /></a>
+</p>
 
-Amazon Quick Flows (formerly QuickSuite) lets you build AI-powered workflows with a visual editor. But there's no built-in way to:
+<p align="center">
+  <a href="#quick-start">Quick start</a> ·
+  <a href="#features">Features</a> ·
+  <a href="#contributing">Contribute</a>
+</p>
 
-- **Export** the prompts, logic, and step configuration as text
-- **Visualize** the flow as a graph with data dependencies
-- **Diff** two versions of a flow to see what changed
-- **Document** flows for reviews, audits, or knowledge sharing
+<p align="center">
+  <a href="https://github.com/florianhorner/Quick-Flow-Exporter/actions/workflows/ci.yml"><img alt="CI" src="https://img.shields.io/github/actions/workflow/status/florianhorner/Quick-Flow-Exporter/ci.yml?branch=main&label=CI&color=2563eb" /></a>
+  <a href="https://github.com/florianhorner/Quick-Flow-Exporter/stargazers"><img alt="Stars" src="https://img.shields.io/github/stars/florianhorner/Quick-Flow-Exporter?style=flat&color=2563eb" /></a>
+  <a href="https://github.com/florianhorner/Quick-Flow-Exporter/commits/main"><img alt="Last commit" src="https://img.shields.io/github/last-commit/florianhorner/Quick-Flow-Exporter?color=2563eb" /></a>
+  <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-64748b" /></a>
+  <img alt="TypeScript 5.9" src="https://img.shields.io/badge/TypeScript-5.9-64748b" />
+  <img alt="React 19" src="https://img.shields.io/badge/React-19-64748b" />
+</p>
 
-This tool fills that gap.
+---
 
-## Screenshots
+## Why
 
-### Paste & Parse
+**The native Quick Flows editor can't export, diff, or visualize. This does all three.**
 
-Ctrl+A your flow in the Quick Flows editor, paste it here, and AI extracts the full structure. Choose from five AI providers (Anthropic, OpenAI, Gemini, Perplexity, or AWS Bedrock) and switch between them at any time.
-
-![Paste Phase](docs/screenshots/01-paste-phase.png)
-
-### Flow Diff
-
-Compare two versions of a flow with word-level inline diffs on prompts. Added, removed, and modified steps are highlighted, and you can expand any change to see exactly what changed.
-
-![Diff Phase](docs/screenshots/02-diff-phase.png)
-
-### Interactive Flow Graph
-
-Visualize your flow as a color-coded directed graph. Each step type has its own color, `@references` show as dashed edges, and reasoning groups render as sub-graphs. Click any node to see the full prompt in a detail panel.
-
-![Flow Graph](docs/screenshots/03-flow-graph.png)
-
-### Multi-Format Export
-
-Export to Markdown (documentation), Mermaid (flowchart diagrams for GitHub/Quip), or JSON (canonical, re-importable). Copy to clipboard or download as a file.
-
-![Export Phase](docs/screenshots/04-export-phase.png)
-
-### One-Click Bookmarklet
-
-Drag the bookmarklet to your bookmarks bar. One click on any Quick Flows editor page copies the content to your clipboard — no Ctrl+A needed.
-
-## Features
-
-| Feature               | Description                                                               |
-| --------------------- | ------------------------------------------------------------------------- |
-| 🧠 AI-Powered Parsing | Paste raw editor content → structured flow with steps, groups, conditions |
-| 🔀 Interactive Graph  | React Flow-powered DAG with color-coded nodes, @reference edges, minimap  |
-| 🔍 Flow Diffing       | Side-by-side comparison with word-level diffs (added/removed/modified)    |
-| 📄 Markdown Export    | Human-readable documentation with full prompt text                        |
-| 🧜 Mermaid Export     | Flowchart diagrams that render in GitHub, Quip, mermaid.live              |
-| { } JSON Export       | Canonical format for version control and re-import                        |
-| 🔖 Bookmarklet        | One-click content extraction from the Quick Flows editor                  |
-| 🧩 Browser Extension  | Chrome/Edge extension for one-click extraction with popup UI              |
-| ✏️ Review & Edit      | Reorder steps, edit prompts, adjust settings before export                |
-| 🔄 Reasoning Groups   | Full support for conditional logic groups with run conditions             |
-| 🌗 Light & Dark Mode  | Theme toggle (light/dark/system) with localStorage persistence            |
-
-## Supported Step Types
-
-| Type                | Icon | Description                |
-| ------------------- | ---- | -------------------------- |
-| Chat Agent          | 🤖   | Conversational AI agent    |
-| General Knowledge   | 🧠   | LLM-powered knowledge step |
-| Web Search          | 🌐   | Internet search step       |
-| UI Agent            | 🖱️   | Browser automation         |
-| Create Image        | 🖼️   | Image generation           |
-| Quick Suite Data    | 📊   | Internal data queries      |
-| Dashboards & Topics | 📈   | BI dashboard integration   |
-| Application Actions | ⚡   | External system actions    |
-| User Input (Text)   | 📝   | Text input from user       |
-| User Input (Files)  | 📎   | File upload from user      |
+Amazon Quick Flows is AWS's visual builder for AI workflows (formerly QuickSuite). Review a teammate's flow without chasing ten tabs. Diff last week's version against today's. Drop the full flow into a design doc as Markdown or Mermaid.
 
 ## Quick Start
 
-### Prerequisites
+**Try it online** → [quick-flow-exporter.vercel.app](https://quick-flow-exporter.vercel.app/). Bring an API key from [Anthropic](https://console.anthropic.com/), [OpenAI](https://platform.openai.com/api-keys), [Gemini](https://aistudio.google.com/app/apikey), or [Perplexity](https://www.perplexity.ai/settings/api).
 
-- Node.js 22 or newer
-- npm 10 or newer
+**Run locally** (Node.js 22+, npm 10+):
 
 ```bash
 git clone https://github.com/florianhorner/Quick-Flow-Exporter.git
 cd Quick-Flow-Exporter
 npm ci
-```
 
-Start both required processes:
-
-```bash
 # Terminal 1 — frontend
 npm run dev
 
@@ -102,212 +54,79 @@ npm run dev
 ANTHROPIC_API_KEY=sk-... npx tsx server/proxy.ts
 ```
 
-Open `http://localhost:5173` in your browser. Parsing requires both frontend and proxy to be running.
+Open `http://localhost:5173`. For OpenAI, Gemini, Perplexity, or Bedrock see [AI Proxy Setup](docs/AI_PROXY_SETUP.md).
 
-If `Parse & Extract` is disabled or parsing fails, verify the proxy is running and review [AI Proxy Setup](#ai-proxy-setup) for provider-specific key configuration.
+> If **Parse & Extract** is greyed out, the proxy isn't running — start Terminal 2.
 
-> **Note:** `npm run dev` starts the Vite frontend only. To use AI parsing, you also need the proxy running in a separate terminal — see [AI Proxy Setup](#ai-proxy-setup) below.
+## Features
 
-## Browser Extension (Chrome / Edge)
+- 🧠 **Five AI providers** — Anthropic, OpenAI, Gemini, Perplexity, AWS Bedrock. Switch per request; keys stay on your machine via local proxy.
+- 🔀 **Dependency graph** — color-coded DAG with `@reference` edges, reasoning-group subgraphs, and a minimap.
+- 🔍 **Version diffs** — word-level inline changes between any two flow versions, no git required.
+- 📄 **Three export formats** — Markdown for docs, Mermaid for GitHub and Quip, JSON for round-tripping.
+- ✏️ **Edit before export** — reorder steps, refine prompts, adjust settings.
+- 🧩 **One-click capture** — Chrome/Edge extension pulls flows straight from the editor.
+- 🌗 **Light & dark mode** — system-detected, persisted.
 
-A Manifest V3 browser extension is included for one-click flow extraction — no bookmarklet needed.
+See [docs/STEP_TYPES.md](docs/STEP_TYPES.md) for every supported step type.
 
-### Install (developer mode)
+## Screenshots
 
-1. Build the extension:
-   ```bash
-   npm run build:extension
-   ```
-2. Open `chrome://extensions` (or `edge://extensions`)
-3. Enable **Developer mode**
-4. Click **Load unpacked** and select the `extension/dist/` directory
+Copy your flow from the Quick Flows editor (Ctrl+A → Ctrl+C), or use the [Chrome/Edge extension](docs/BROWSER_EXTENSION.md) for one-click capture.
 
-### Usage
+| 1. Paste a flow, get structured steps               | 2. Diff two versions, word-level                  |
+| --------------------------------------------------- | ------------------------------------------------- |
+| ![Paste Phase](docs/screenshots/01-paste-phase.png) | ![Diff Phase](docs/screenshots/02-diff-phase.png) |
 
-1. Navigate to a Quick Flows editor page
-2. Click the extension icon in your toolbar
-3. Click **Extract Flow** — the popup shows a preview of the extracted text
-4. **Copy to Clipboard** to paste into the web app, or **Open in Exporter** to launch the app with the data pre-loaded
+| 3. Explore dependencies as a graph                | 4. Export to Markdown, Mermaid, JSON                  |
+| ------------------------------------------------- | ----------------------------------------------------- |
+| ![Flow Graph](docs/screenshots/03-flow-graph.png) | ![Export Phase](docs/screenshots/04-export-phase.png) |
 
-## AI Proxy Setup
+## Resources
 
-The parser uses AI to extract structured data from raw pasted text. Requests go through a local proxy to keep API keys out of the browser. Five providers are supported out of the box.
-
-### Anthropic (Claude) — default
-
-```bash
-ANTHROPIC_API_KEY=sk-... npx tsx server/proxy.ts
-```
-
-### OpenAI
-
-```bash
-PROVIDER=openai OPENAI_API_KEY=sk-... npx tsx server/proxy.ts
-```
-
-### Google Gemini
-
-```bash
-PROVIDER=gemini GEMINI_API_KEY=AIza... npx tsx server/proxy.ts
-```
-
-### Perplexity
-
-```bash
-PROVIDER=perplexity PERPLEXITY_API_KEY=pplx-... npx tsx server/proxy.ts
-```
-
-### AWS Bedrock
-
-```bash
-npm install @aws-sdk/client-bedrock-runtime
-PROVIDER=bedrock AWS_REGION=us-east-1 npx tsx server/proxy.ts
-```
-
-Uses your default AWS credentials (`~/.aws/credentials` or environment variables).
-
-### Per-request provider selection
-
-The `PROVIDER` env var sets the server default, but users can switch providers from the UI at any time. The frontend sends a `provider` field in each request, so a single proxy instance can serve all providers simultaneously — just set the API keys you want available:
-
-```bash
-ANTHROPIC_API_KEY=sk-... OPENAI_API_KEY=sk-... PERPLEXITY_API_KEY=pplx-... npx tsx server/proxy.ts
-```
-
-### Environment variables
-
-| Variable             | Default                                     | Description                   |
-| -------------------- | ------------------------------------------- | ----------------------------- |
-| `PROVIDER`           | `anthropic`                                 | Default AI provider           |
-| `ANTHROPIC_API_KEY`  | —                                           | Anthropic API key             |
-| `ANTHROPIC_MODEL`    | `claude-sonnet-4-20250514`                  | Anthropic model ID            |
-| `OPENAI_API_KEY`     | —                                           | OpenAI API key                |
-| `OPENAI_MODEL`       | `gpt-4o`                                    | OpenAI model ID               |
-| `GEMINI_API_KEY`     | —                                           | Google Gemini API key         |
-| `GEMINI_MODEL`       | `gemini-2.5-flash`                          | Gemini model ID               |
-| `PERPLEXITY_API_KEY` | —                                           | Perplexity API key            |
-| `PERPLEXITY_MODEL`   | `sonar-pro`                                 | Perplexity model ID           |
-| `AWS_REGION`         | `us-east-1`                                 | AWS region for Bedrock        |
-| `BEDROCK_MODEL_ID`   | `anthropic.claude-3-5-sonnet-20241022-v2:0` | Bedrock model ID              |
-| `PORT`               | `3001`                                      | Proxy server port             |
-| `RATE_LIMIT`         | `20`                                        | Requests per 60s per IP       |
-| `TRUST_PROXY`        | `false`                                     | Trust X-Forwarded-For header  |
-| `TRUST_PROXY_HOPS`   | `1`                                         | Trusted proxy hops from right |
-| `CORS_ORIGIN`        | `http://localhost:5173`                     | Allowed CORS origin           |
-
-> The Vite dev server proxies `/api` requests to `http://localhost:3001` automatically.
->
-> If `TRUST_PROXY=true`, set `TRUST_PROXY_HOPS` to the number of trusted proxies that append to `X-Forwarded-For` between the browser and this app. `1` fits a single reverse proxy; larger chains such as CDN + ingress typically need `2` or more.
-
-## How It Works
-
-The app is a six-phase pipeline. Each phase is a tab in the navigation header — you can jump between them freely once a flow is parsed.
-
-```text
-┌──────────┐   ┌──────────┐   ┌──────────┐   ┌──────────┐   ┌──────────┐
-│  1. Paste │──▶│ 2. Groups│──▶│ 3. Review│──▶│ 4. Export│   │  5. Diff │
-│  & Parse  │   │ (if any) │   │  & Edit  │   │MD/MMD/JSON│   │ (any two │
-└──────────┘   └──────────┘   └──────────┘   └──────────┘   │  flows)  │
-                                     │                        └──────────┘
-                               ┌─────┴─────┐
-                               │  6. Graph  │
-                               │(interactive│
-                               │    DAG)    │
-                               └───────────┘
-```
-
-1. **Paste & Parse** — Copy the raw content from the Quick Flows editor (Ctrl+A → Ctrl+C), paste it, select a provider, and parse. The proxy sends the text to your chosen AI provider (up to 500 KB, 60s timeout) and returns structured JSON.
-2. **Groups** — If reasoning groups are detected, the app prompts you to paste their instructions for a second extraction pass. Skip this step if there are no groups.
-3. **Review** — Edit steps, reorder, tweak prompts, and adjust settings. Changes here propagate to all exports.
-4. **Graph** — Visualize the flow as an interactive directed acyclic graph. Color-coded nodes, dashed `@reference` edges, subgraphs for groups. Click any node for a detail panel.
-5. **Export** — Copy or download as Markdown (human-readable docs), Mermaid (renders in GitHub/Quip), or JSON (version-control friendly).
-6. **Diff** — Paste any two raw flow versions and compare them. Word-level inline diffs highlight exactly what changed in each prompt. Diff is independent — you don't need a parsed flow loaded first.
-
-## Project Structure
-
-```
-src/
-├── types.ts                     # TypeScript type definitions
-├── constants.ts                 # Step types, output prefs, run conditions
-├── context/
-│   └── ThemeContext.tsx           # Light/dark/system theme provider
-├── lib/
-│   ├── ai.ts                    # AI proxy client
-│   ├── diff.ts                  # Flow diff engine (word-level diffs)
-│   ├── flow.ts                  # Flow/Step/Group factories & helpers
-│   ├── markdown.ts              # Markdown export generator
-│   ├── mermaid.ts               # Mermaid flowchart generator
-│   ├── parser.ts                # AI-powered flow & group parsing
-│   ├── prompts.ts               # LLM system prompts
-│   └── storage.ts               # Export history persistence
-├── components/
-│   ├── BookmarkletPanel.tsx      # Draggable bookmarklet for Quick Flows
-│   ├── DiffPhase.tsx             # Side-by-side flow comparison UI
-│   ├── ExportPhase.tsx           # Multi-format export (MD/Mermaid/JSON)
-│   ├── FlowGraph.tsx             # Interactive React Flow graph
-│   ├── GroupCard.tsx             # Editable reasoning group
-│   ├── GroupInstructionCard.tsx   # AI extraction for group instructions
-│   ├── GroupsPhase.tsx           # Group instruction extraction wizard
-│   ├── PastePhase.tsx            # Raw text paste & parse
-│   ├── ReviewPhase.tsx           # Full flow editor
-│   ├── StepCard.tsx              # Collapsible step editor
-│   ├── StepFields.tsx            # Step-type-specific form fields
-│   └── ErrorBoundary.tsx         # Catch rendering errors gracefully
-├── App.tsx                       # Main app with phase navigation
-├── main.tsx                      # Entry point
-└── index.css                     # Tailwind imports + light/dark body styles
-server/
-├── proxy.ts                      # AI proxy server (Anthropic, OpenAI, Gemini, Perplexity, Bedrock)
-└── proxy-utils.ts                # Shared proxy utilities (rate limiter, validation, IP extraction)
-extension/
-├── manifest.json                 # Chrome/Edge Manifest V3 config
-├── popup/                        # Extension popup (HTML, CSS, TypeScript)
-├── background/                   # Service worker for tab management
-└── icons/                        # Extension icons (16/48/128 px)
-scripts/
-├── build-extension.mjs           # esbuild bundler for the extension
-├── generate-icons.mjs            # Programmatic extension icon generation
-├── take-screenshots.mjs          # Automated screenshot capture for docs
-└── conductor-setup.sh            # Conductor workspace setup script
-vercel.json                       # Vercel SPA deployment config
-conductor.json                    # Conductor multi-agent workspace config
-```
-
-## Tech Stack
-
-- **React 19** + TypeScript
-- **Tailwind CSS** for styling
-- **React Flow** for the interactive graph visualization
-- **diff-match-patch** for word-level text diffing
-- **Vite** for dev/build tooling
-
-## Scripts
-
-| Command                   | Description                                        |
-| ------------------------- | -------------------------------------------------- |
-| `npm run dev`             | Start Vite frontend at localhost:5173              |
-| `npm run build`           | Type-check and build for production                |
-| `npm run build:extension` | Bundle browser extension to `extension/dist`       |
-| `npm run preview`         | Preview production build                           |
-| `npm run lint`            | Run ESLint                                         |
-| `npm run test`            | Run Vitest test suite once                         |
-| `npm run test:watch`      | Run Vitest in watch mode (re-runs on file changes) |
-| `npm run format:check`    | Check formatting with Prettier                     |
-| `npm run typecheck`       | Type-check without emitting (`tsc --noEmit`)       |
+- **[Architecture](docs/ARCHITECTURE.md)** — the six-phase pipeline and project layout
+- **[AI Proxy Setup](docs/AI_PROXY_SETUP.md)** — provider configs, env vars, per-request switching
+- **[Browser Extension](docs/BROWSER_EXTENSION.md)** — install the Chrome/Edge capture extension
+- **[Step Types](docs/STEP_TYPES.md)** — every Quick Flows step type and how it renders
+- **[Scripts](docs/SCRIPTS.md)** — npm scripts, tech stack, prerequisites
 
 ## Roadmap
 
-- [x] ~~Browser extension (Chrome/Edge)~~ for zero-friction extraction
-- [x] ~~Light & dark mode~~ with system preference detection
+**Shipped**
+
+- [x] Browser extension (Chrome/Edge)
+- [x] Light & dark mode
+
+**Next**
+
 - [ ] Flow analytics (prompt complexity, reference graph completeness, cost estimation)
 - [ ] Shareable links (encode flow in URL for Slack/email sharing)
+
+**Nice-to-have**
+
 - [ ] Keyboard shortcuts
 - [ ] `npx quick-flow-exporter` for zero-setup local usage
 
 ## Contributing
 
-Contributions welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+Issues, PRs, and feedback all move this forward.
+
+1. Fork, clone, and run `npm ci`.
+2. Branch off main: `git checkout -b feat/your-idea`.
+3. Before opening a PR: `npm run lint && npm run test && npm run typecheck`.
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the full guide.
 
 ## License
 
 [MIT](LICENSE)
+
+<!--
+## Star history
+
+Uncomment once the repo hits ~50 stars — shows growth curve.
+
+<a href="https://star-history.com/#florianhorner/Quick-Flow-Exporter&Date">
+  <img src="https://api.star-history.com/svg?repos=florianhorner/Quick-Flow-Exporter&type=Date" alt="Star history" />
+</a>
+-->
