@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.3.4] - 2026-04-19
+
+### Security
+
+- Removed dead AI provider domains from CSP `connect-src` — the SPA never calls these directly, and their presence silently permitted future direct browser-to-AI calls that would bypass the proxy and expose user API keys
+- Added `Strict-Transport-Security: max-age=31536000; includeSubDomains; preload` to enforce HTTPS
+- Added `Referrer-Policy: strict-origin-when-cross-origin` to limit referer leakage
+- Added `Permissions-Policy` disabling camera, microphone, geolocation, and payment access
+
 ## [1.3.3] - 2026-04-14
 
 ### Security
