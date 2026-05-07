@@ -109,8 +109,8 @@ Open an issue with:
 - Steps to reproduce
 - Browser/OS info if relevant
 
-
 <!-- BEGIN: commit-message-standards (managed by bootstrap-repo.sh — do not hand-edit) -->
+
 ## Commit messages
 
 This repo follows the [engineering-standards commit-message spec](https://github.com/florianhorner/engineering-standards/blob/main/specs/commit-message-spec.md). The cheat sheet below is self-sufficient — you do not need to leave the repo to write a conformant commit.
@@ -158,27 +158,29 @@ florian asked me to add this                         # rule_id: OPERATOR_ATTRIBU
 ### Body-when-required rule
 
 A `Why:` body line is REQUIRED when **both** conditions hold:
+
 - type is `feat`
 - `git diff --shortstat` shows >50 lines changed
 
 For all other commits the body is optional. Acceptable terse `Why:` templates:
+
 - `Why: closes #N` (when issue body has the context)
 - `Why: incident response — outage 2026-05-08T03:00Z`
 - `Why: spec at <url>; see decision log section 3`
 
 ### Banned patterns — body only
 
-| rule_id | Disallowed | Fix |
-|---|---|---|
-| `OPERATOR_ATTRIBUTION` | `florian asked`, `as requested`, `per request`, `per my request` | Replace with WHY: "fix X because Y" |
-| `AGENT_SELF_TALK` | `addressed all`, `fix all`, `fixed all`, `cleaned up everything` | Name specific changes: "fix N+1 in Foo.query, dedupe Bar.helper" |
+| rule_id                | Disallowed                                                       | Fix                                                              |
+| ---------------------- | ---------------------------------------------------------------- | ---------------------------------------------------------------- |
+| `OPERATOR_ATTRIBUTION` | `florian asked`, `as requested`, `per request`, `per my request` | Replace with WHY: "fix X because Y"                              |
+| `AGENT_SELF_TALK`      | `addressed all`, `fix all`, `fixed all`, `cleaned up everything` | Name specific changes: "fix N+1 in Foo.query, dedupe Bar.helper" |
 
 ### Banned patterns — subject only
 
-| rule_id | Disallowed | Fix |
-|---|---|---|
-| `WEB_UI_DEFAULT` | `Add files via upload`, `Update Foo.md`, `Initial commit` | Use `type(scope): subject`; describe what changed |
-| `VERSION_IN_SUBJECT` | Subject starting with `v[0-9]` | Drop the version prefix; use `chore(release): 1.2.3` if needed |
+| rule_id              | Disallowed                                                | Fix                                                            |
+| -------------------- | --------------------------------------------------------- | -------------------------------------------------------------- |
+| `WEB_UI_DEFAULT`     | `Add files via upload`, `Update Foo.md`, `Initial commit` | Use `type(scope): subject`; describe what changed              |
+| `VERSION_IN_SUBJECT` | Subject starting with `v[0-9]`                            | Drop the version prefix; use `chore(release): 1.2.3` if needed |
 
 ### Exempt subjects (skip the format check entirely)
 

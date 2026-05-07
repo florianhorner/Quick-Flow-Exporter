@@ -1,4 +1,5 @@
 <!-- BEGIN: commit-message-standards (managed by bootstrap-repo.sh — do not hand-edit) -->
+
 ## Commit message standards
 
 This repo follows the [engineering-standards commit-message spec](https://github.com/florianhorner/engineering-standards/blob/main/specs/commit-message-spec.md).
@@ -12,4 +13,5 @@ This repo follows the [engineering-standards commit-message spec](https://github
 **Machine-readable rules:** [`.config/commit-rules.json`](.config/commit-rules.json) is a SHA-pinned vendored copy of the upstream `commit-rules.json`. The validator binary, commit-msg hook, and CI workflow all read this file. Do not hand-edit — re-run `bootstrap-repo.sh` to refresh.
 
 **Bypass:** `git commit --no-verify` requires a `Policy-Override: <reason>` trailer to pass CI. Logged to `~/.commit-bypass.log` by the pre-push hook.
+
 <!-- END: commit-message-standards -->
