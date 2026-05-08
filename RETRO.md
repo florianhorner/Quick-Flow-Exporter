@@ -14,11 +14,11 @@ This file is regenerated periodically. Forward enforcement (commit-msg hook + re
 
 ## Failure breakdown
 
-| Rule | Count | What it catches |
-|---|---:|---|
-| SUBJECT_TOO_LONG | 4 | Subjects over 72 characters — usually means multiple things crammed into one line |
-| SUBJECT_FORMAT | 3 | Missing or wrong `type(scope):` prefix (e.g. `security:`, `quality:`, no prefix at all) |
-| WEB_UI_DEFAULT | 1 | GitHub web-UI default subject like `Initial commit` or `Add files via upload` |
+| Rule             | Count | What it catches                                                                         |
+| ---------------- | ----: | --------------------------------------------------------------------------------------- |
+| SUBJECT_TOO_LONG |     4 | Subjects over 72 characters — usually means multiple things crammed into one line       |
+| SUBJECT_FORMAT   |     3 | Missing or wrong `type(scope):` prefix (e.g. `security:`, `quality:`, no prefix at all) |
+| WEB_UI_DEFAULT   |     1 | GitHub web-UI default subject like `Initial commit` or `Add files via upload`           |
 
 ## Worst-N legacy commits explained
 
