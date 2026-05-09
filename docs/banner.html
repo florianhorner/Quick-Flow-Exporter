@@ -9,12 +9,21 @@
       rel="stylesheet"
     />
     <style>
-      * { margin: 0; padding: 0; box-sizing: border-box; }
-      html, body {
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
         width: 1280px;
         height: 640px;
         background: #0a1a2f;
-        font-family: 'Inter', -apple-system, system-ui, sans-serif;
+        font-family:
+          'Inter',
+          -apple-system,
+          system-ui,
+          sans-serif;
         color: #e6edf7;
         overflow: hidden;
       }
@@ -25,12 +34,21 @@
         grid-template-columns: 1.05fr 0.95fr;
         position: relative;
         background:
-          radial-gradient(1100px 700px at 20% 15%, rgba(37, 99, 235, 0.22), transparent 60%),
-          radial-gradient(900px 600px at 90% 95%, rgba(37, 99, 235, 0.16), transparent 65%),
+          radial-gradient(
+            1100px 700px at 20% 15%,
+            rgba(37, 99, 235, 0.22),
+            transparent 60%
+          ),
+          radial-gradient(
+            900px 600px at 90% 95%,
+            rgba(37, 99, 235, 0.16),
+            transparent 65%
+          ),
           linear-gradient(135deg, #0a1a2f 0%, #0d2240 60%, #0a1a2f 100%);
       }
       .grid-bg {
-        position: absolute; inset: 0;
+        position: absolute;
+        inset: 0;
         background-image:
           linear-gradient(rgba(37, 99, 235, 0.06) 1px, transparent 1px),
           linear-gradient(90deg, rgba(37, 99, 235, 0.06) 1px, transparent 1px);
@@ -60,7 +78,13 @@
         border-radius: 999px;
         background: rgba(37, 99, 235, 0.08);
       }
-      .dot { width: 8px; height: 8px; border-radius: 50%; background: #2563eb; box-shadow: 0 0 12px #2563eb; }
+      .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #2563eb;
+        box-shadow: 0 0 12px #2563eb;
+      }
       h1 {
         font-size: 76px;
         line-height: 1.02;
@@ -80,8 +104,16 @@
         color: #a8b8cf;
         max-width: 500px;
       }
-      .tagline strong { color: #e6edf7; font-weight: 600; }
-      .chips { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
+      .tagline strong {
+        color: #e6edf7;
+        font-weight: 600;
+      }
+      .chips {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 8px;
+      }
       .chip {
         font-family: 'JetBrains Mono', monospace;
         font-size: 13px;
@@ -91,7 +123,10 @@
         background: rgba(10, 26, 47, 0.7);
         color: #c6d4ea;
       }
-      .chip strong { color: #7aa2ff; font-weight: 600; }
+      .chip strong {
+        color: #7aa2ff;
+        font-weight: 600;
+      }
 
       .right {
         position: relative;
@@ -119,17 +154,32 @@
         background: #0a1a2f;
         border-bottom: 1px solid rgba(122, 162, 255, 0.15);
       }
-      .win-bar .b { width: 12px; height: 12px; border-radius: 50%; }
-      .b1 { background: #ef4444; }
-      .b2 { background: #f59e0b; }
-      .b3 { background: #2563eb; }
+      .win-bar .b {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+      }
+      .b1 {
+        background: #ef4444;
+      }
+      .b2 {
+        background: #f59e0b;
+      }
+      .b3 {
+        background: #2563eb;
+      }
       .win-title {
         margin-left: 12px;
         font-family: 'JetBrains Mono', monospace;
         font-size: 12px;
         color: #7aa2ff;
       }
-      .graph { padding: 28px 24px; display: flex; flex-direction: column; gap: 14px; }
+      .graph {
+        padding: 28px 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
       .node {
         position: relative;
         display: flex;
@@ -141,14 +191,19 @@
         border: 1px solid rgba(122, 162, 255, 0.3);
       }
       .node .icon {
-        width: 30px; height: 30px;
-        display: flex; align-items: center; justify-content: center;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         border-radius: 8px;
         background: rgba(37, 99, 235, 0.25);
         font-size: 16px;
       }
       .node .label {
-        font-size: 14px; font-weight: 600; color: #e6edf7;
+        font-size: 14px;
+        font-weight: 600;
+        color: #e6edf7;
       }
       .node .kind {
         margin-left: auto;
@@ -166,9 +221,15 @@
         line-height: 1;
       }
       .node.accent {
-        background: linear-gradient(135deg, rgba(37, 99, 235, 0.25), rgba(37, 99, 235, 0.08));
+        background: linear-gradient(
+          135deg,
+          rgba(37, 99, 235, 0.25),
+          rgba(37, 99, 235, 0.08)
+        );
         border-color: #2563eb;
-        box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.3), 0 8px 24px -8px rgba(37, 99, 235, 0.45);
+        box-shadow:
+          0 0 0 1px rgba(37, 99, 235, 0.3),
+          0 8px 24px -8px rgba(37, 99, 235, 0.45);
       }
     </style>
   </head>
@@ -176,11 +237,14 @@
     <div class="stage">
       <div class="grid-bg"></div>
       <div class="left">
-        <div class="eyebrow"><span class="dot"></span> AI Workflow Tooling · Open Source</div>
+        <div class="eyebrow">
+          <span class="dot"></span> AI Workflow Tooling · Open Source
+        </div>
         <h1>Quick Flow<br /><span class="accent">Exporter</span></h1>
         <div class="tagline">
           <strong>Paste a flow. Get structure.</strong><br />
-          Markdown, Mermaid, JSON, an interactive graph, and word-level diffs — for flows the native editor can't export.
+          Markdown, Mermaid, JSON, an interactive graph, and word-level diffs — for flows
+          the native editor can't export.
         </div>
         <div class="chips">
           <span class="chip"><strong>→</strong> 5 AI providers</span>
