@@ -121,7 +121,11 @@ export async function parseWithAI({
     throw new Error('Unexpected response shape from AI proxy');
   } catch (e) {
     if (e instanceof DOMException && e.name === 'AbortError') {
-      throw new Error('AI request timed out after 60 seconds');
+      const error = new Error('AI request timed out after 60 seconds') as Error & {
+        cause?: unknown;
+      };
+      error.cause = e;
+      throw error;
     }
     throw e;
   } finally {
