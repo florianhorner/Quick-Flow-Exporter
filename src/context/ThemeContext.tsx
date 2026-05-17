@@ -14,11 +14,8 @@ const STORAGE_KEY = 'qfe-theme';
 const CYCLE: ThemeMode[] = ['light', 'dark', 'system'];
 
 function getSystemPreference(): 'light' | 'dark' {
+  if (typeof window.matchMedia !== 'function') return 'light';
   return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-}
-
-function resolveTheme(mode: ThemeMode): 'light' | 'dark' {
-  return mode === 'system' ? getSystemPreference() : mode;
 }
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
@@ -30,41 +27,36 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     return 'dark';
   });
 
-  const [resolved, setResolved] = useState<'light' | 'dark'>(() => resolveTheme(mode));
-
-  const applyTheme = useCallback((m: ThemeMode) => {
-    const r = resolveTheme(m);
-    setResolved(r);
-    document.documentElement.classList.toggle('dark', r === 'dark');
-  }, []);
-
-  const setMode = useCallback(
-    (m: ThemeMode) => {
-      setModeState(m);
-      localStorage.setItem(STORAGE_KEY, m);
-      applyTheme(m);
-    },
-    [applyTheme]
+  const [systemTheme, setSystemTheme] = useState<'light' | 'dark'>(() =>
+    getSystemPreference()
   );
+  const resolved = mode === 'system' ? systemTheme : mode;
+
+  const setMode = useCallback((m: ThemeMode) => {
+    setModeState(m);
+    localStorage.setItem(STORAGE_KEY, m);
+  }, []);
 
   const toggle = useCallback(() => {
     const next = CYCLE[(CYCLE.indexOf(mode) + 1) % CYCLE.length]!;
     setMode(next);
   }, [mode, setMode]);
 
-  // Apply on mount
+  // Keep the document class synchronized with the resolved React theme.
   useEffect(() => {
-    applyTheme(mode);
-  }, [applyTheme, mode]);
+    document.documentElement.classList.toggle('dark', resolved === 'dark');
+  }, [resolved]);
 
-  // Listen for system preference changes when in 'system' mode
+  // Track system preference changes so switching to system mode uses current OS state.
   useEffect(() => {
-    if (mode !== 'system') return;
+    if (typeof window.matchMedia !== 'function') return;
     const mq = window.matchMedia('(prefers-color-scheme: dark)');
-    const handler = () => applyTheme('system');
+    const handler = (event: MediaQueryListEvent) => {
+      setSystemTheme(event.matches ? 'dark' : 'light');
+    };
     mq.addEventListener('change', handler);
     return () => mq.removeEventListener('change', handler);
-  }, [mode, applyTheme]);
+  }, []);
 
   return (
     <ThemeContext.Provider value={{ mode, resolved, setMode, toggle }}>
