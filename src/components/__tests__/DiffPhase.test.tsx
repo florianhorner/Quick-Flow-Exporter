@@ -108,6 +108,25 @@ describe('DiffPhase', () => {
       await user.type(screen.getByRole('textbox'), 'after content');
       expect(screen.getByText('Compare Flows')).not.toBeDisabled();
     });
+
+    it('uses the latest currentFlow when comparing after a rerender', async () => {
+      vi.mocked(parseFlow).mockResolvedValue(makeFlow({ title: 'After' }));
+      const user = userEvent.setup();
+      const { rerender } = render(
+        <DiffPhase currentFlow={makeFlow({ title: 'Before v1' })} onBack={onBack} />
+      );
+
+      rerender(
+        <DiffPhase currentFlow={makeFlow({ title: 'Before v2' })} onBack={onBack} />
+      );
+
+      await user.type(screen.getByRole('textbox'), 'after content');
+      await user.click(screen.getByText('Compare Flows'));
+
+      await screen.findByText('DIFF');
+      expect(document.body.textContent).toContain('Before v2');
+      expect(document.body.textContent).toContain('After');
+    });
   });
 
   describe('parse error handling', () => {

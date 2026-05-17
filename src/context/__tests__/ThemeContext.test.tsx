@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ThemeProvider, useTheme } from '../ThemeContext';
 
@@ -15,14 +15,25 @@ function ThemeConsumer() {
   );
 }
 
+let mediaChangeListeners: Array<(event: MediaQueryListEvent) => void> = [];
+
 function mockMatchMedia(prefersDark: boolean) {
+  mediaChangeListeners = [];
   vi.stubGlobal(
     'matchMedia',
     vi.fn((query: string) => ({
       matches: query.includes('dark') ? prefersDark : !prefersDark,
       media: query,
-      addEventListener: vi.fn(),
-      removeEventListener: vi.fn(),
+      addEventListener: vi.fn(
+        (_event: string, listener: (event: MediaQueryListEvent) => void) => {
+          mediaChangeListeners.push(listener);
+        }
+      ),
+      removeEventListener: vi.fn(
+        (_event: string, listener: (event: MediaQueryListEvent) => void) => {
+          mediaChangeListeners = mediaChangeListeners.filter((l) => l !== listener);
+        }
+      ),
       dispatchEvent: vi.fn(),
     }))
   );
@@ -109,6 +120,27 @@ describe('ThemeContext', () => {
       expect(document.documentElement.classList.contains('dark')).toBe(expectDarkClass);
     }
   );
+
+  it('updates resolved theme when system preference changes in system mode', () => {
+    localStorage.setItem('qfe-theme', 'system');
+    render(
+      <ThemeProvider>
+        <ThemeConsumer />
+      </ThemeProvider>
+    );
+
+    expect(screen.getByTestId('resolved').textContent).toBe('light');
+    expect(document.documentElement.classList.contains('dark')).toBe(false);
+
+    act(() => {
+      mediaChangeListeners.forEach((listener) =>
+        listener({ matches: true } as MediaQueryListEvent)
+      );
+    });
+
+    expect(screen.getByTestId('resolved').textContent).toBe('dark');
+    expect(document.documentElement.classList.contains('dark')).toBe(true);
+  });
 
   it('useTheme throws when used outside ThemeProvider', () => {
     const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});

@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback, useEffect } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import type { Flow } from '../types';
 import { parseFlow } from '../lib/parser';
 import { diffFlows, wordDiffSegments, type FlowDiffResult } from '../lib/diff';
@@ -19,13 +19,6 @@ export default function DiffPhase({ currentFlow, onBack }: DiffPhaseProps) {
   const [parsing, setParsing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [expandedPaths, setExpandedPaths] = useState<Set<string>>(new Set());
-
-  // Sync leftFlow when currentFlow prop changes (e.g. user re-parses)
-  useEffect(() => {
-    if (state === 'input') {
-      setLeftFlow(currentFlow);
-    }
-  }, [currentFlow, state]);
 
   const handleDiff = useCallback(async () => {
     setParsing(true);
