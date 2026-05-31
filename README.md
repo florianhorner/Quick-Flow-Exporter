@@ -58,6 +58,8 @@ Open `http://localhost:5173`. For OpenAI, Gemini, Perplexity, or Bedrock see [AI
 
 > If **Parse & Extract** is greyed out, the proxy isn't running — start Terminal 2.
 
+> Under [Conductor](https://conductor.build), the **Run** button starts both processes via `scripts/conductor-run.sh` on `$CONDUCTOR_PORT`-derived ports (UI = `CONDUCTOR_PORT`, proxy = `+1`), so parallel workspaces never collide.
+
 ## Features
 
 - 🧠 **Five AI providers** — Anthropic, OpenAI, Gemini, Perplexity, AWS Bedrock. Switch per request; keys stay on your machine via local proxy.

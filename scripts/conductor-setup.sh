@@ -100,7 +100,7 @@ check_tool "delta (git-delta)" delta    "brew install git-delta"
 
 echo ""
 echo "${BOLD}── Workspace ready ──────────────────────────────────────────${RESET}"
-echo "  Dev server:  npm run dev         → http://localhost:5173"
+echo "  Dev server:  npm run dev         (Conductor Run starts proxy+vite on \$CONDUCTOR_PORT)"
 echo "  Tests:       npm run test"
 echo "  Lint:        npm run lint"
 echo "  Build:       npm run build"
