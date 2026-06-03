@@ -3,5 +3,46 @@
     "setup": "bash scripts/conductor-setup.sh",
     "run": "bash scripts/conductor-run.sh"
   },
-  "runScriptMode": "concurrent"
+  "runScriptMode": "concurrent",
+  "codeReview": {
+    "focus": [
+      "API keys stay server-side in the proxy (server/proxy.ts) — never expose provider keys to the client",
+      "React 19 hooks correctness; avoid unnecessary re-renders in the flow graph (@xyflow/react)",
+      "Markdown export determinism — identical flow input must produce identical output",
+      "Browser-extension manifest + permissions kept minimal",
+      "Proxy provider switching (anthropic/openai/gemini/perplexity/bedrock) handled safely"
+    ],
+    "ignore": ["Do not flag formatting issues — CI/linters catch those"]
+  },
+  "pullRequest": {
+    "titleStyle": "Imperative mood, max 60 chars",
+    "descriptionMust": [
+      "What changed: which modules or areas",
+      "Why: the bug, feature, or behavior this addresses",
+      "Testing: how it was verified"
+    ],
+    "rules": ["Keep it concise — no boilerplate sections if they'd be empty"]
+  },
+  "branchNaming": {
+    "style": "conventional",
+    "format": "prefix/short-description",
+    "prefixes": ["feat", "fix", "chore", "docs", "refactor"],
+    "rules": [
+      "Use lowercase-hyphenated descriptions after prefix",
+      "Keep it short and descriptive — max 4 words after prefix",
+      "Example: feat/add-device-support, fix/reconnect-loop, chore/update-deps"
+    ]
+  },
+  "general": {
+    "description": "TypeScript/React (Vite) SPA plus a Node AI proxy and a Chrome/Edge extension that exports Quick Flows into readable, reproducible Markdown.",
+    "rules": ["Solo developer — no team process overhead needed"],
+    "outputFormatting": {
+      "structure": "Always use markdown: headers (##/###), bullets, bold for key terms, tables for comparisons",
+      "tldr": "Lead every response with a single TL;DR line before any detail",
+      "decisions": "For multi-option decisions: Option A / B / C with explicit tradeoffs in a table or bullet list — never buried in prose",
+      "density": "Max 3 sentences per paragraph. Break up walls of text. Prefer visual hierarchy over long paragraphs.",
+      "codeBlocks": "Always fence code with a language hint (```rust, ```toml, ```bash). Never inline code longer than one expression.",
+      "citations": "When referencing files, use relative paths as inline code (`src/foo.rs`). When referencing external docs, link them."
+    }
+  }
 }
