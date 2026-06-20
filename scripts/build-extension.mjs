@@ -19,6 +19,21 @@ mkdirSync(resolve(dist, 'popup'), { recursive: true });
 mkdirSync(resolve(dist, 'background'), { recursive: true });
 mkdirSync(resolve(dist, 'icons'), { recursive: true });
 
+// Resolve the exporter URL baked into the extension. localhost is a dev-only
+// default; a packaged (--minify) build must point at the real deployment, so
+// fail loudly rather than ship a dead localhost tab to users.
+const isProd = process.argv.includes('--minify');
+const exporterBaseUrl = process.env.EXPORTER_BASE_URL;
+if (isProd && !exporterBaseUrl) {
+  console.error(
+    'EXPORTER_BASE_URL must be set for a packaged (--minify) extension build.\n' +
+      'Example: EXPORTER_BASE_URL=https://quick-flow-exporter.vercel.app node scripts/build-extension.mjs --minify'
+  );
+  process.exit(1);
+}
+const resolvedExporterBaseUrl = exporterBaseUrl ?? 'http://localhost:5173';
+console.log(`Exporter base URL: ${resolvedExporterBaseUrl}`);
+
 // Bundle TypeScript files
 await esbuild.build({
   entryPoints: [resolve(ext, 'popup/popup.ts'), resolve(ext, 'background/background.ts')],
@@ -26,11 +41,9 @@ await esbuild.build({
   bundle: true,
   format: 'iife',
   target: 'chrome120',
-  minify: process.argv.includes('--minify'),
+  minify: isProd,
   define: {
-    __EXPORTER_BASE_URL__: JSON.stringify(
-      process.env.EXPORTER_BASE_URL ?? 'http://localhost:5173'
-    ),
+    __EXPORTER_BASE_URL__: JSON.stringify(resolvedExporterBaseUrl),
   },
 });
 
