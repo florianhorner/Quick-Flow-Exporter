@@ -27,6 +27,7 @@ Thumbs.db
 *.log
 npm-debug.log*
 .gstack/
+.playwright-cli/
 
 # Cross-project workspace artifacts
 .steamroll/

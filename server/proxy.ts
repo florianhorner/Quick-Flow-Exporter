@@ -24,6 +24,7 @@ import {
   createClientConfigError,
   createProviderHttpError,
   createRateLimiter,
+  getProxyPort,
   getRateLimitIp,
   ProxyHttpError,
   validateGeminiModel,
@@ -33,7 +34,7 @@ import {
   type ProxyRequest,
 } from './proxy-utils';
 
-const PORT = Number(process.env.PORT ?? 3001);
+const PORT = getProxyPort();
 const DEFAULT_PROVIDER: Provider = VALID_PROVIDERS.includes(
   process.env.PROVIDER as Provider
 )

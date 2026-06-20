@@ -2,15 +2,26 @@ import { useState, useMemo, useCallback } from 'react';
 import type { Flow } from '../types';
 import { parseFlow } from '../lib/parser';
 import { diffFlows, wordDiffSegments, type FlowDiffResult } from '../lib/diff';
+import { DEMO_MODE_MESSAGE } from '../config';
 
 interface DiffPhaseProps {
   currentFlow: Flow | null;
   onBack: () => void;
+  demoMode?: boolean;
+  exampleDiff?: {
+    left: Flow;
+    right: Flow;
+  };
 }
 
 type DiffState = 'input' | 'result';
 
-export default function DiffPhase({ currentFlow, onBack }: DiffPhaseProps) {
+export default function DiffPhase({
+  currentFlow,
+  onBack,
+  demoMode = false,
+  exampleDiff,
+}: DiffPhaseProps) {
   const [leftRaw, setLeftRaw] = useState('');
   const [rightRaw, setRightRaw] = useState('');
   const [leftFlow, setLeftFlow] = useState<Flow | null>(currentFlow);
@@ -21,6 +32,7 @@ export default function DiffPhase({ currentFlow, onBack }: DiffPhaseProps) {
   const [expandedPaths, setExpandedPaths] = useState<Set<string>>(new Set());
 
   const handleDiff = useCallback(async () => {
+    if (demoMode) return;
     setParsing(true);
     setError(null);
     try {
@@ -33,12 +45,28 @@ export default function DiffPhase({ currentFlow, onBack }: DiffPhaseProps) {
       setError(`Parse error: ${e instanceof Error ? e.message : String(e)}`);
     }
     setParsing(false);
-  }, [leftRaw, rightRaw, currentFlow]);
+  }, [leftRaw, rightRaw, currentFlow, demoMode]);
+
+  const loadExampleDiff = useCallback(() => {
+    if (!exampleDiff) return;
+    setError(null);
+    setParsing(false);
+    setLeftFlow(structuredClone(exampleDiff.left));
+    setRightFlow(structuredClone(exampleDiff.right));
+    setExpandedPaths(new Set());
+    setState('result');
+  }, [exampleDiff]);
 
   const diffResult = useMemo<FlowDiffResult | null>(() => {
     if (!leftFlow || !rightFlow) return null;
     return diffFlows(leftFlow, rightFlow);
   }, [leftFlow, rightFlow]);
+
+  const canCompare =
+    !demoMode &&
+    !parsing &&
+    (!!currentFlow || leftRaw.trim().length > 0) &&
+    rightRaw.trim().length > 0;
 
   const toggleExpand = (path: string) => {
     setExpandedPaths((prev) => {
@@ -61,6 +89,24 @@ export default function DiffPhase({ currentFlow, onBack }: DiffPhaseProps) {
               Paste two versions of a flow to see what changed.
             </p>
           </div>
+
+          {demoMode && (
+            <div className="rounded-lg border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20 p-4 text-sm text-blue-700 dark:text-blue-300">
+              <div className="font-semibold">Hosted demo mode</div>
+              <p className="mt-1">
+                {DEMO_MODE_MESSAGE} Load the bundled before/after pair to inspect the diff
+                workflow without calling the AI proxy.
+              </p>
+              {exampleDiff && (
+                <button
+                  onClick={loadExampleDiff}
+                  className="mt-3 px-4 py-2 rounded-lg text-sm font-semibold bg-blue-600 text-white hover:bg-blue-500 shadow-lg shadow-blue-500/20"
+                >
+                  Load example diff
+                </button>
+              )}
+            </div>
+          )}
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
@@ -108,16 +154,18 @@ export default function DiffPhase({ currentFlow, onBack }: DiffPhaseProps) {
             </button>
             <button
               onClick={handleDiff}
-              disabled={parsing || (!currentFlow && !leftRaw.trim()) || !rightRaw.trim()}
+              disabled={!canCompare}
               className={`px-6 py-2.5 rounded-lg text-sm font-semibold transition-all ${
-                parsing
-                  ? 'bg-slate-200 dark:bg-midnight-700 text-slate-400 dark:text-slate-500'
-                  : (!currentFlow && !leftRaw.trim()) || !rightRaw.trim()
-                    ? 'bg-slate-200 dark:bg-midnight-700 text-slate-400 dark:text-slate-500'
-                    : 'bg-blue-600 text-white hover:bg-blue-500 shadow-lg shadow-blue-500/25'
+                canCompare
+                  ? 'bg-blue-600 text-white hover:bg-blue-500 shadow-lg shadow-blue-500/25'
+                  : 'bg-slate-200 dark:bg-midnight-700 text-slate-400 dark:text-slate-500'
               }`}
             >
-              {parsing ? 'Parsing...' : 'Compare Flows'}
+              {demoMode
+                ? 'Run locally to compare'
+                : parsing
+                  ? 'Parsing...'
+                  : 'Compare Flows'}
             </button>
           </div>
 

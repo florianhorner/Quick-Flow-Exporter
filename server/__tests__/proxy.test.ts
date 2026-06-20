@@ -3,12 +3,45 @@ import {
   createProviderHttpError,
   createRateLimiter,
   extractTrustedIp,
+  getProxyPort,
   getRateLimitIp,
   ProxyHttpError,
   validateGeminiModel,
   validateProxyRequest,
   VALID_PROVIDERS,
 } from '../proxy-utils';
+import {
+  DEFAULT_EXPORTER_BASE_URL,
+  normalizeExporterBaseUrl,
+} from '../../extension/background/config';
+
+describe('proxy port config', () => {
+  it('uses PORT when explicitly set', () => {
+    expect(getProxyPort({ PORT: '4500', PROXY_PORT: '4600' })).toBe(4500);
+  });
+
+  it('falls back to PROXY_PORT for combined local dev startup', () => {
+    expect(getProxyPort({ PROXY_PORT: '4600' })).toBe(4600);
+    expect(getProxyPort({ PORT: 'not-a-port', PROXY_PORT: '4600' })).toBe(4600);
+  });
+
+  it('defaults to 3001 when no valid port is configured', () => {
+    expect(getProxyPort({ PORT: 'not-a-port' })).toBe(3001);
+    expect(getProxyPort({})).toBe(3001);
+  });
+});
+
+describe('extension exporter URL config', () => {
+  it('defaults the extension handoff to the local app', () => {
+    expect(normalizeExporterBaseUrl(undefined)).toBe(DEFAULT_EXPORTER_BASE_URL);
+  });
+
+  it('accepts a build-time override and trims trailing slashes', () => {
+    expect(normalizeExporterBaseUrl(' https://example.com/exporter/ ')).toBe(
+      'https://example.com/exporter'
+    );
+  });
+});
 
 describe('proxy request validation', () => {
   it('accepts valid request', () => {

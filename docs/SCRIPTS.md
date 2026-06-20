@@ -14,7 +14,9 @@
 
 | Command                   | Description                                                     |
 | ------------------------- | --------------------------------------------------------------- |
+| `npm start`               | Start the frontend and local AI proxy together                  |
 | `npm run dev`             | Start Vite frontend at localhost:5173                           |
+| `npm run dev:all`         | Start Vite and `server/proxy.ts` with `concurrently`            |
 | `npm run build`           | Type-check and build for production                             |
 | `npm run build:extension` | Bundle browser extension to `extension/dist`                    |
 | `npm run preview`         | Preview production build                                        |

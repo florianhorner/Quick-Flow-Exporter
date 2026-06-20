@@ -15,6 +15,17 @@ export interface ProxyRequest {
   provider?: Provider;
 }
 
+export function getProxyPort(
+  env: Partial<Record<'PORT' | 'PROXY_PORT', string | undefined>> = process.env
+): number {
+  const parsePort = (value: string | undefined): number | null => {
+    const parsed = Number(value);
+    return Number.isFinite(parsed) && parsed > 0 ? parsed : null;
+  };
+
+  return parsePort(env.PORT) ?? parsePort(env.PROXY_PORT) ?? 3001;
+}
+
 export class ProxyHttpError extends Error {
   readonly status: number;
 

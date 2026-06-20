@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { HistoryEntry } from '../types';
 import BookmarkletPanel from './BookmarkletPanel';
+import { DEMO_MODE_MESSAGE } from '../config';
 import {
   getApiKey,
   setApiKey,
@@ -14,18 +15,22 @@ interface PastePhaseProps {
   raw: string;
   onRawChange: (value: string) => void;
   onParse: () => void;
+  onLoadExample: () => void;
   parsing: boolean;
   parseError: string | null;
   history: HistoryEntry[];
+  demoMode?: boolean;
 }
 
 export default function PastePhase({
   raw,
   onRawChange,
   onParse,
+  onLoadExample,
   parsing,
   parseError,
   history,
+  demoMode = false,
 }: PastePhaseProps) {
   const [needsKey, setNeedsKey] = useState(false);
   const [keyValue, setKeyValue] = useState('');
@@ -34,6 +39,7 @@ export default function PastePhase({
 
   const currentProviderInfo = PROVIDERS.find((p) => p.value === selectedProvider)!;
   const isBedrock = selectedProvider === 'bedrock';
+  const canParse = !demoMode && !parsing && raw.trim().length > 0;
 
   const handleProviderChange = (provider: Provider) => {
     setSelectedProvider(provider);
@@ -43,6 +49,7 @@ export default function PastePhase({
   };
 
   const handleParse = () => {
+    if (demoMode) return;
     // Bedrock uses server-side AWS credentials, no client key needed
     if (!isBedrock && !getApiKey()) {
       setNeedsKey(true);
@@ -52,6 +59,7 @@ export default function PastePhase({
   };
 
   const handleKeySaveAndParse = () => {
+    if (demoMode) return;
     setApiKey(keyValue);
     setNeedsKey(false);
     setKeyValue('');
@@ -80,6 +88,22 @@ export default function PastePhase({
           </p>
         </div>
 
+        {demoMode && (
+          <div className="rounded-lg border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20 p-4 text-sm text-blue-700 dark:text-blue-300">
+            <div className="font-semibold">Hosted demo mode</div>
+            <p className="mt-1">
+              {DEMO_MODE_MESSAGE} Use the bundled example to inspect the graph, export
+              formats, and diff workflow without sending data to an AI provider.
+            </p>
+            <button
+              onClick={onLoadExample}
+              className="mt-3 px-4 py-2 rounded-lg text-sm font-semibold bg-blue-600 text-white hover:bg-blue-500 shadow-lg shadow-blue-500/20"
+            >
+              Load example
+            </button>
+          </div>
+        )}
+
         <label htmlFor="paste-input" className="sr-only">
           Paste your flow content
         </label>
@@ -95,7 +119,7 @@ export default function PastePhase({
           autoFocus
         />
 
-        {needsKey && (
+        {!demoMode && needsKey && (
           <div className="bg-slate-100 dark:bg-midnight-900 border border-blue-300/50 dark:border-blue-800/50 rounded-lg p-4 space-y-3">
             <div className="flex items-center gap-2">
               <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">
@@ -200,38 +224,54 @@ export default function PastePhase({
           </div>
         )}
 
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-wrap items-center gap-3">
             <span className="text-xs text-slate-400 dark:text-slate-500 font-mono">
               {raw.length > 0 ? `${raw.length.toLocaleString()} chars` : ''}
             </span>
-            {/* Provider badge */}
-            <span className="text-xs text-slate-400 dark:text-slate-600">
-              {currentProviderInfo.label}
-            </span>
-            <button
-              onClick={() => {
-                setNeedsKey(true);
-                setKeyValue(getApiKey());
-              }}
-              className="text-xs text-slate-400 dark:text-slate-600 hover:text-slate-600 dark:hover:text-slate-400"
-            >
-              {hasKey || isBedrock ? 'Settings' : 'Set API key'}
-            </button>
+            {!demoMode && (
+              <>
+                {/* Provider badge */}
+                <span className="text-xs text-slate-400 dark:text-slate-600">
+                  {currentProviderInfo.label}
+                </span>
+                <button
+                  onClick={() => {
+                    setNeedsKey(true);
+                    setKeyValue(getApiKey());
+                  }}
+                  className="text-xs text-slate-400 dark:text-slate-600 hover:text-slate-600 dark:hover:text-slate-400"
+                >
+                  {hasKey || isBedrock ? 'Settings' : 'Set API key'}
+                </button>
+              </>
+            )}
           </div>
-          <button
-            onClick={handleParse}
-            disabled={parsing || !raw.trim()}
-            className={`px-6 py-2.5 rounded-lg text-sm font-semibold transition-all ${
-              parsing
-                ? 'bg-slate-200 dark:bg-midnight-700 text-slate-400 dark:text-slate-500'
-                : raw.trim()
+          <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center">
+            {!demoMode && (
+              <button
+                onClick={onLoadExample}
+                className="w-full px-4 py-2.5 rounded-lg text-sm font-semibold bg-slate-100 dark:bg-midnight-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-midnight-600 border border-slate-200 dark:border-midnight-600 sm:w-auto"
+              >
+                Load example
+              </button>
+            )}
+            <button
+              onClick={handleParse}
+              disabled={!canParse}
+              className={`w-full px-6 py-2.5 rounded-lg text-sm font-semibold transition-all sm:w-auto ${
+                canParse
                   ? 'bg-blue-600 text-white hover:bg-blue-500 shadow-lg shadow-blue-500/25'
                   : 'bg-slate-200 dark:bg-midnight-700 text-slate-400 dark:text-slate-500'
-            }`}
-          >
-            {parsing ? 'Parsing...' : 'Parse & Extract'}
-          </button>
+              }`}
+            >
+              {demoMode
+                ? 'Run locally to parse'
+                : parsing
+                  ? 'Parsing...'
+                  : 'Parse & Extract'}
+            </button>
+          </div>
         </div>
 
         {parseError && (

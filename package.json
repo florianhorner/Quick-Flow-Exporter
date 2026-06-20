@@ -9,7 +9,9 @@
     "npm": ">=10"
   },
   "scripts": {
+    "start": "npm run dev:all",
     "dev": "vite",
+    "dev:all": "concurrently -k -n ui,proxy -c blue,magenta \"npm run dev\" \"tsx server/proxy.ts\"",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
     "lint": "eslint .",
@@ -39,6 +41,7 @@
     "@vitejs/plugin-react": "^6.0.2",
     "autoprefixer": "^10.5.0",
     "chrome-types": "^0.1.428",
+    "concurrently": "^10.0.3",
     "esbuild": "^0.28.0",
     "eslint": "^10.4.0",
     "eslint-plugin-react-hooks": "^7.1.1",
@@ -50,6 +53,7 @@
     "postcss": "^8.5.14",
     "prettier": "^3.8.2",
     "tailwindcss": "^3.4.19",
+    "tsx": "^4.22.4",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.58.1",
     "vite": "^8.0.13",

@@ -5,12 +5,18 @@ import { MAX_HISTORY_ENTRIES } from './constants';
 import { parseFlow } from './lib/parser';
 import { loadHistory, saveHistory } from './lib/storage';
 import { useTheme } from './context/ThemeContext';
+import { IS_DEMO_MODE } from './config';
+import { exampleDiffAfter, exampleDiffBefore, exampleFlow } from './data/examples';
 import PastePhase from './components/PastePhase';
 import GroupsPhase from './components/GroupsPhase';
 import ReviewPhase from './components/ReviewPhase';
 import ExportPhase from './components/ExportPhase';
 import FlowGraph from './components/FlowGraph';
 import DiffPhase from './components/DiffPhase';
+
+// Stable reference so DiffPhase's loadExampleDiff useCallback isn't invalidated
+// on every App render by a freshly-allocated prop object.
+const EXAMPLE_DIFF = { left: exampleDiffBefore, right: exampleDiffAfter };
 
 export default function App() {
   const [flow, setFlow] = useState<Flow>(createEmptyFlow());
@@ -73,6 +79,17 @@ export default function App() {
     setFlow(createEmptyFlow());
     setRaw('');
     setParseError(null);
+  };
+
+  const loadExample = () => {
+    parseIdRef.current++; // invalidate any in-flight parse
+    setParsing(false);
+    setParseError(null);
+    // The curated exampleFlow is the source of truth; do not pre-fill the paste
+    // box with a sketch that would re-parse to a different flow (raw/flow drift).
+    setRaw('');
+    setFlow(structuredClone(exampleFlow));
+    setPhase('graph');
   };
 
   const hasFlow = flow.items.length > 0;
@@ -171,9 +188,11 @@ export default function App() {
             raw={raw}
             onRawChange={setRaw}
             onParse={doParse}
+            onLoadExample={loadExample}
             parsing={parsing}
             parseError={parseError}
             history={history}
+            demoMode={IS_DEMO_MODE}
           />
         )}
 
@@ -183,6 +202,7 @@ export default function App() {
             onUpdateItem={(i, item) => updateItem(i, item)}
             onBack={() => setPhase('paste')}
             onContinue={() => setPhase('review')}
+            demoMode={IS_DEMO_MODE}
           />
         )}
 
@@ -210,6 +230,8 @@ export default function App() {
             onBack={() =>
               flow.items.length > 0 ? setPhase('review') : setPhase('paste')
             }
+            demoMode={IS_DEMO_MODE}
+            exampleDiff={EXAMPLE_DIFF}
           />
         )}
       </div>

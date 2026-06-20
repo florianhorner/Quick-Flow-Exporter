@@ -38,7 +38,7 @@ Amazon Quick Flows is AWS's visual builder for AI workflows (formerly QuickSuite
 
 ## Quick Start
 
-**Try it online** → [quick-flow-exporter.vercel.app](https://quick-flow-exporter.vercel.app/). Bring an API key from [Anthropic](https://console.anthropic.com/), [OpenAI](https://platform.openai.com/api-keys), [Gemini](https://aistudio.google.com/app/apikey), or [Perplexity](https://www.perplexity.ai/settings/api).
+**Try it online** → [quick-flow-exporter.vercel.app](https://quick-flow-exporter.vercel.app/). The hosted demo uses bundled example data, so you can inspect the graph, exports, and diff workflow without sending a real flow to an AI provider.
 
 **Run locally** (Node.js 22+, npm 10+):
 
@@ -47,16 +47,12 @@ git clone https://github.com/florianhorner/Quick-Flow-Exporter.git
 cd Quick-Flow-Exporter
 npm ci
 
-# Terminal 1 — frontend
-npm run dev
-
-# Terminal 2 — AI proxy (Anthropic default)
-ANTHROPIC_API_KEY=sk-... npx tsx server/proxy.ts
+ANTHROPIC_API_KEY=sk-... npm start
 ```
 
-Open `http://localhost:5173`. For OpenAI, Gemini, Perplexity, or Bedrock see [AI Proxy Setup](docs/AI_PROXY_SETUP.md).
+Open `http://localhost:5173`. Bring an API key from [Anthropic](https://console.anthropic.com/), [OpenAI](https://platform.openai.com/api-keys), [Gemini](https://aistudio.google.com/app/apikey), or [Perplexity](https://www.perplexity.ai/settings/api). For OpenAI, Gemini, Perplexity, or Bedrock see [AI Proxy Setup](docs/AI_PROXY_SETUP.md).
 
-> If **Parse & Extract** is greyed out, the proxy isn't running — start Terminal 2.
+> If parsing fails locally, confirm `npm start` is still running and the proxy process has the right provider key.
 
 > Under [Conductor](https://conductor.build), the **Run** button starts both processes via `scripts/conductor-run.sh` on `$CONDUCTOR_PORT`-derived ports (UI = `CONDUCTOR_PORT`, proxy = `+1`), so parallel workspaces never collide.
 

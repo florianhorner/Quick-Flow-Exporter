@@ -27,6 +27,11 @@ await esbuild.build({
   format: 'iife',
   target: 'chrome120',
   minify: process.argv.includes('--minify'),
+  define: {
+    __EXPORTER_BASE_URL__: JSON.stringify(
+      process.env.EXPORTER_BASE_URL ?? 'http://localhost:5173'
+    ),
+  },
 });
 
 // Copy static assets

@@ -3,13 +3,12 @@
  * Handles messages from popup and coordinates tab creation.
  */
 
-const EXPORTER_BASE_URL = 'https://quick-flow-exporter.pages.dev';
+import { EXPORTER_BASE_URL } from './config';
 
 chrome.runtime.onMessage.addListener((message: { type: string; text?: string }) => {
-  if (message.type === 'OPEN_EXPORTER' && message.text) {
-    const encoded = encodeURIComponent(message.text);
+  if (message.type === 'OPEN_EXPORTER') {
     chrome.tabs.create({
-      url: `${EXPORTER_BASE_URL}/#flow=${encoded}`,
+      url: EXPORTER_BASE_URL,
     });
   }
 });
