@@ -20,7 +20,10 @@ export function getProxyPort(
 ): number {
   const parsePort = (value: string | undefined): number | null => {
     const parsed = Number(value);
-    return Number.isFinite(parsed) && parsed > 0 ? parsed : null;
+    // Integer in the valid TCP range only. Rejects NaN, 0, negatives, floats
+    // like "0.9" (which listen() truncates to 0 → a random ephemeral port),
+    // and out-of-range values.
+    return Number.isInteger(parsed) && parsed > 0 && parsed <= 65535 ? parsed : null;
   };
 
   return parsePort(env.PORT) ?? parsePort(env.PROXY_PORT) ?? 3001;

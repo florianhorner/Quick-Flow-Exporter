@@ -113,7 +113,73 @@ describe('parseWithAI', () => {
       'The AI proxy is not reachable'
     );
     await expect(parseWithAI({ system: 's', userMessage: 'm' })).rejects.toThrow(
-      'Start the proxy'
+      'npm start'
+    );
+  });
+
+  it('maps a 404 (proxy route not served) to the proxy setup message', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        ok: false,
+        status: 404,
+        text: () => Promise.resolve('Not Found'),
+      })
+    );
+
+    await expect(parseWithAI({ system: 's', userMessage: 'm' })).rejects.toThrow(
+      'The AI proxy is not reachable'
+    );
+  });
+
+  it('surfaces the real status for a non-OK HTML error (not the proxy hint)', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        ok: false,
+        status: 500,
+        text: () => Promise.resolve('<!doctype html><html>boom</html>'),
+      })
+    );
+
+    await expect(parseWithAI({ system: 's', userMessage: 'm' })).rejects.toThrow(
+      'AI proxy request failed (500)'
+    );
+  });
+
+  it('maps an OK response with an HTML SPA body to the proxy setup message', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        ok: true,
+        text: () => Promise.resolve('<!doctype html><html></html>'),
+      })
+    );
+
+    await expect(parseWithAI({ system: 's', userMessage: 'm' })).rejects.toThrow(
+      'The AI proxy is not reachable'
+    );
+  });
+
+  it('maps an OK response with a non-JSON body to the proxy setup message', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        ok: true,
+        text: () => Promise.resolve('OK'),
+      })
+    );
+
+    await expect(parseWithAI({ system: 's', userMessage: 'm' })).rejects.toThrow(
+      'The AI proxy is not reachable'
+    );
+  });
+
+  it('maps a network failure (fetch rejects with TypeError) to the proxy setup message', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new TypeError('Failed to fetch')));
+
+    await expect(parseWithAI({ system: 's', userMessage: 'm' })).rejects.toThrow(
+      'The AI proxy is not reachable'
     );
   });
 

@@ -29,11 +29,23 @@ describe('proxy port config', () => {
     expect(getProxyPort({ PORT: 'not-a-port' })).toBe(3001);
     expect(getProxyPort({})).toBe(3001);
   });
+
+  it('rejects non-integer and out-of-range ports', () => {
+    // "0.9" would truncate to 0 (a random ephemeral port) if accepted.
+    expect(getProxyPort({ PORT: '0.9' })).toBe(3001);
+    expect(getProxyPort({ PORT: '-1' })).toBe(3001);
+    expect(getProxyPort({ PORT: '70000', PROXY_PORT: '4600' })).toBe(4600);
+  });
 });
 
 describe('extension exporter URL config', () => {
   it('defaults the extension handoff to the local app', () => {
     expect(normalizeExporterBaseUrl(undefined)).toBe(DEFAULT_EXPORTER_BASE_URL);
+  });
+
+  it('falls back to the default for empty or whitespace-only values', () => {
+    expect(normalizeExporterBaseUrl('')).toBe(DEFAULT_EXPORTER_BASE_URL);
+    expect(normalizeExporterBaseUrl('   ')).toBe(DEFAULT_EXPORTER_BASE_URL);
   });
 
   it('accepts a build-time override and trims trailing slashes', () => {
