@@ -2,21 +2,6 @@
 
 Deferred work captured during design and review sessions. Pick up when relevant.
 
-## Demo mode + AI proxy review follow-ups (2026-06-20)
-
-> The `dev:all` port-mismatch and the extension `localhost` build fallback (both
-> flagged again by Codex/CodeRabbit on PR #44) were fixed in that PR — Vite now
-> resolves its `/api` target via `getProxyPort()`, and `build-extension.mjs` fails
-> a packaged (`--minify`) build that lacks `EXPORTER_BASE_URL`.
-
-### P2: `docs/AI_PROXY_SETUP.md` still shows the old two-terminal proxy flow
-
-**What:** Per-provider examples show bare `npx tsx server/proxy.ts` (UI not started), and the env-var table describes `PORT`/`PROXY_PORT` backwards (`PROXY_PORT` is consumed by Vite, not a proxy-server fallback).
-
-**Fix:** frame the provider examples as proxy-only overrides to `npm start`, and correct the env-var table descriptions.
-
-**Source:** pre-ship docs/config review, 2026-06-20.
-
 ## DX Review follow-ups (2026-04-17)
 
 ### P2: Add Troubleshooting section or doc
