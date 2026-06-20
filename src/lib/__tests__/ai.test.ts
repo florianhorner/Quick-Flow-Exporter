@@ -8,13 +8,14 @@ beforeEach(() => {
 afterEach(() => {
   vi.useRealTimers();
   vi.restoreAllMocks();
+  vi.unstubAllEnvs();
 });
 
 describe('parseWithAI', () => {
   it('sends correct request and returns text', async () => {
     const mockFetch = vi.fn().mockResolvedValue({
       ok: true,
-      json: () => Promise.resolve({ text: 'parsed result' }),
+      text: () => Promise.resolve(JSON.stringify({ text: 'parsed result' })),
     });
     vi.stubGlobal('fetch', mockFetch);
 
@@ -73,7 +74,7 @@ describe('parseWithAI', () => {
       'fetch',
       vi.fn().mockResolvedValue({
         ok: true,
-        json: () => Promise.resolve({ result: 'wrong shape' }),
+        text: () => Promise.resolve(JSON.stringify({ result: 'wrong shape' })),
       })
     );
 
@@ -85,7 +86,7 @@ describe('parseWithAI', () => {
   it('defaults maxTokens to 4096', async () => {
     const mockFetch = vi.fn().mockResolvedValue({
       ok: true,
-      json: () => Promise.resolve({ text: 'ok' }),
+      text: () => Promise.resolve(JSON.stringify({ text: 'ok' })),
     });
     vi.stubGlobal('fetch', mockFetch);
 
@@ -94,5 +95,104 @@ describe('parseWithAI', () => {
     const body = JSON.parse(mockFetch.mock.calls[0]![1].body);
     expect(body.maxTokens).toBe(4096);
     expect(body.provider).toBe('anthropic');
+  });
+
+  it('maps SPA fallbacks to a proxy setup message (not the demo message)', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        ok: false,
+        status: 405,
+        text: () => Promise.resolve('<!doctype html><html></html>'),
+      })
+    );
+
+    // Reachable only when NOT in demo mode, so the message must not claim the
+    // user is on the hosted demo — it should point at the local proxy fix.
+    await expect(parseWithAI({ system: 's', userMessage: 'm' })).rejects.toThrow(
+      'The AI proxy is not reachable'
+    );
+    await expect(parseWithAI({ system: 's', userMessage: 'm' })).rejects.toThrow(
+      'npm start'
+    );
+  });
+
+  it('maps a 404 (proxy route not served) to the proxy setup message', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        ok: false,
+        status: 404,
+        text: () => Promise.resolve('Not Found'),
+      })
+    );
+
+    await expect(parseWithAI({ system: 's', userMessage: 'm' })).rejects.toThrow(
+      'The AI proxy is not reachable'
+    );
+  });
+
+  it('surfaces the real status for a non-OK HTML error (not the proxy hint)', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        ok: false,
+        status: 500,
+        text: () => Promise.resolve('<!doctype html><html>boom</html>'),
+      })
+    );
+
+    await expect(parseWithAI({ system: 's', userMessage: 'm' })).rejects.toThrow(
+      'AI proxy request failed (500)'
+    );
+  });
+
+  it('maps an OK response with an HTML SPA body to the proxy setup message', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        ok: true,
+        text: () => Promise.resolve('<!doctype html><html></html>'),
+      })
+    );
+
+    await expect(parseWithAI({ system: 's', userMessage: 'm' })).rejects.toThrow(
+      'The AI proxy is not reachable'
+    );
+  });
+
+  it('maps an OK response with a non-JSON body to the proxy setup message', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        ok: true,
+        text: () => Promise.resolve('OK'),
+      })
+    );
+
+    await expect(parseWithAI({ system: 's', userMessage: 'm' })).rejects.toThrow(
+      'The AI proxy is not reachable'
+    );
+  });
+
+  it('maps a network failure (fetch rejects with TypeError) to the proxy setup message', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new TypeError('Failed to fetch')));
+
+    await expect(parseWithAI({ system: 's', userMessage: 'm' })).rejects.toThrow(
+      'The AI proxy is not reachable'
+    );
+  });
+
+  it('does not call the proxy in demo mode', async () => {
+    vi.stubEnv('VITE_DEMO_MODE', 'true');
+    vi.resetModules();
+    const demoFetch = vi.fn();
+    vi.stubGlobal('fetch', demoFetch);
+    const { parseWithAI: parseWithAIInDemoMode } = await import('../ai');
+
+    await expect(
+      parseWithAIInDemoMode({ system: 's', userMessage: 'm' })
+    ).rejects.toThrow('hosted demo uses bundled examples only');
+    expect(demoFetch).not.toHaveBeenCalled();
   });
 });

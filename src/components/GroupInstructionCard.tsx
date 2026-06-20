@@ -1,23 +1,28 @@
 import { useState } from 'react';
 import type { Group } from '../types';
 import { parseGroupInstructions } from '../lib/parser';
+import { DEMO_MODE_MESSAGE } from '../config';
 
 interface GroupInstructionCardProps {
   item: Group;
   index: number;
   onUpdate: (updated: Group) => void;
+  demoMode?: boolean;
 }
 
 export default function GroupInstructionCard({
   item,
   index,
   onUpdate,
+  demoMode = false,
 }: GroupInstructionCardProps) {
   const [rawInput, setRawInput] = useState('');
   const [parsing, setParsing] = useState(false);
   const [extracted, setExtracted] = useState(!!item.reasoningInstructions);
+  const canExtract = !demoMode && !parsing && rawInput.trim().length > 0;
 
   const handleParse = async () => {
+    if (demoMode) return;
     if (!rawInput.trim()) return;
     setParsing(true);
     try {
@@ -77,6 +82,11 @@ export default function GroupInstructionCard({
         </div>
       ) : (
         <div className="space-y-2">
+          {demoMode && (
+            <div className="rounded border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20 p-3 text-xs text-blue-700 dark:text-blue-300">
+              {DEMO_MODE_MESSAGE}
+            </div>
+          )}
           <textarea
             className="w-full border border-slate-200 dark:border-midnight-700 rounded px-3 py-2 text-sm bg-slate-50 dark:bg-[#0d1117] text-slate-700 dark:text-slate-300 font-mono placeholder-slate-400 dark:placeholder-slate-600 focus:border-purple-500"
             rows={4}
@@ -88,16 +98,18 @@ export default function GroupInstructionCard({
           />
           <button
             onClick={handleParse}
-            disabled={parsing || !rawInput.trim()}
+            disabled={!canExtract}
             className={`px-4 py-2 rounded text-sm font-medium ${
-              parsing
-                ? 'bg-slate-200 dark:bg-midnight-700 text-slate-400 dark:text-slate-500'
-                : rawInput.trim()
-                  ? 'bg-purple-700 text-white hover:bg-purple-600'
-                  : 'bg-slate-200 dark:bg-midnight-700 text-slate-400 dark:text-slate-500'
+              canExtract
+                ? 'bg-purple-700 text-white hover:bg-purple-600'
+                : 'bg-slate-200 dark:bg-midnight-700 text-slate-400 dark:text-slate-500'
             }`}
           >
-            {parsing ? 'Extracting...' : 'Extract Instructions'}
+            {demoMode
+              ? 'Run locally to extract'
+              : parsing
+                ? 'Extracting...'
+                : 'Extract Instructions'}
           </button>
         </div>
       )}

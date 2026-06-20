@@ -12,6 +12,7 @@ const defaultProps = {
   raw: '',
   onRawChange: vi.fn(),
   onParse: vi.fn(),
+  onLoadExample: vi.fn(),
   parsing: false,
   parseError: null,
   history: [] as HistoryEntry[],
@@ -184,5 +185,36 @@ describe('PastePhase', () => {
     );
     expect(link).toHaveAttribute('target', '_blank');
     expect(link).toHaveAttribute('rel', 'noopener noreferrer');
+  });
+
+  it('calls onLoadExample when Load example is clicked', async () => {
+    const user = userEvent.setup();
+    const onLoadExample = vi.fn();
+    render(<PastePhase {...defaultProps} onLoadExample={onLoadExample} />);
+    await user.click(screen.getByText('Load example'));
+    expect(onLoadExample).toHaveBeenCalledOnce();
+  });
+
+  it('gates parsing and provider settings in hosted demo mode', () => {
+    render(<PastePhase {...defaultProps} raw="some content" demoMode />);
+    expect(screen.getByText('Hosted demo mode')).toBeInTheDocument();
+    expect(screen.getByText('Run locally to parse')).toBeDisabled();
+    expect(screen.queryByText('Set API key')).not.toBeInTheDocument();
+    expect(screen.queryByText('Anthropic (Claude)')).not.toBeInTheDocument();
+  });
+
+  it('uses Load example as the hosted demo CTA', async () => {
+    const user = userEvent.setup();
+    const onLoadExample = vi.fn();
+    render(
+      <PastePhase
+        {...defaultProps}
+        raw="some content"
+        demoMode
+        onLoadExample={onLoadExample}
+      />
+    );
+    await user.click(screen.getByText('Load example'));
+    expect(onLoadExample).toHaveBeenCalledOnce();
   });
 });

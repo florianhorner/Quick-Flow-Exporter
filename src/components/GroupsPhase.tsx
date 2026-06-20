@@ -7,6 +7,7 @@ interface GroupsPhaseProps {
   onUpdateItem: (index: number, item: Group) => void;
   onBack: () => void;
   onContinue: () => void;
+  demoMode?: boolean;
 }
 
 export default function GroupsPhase({
@@ -14,6 +15,7 @@ export default function GroupsPhase({
   onUpdateItem,
   onBack,
   onContinue,
+  demoMode = false,
 }: GroupsPhaseProps) {
   const groups = allGroups(flow.items);
 
@@ -40,6 +42,7 @@ export default function GroupsPhase({
                 item={item}
                 index={idx}
                 onUpdate={(updated) => onUpdateItem(idx, updated)}
+                demoMode={demoMode}
               />
             );
           })}

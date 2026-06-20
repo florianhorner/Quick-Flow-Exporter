@@ -15,6 +15,20 @@ export interface ProxyRequest {
   provider?: Provider;
 }
 
+export function getProxyPort(
+  env: Partial<Record<'PORT' | 'PROXY_PORT', string | undefined>> = process.env
+): number {
+  const parsePort = (value: string | undefined): number | null => {
+    const parsed = Number(value);
+    // Integer in the valid TCP range only. Rejects NaN, 0, negatives, floats
+    // like "0.9" (which listen() truncates to 0 → a random ephemeral port),
+    // and out-of-range values.
+    return Number.isInteger(parsed) && parsed > 0 && parsed <= 65535 ? parsed : null;
+  };
+
+  return parsePort(env.PORT) ?? parsePort(env.PROXY_PORT) ?? 3001;
+}
+
 export class ProxyHttpError extends Error {
   readonly status: number;
 

@@ -151,6 +151,40 @@ describe('DiffPhase', () => {
     });
   });
 
+  describe('hosted demo mode', () => {
+    it('disables parser-backed comparing', async () => {
+      const user = userEvent.setup();
+      render(<DiffPhase currentFlow={null} onBack={onBack} demoMode />);
+      const [left, right] = screen.getAllByRole('textbox');
+      await user.type(left!, 'before');
+      await user.type(right!, 'after');
+      expect(screen.getByText('Run locally to compare')).toBeDisabled();
+      expect(parseFlow).not.toHaveBeenCalled();
+    });
+
+    it('loads the bundled example diff without parsing raw text', async () => {
+      const user = userEvent.setup();
+      render(
+        <DiffPhase
+          currentFlow={null}
+          onBack={onBack}
+          demoMode
+          exampleDiff={{
+            left: makeFlow({ title: 'Example Before' }),
+            right: makeFlow({ title: 'Example After' }),
+          }}
+        />
+      );
+
+      await user.click(screen.getByText('Load example diff'));
+
+      expect(screen.getByText('DIFF')).toBeInTheDocument();
+      expect(document.body.textContent).toContain('Example Before');
+      expect(document.body.textContent).toContain('Example After');
+      expect(parseFlow).not.toHaveBeenCalled();
+    });
+  });
+
   describe('result state', () => {
     it('shows NO CHANGES when both flows are identical', async () => {
       const flow = makeFlow({ title: 'Flow A' });
