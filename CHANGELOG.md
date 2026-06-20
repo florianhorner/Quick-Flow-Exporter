@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.4.0] - 2026-06-20
+
+### Added
+
+- Hosted demo mode: the Vercel deployment now ships bundled example flows (`VITE_DEMO_MODE=true`), so you can explore the graph, export formats, and diff workflow without an AI provider key. AI-backed actions are gated with a clear "Load example" path instead of failing.
+- One-command local dev: `npm start` runs the UI and AI proxy together via `concurrently`, replacing the previous two-terminal setup.
+- Build-configurable browser-extension target via the `EXPORTER_BASE_URL` env var (baked in at extension build time).
+
+### Changed
+
+- When the local AI proxy is unreachable, the app now shows a clear "proxy is not reachable" hint pointing at `npm start`, and only reports it as missing for 404/405/SPA-HTML/network responses — genuine 4xx/5xx now surface their real status instead of being masked.
+- The proxy port is derived from `PORT` then `PROXY_PORT`, validated as an integer in the valid TCP range (rejects values like `0.9` that would otherwise bind a random port).
+
 ## [1.3.4] - 2026-04-19
 
 ### Security
