@@ -56,6 +56,17 @@ Open `http://localhost:5173`. Bring an API key from [Anthropic](https://console.
 
 > Under [Conductor](https://conductor.build), the **Run** button starts both processes via `scripts/conductor-run.sh` on `$CONDUCTOR_PORT`-derived ports (UI = `CONDUCTOR_PORT`, proxy = `+1`), so parallel workspaces never collide.
 
+## Troubleshooting
+
+| Symptom                                | Cause                                                               | Fix                                                                                                                  |
+| -------------------------------------- | ------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| **Parse & Extract greyed out**         | Proxy not running, or no API key for the selected provider          | Confirm `npm start` is still running; make sure the provider key matches the provider you picked in the UI           |
+| **`429 Too Many Requests`**            | Rate limit — 20 requests / 60s per IP by default                    | Wait for the `Retry-After` window, or raise `RATE_LIMIT` on the proxy (see [AI Proxy Setup](docs/AI_PROXY_SETUP.md)) |
+| **`401` / auth error**                 | Wrong or expired key, or key for a different provider               | Re-enter the key for the selected provider; keys are stored per browser, not shared across providers                 |
+| **Paste rejected as too large**        | Flow exceeds the 500 KB request cap                                 | Trim the pasted flow, or export fewer steps from the editor                                                          |
+| **CORS error on a self-hosted deploy** | Proxy `CORS_ORIGIN` defaults to `http://localhost:5173`             | Set `CORS_ORIGIN` to your deployed frontend origin                                                                   |
+| **Extension doesn't capture**          | Not on a Quick Flows editor tab, or installed before the tab loaded | Open the Quick Flows editor, reload the tab, then click the extension                                                |
+
 ## Features
 
 - 🧠 **Five AI providers** — Anthropic, OpenAI, Gemini, Perplexity, AWS Bedrock. Switch per request; keys stay on your machine via local proxy.
