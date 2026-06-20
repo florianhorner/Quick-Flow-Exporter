@@ -29,3 +29,4 @@ If applicable, add screenshots.
 - OS: [e.g. Windows 11, macOS 15]
 - Browser: [e.g. Chrome 130, Firefox 133]
 - Node.js version: [e.g. 22.x]
+- Quick Flows editor: [date you copied the flow, e.g. "current as of 2026-06-20" — helps reproduce parser/format regressions]

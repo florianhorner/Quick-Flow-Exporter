@@ -10,6 +10,6 @@ Steps to verify the change works.
 
 - [ ] `npm run test` passes
 - [ ] `npm run lint` passes
-- [ ] `npx tsc -p tsconfig.json --noEmit` passes
-- [ ] `npx tsc -p tsconfig.server.json --noEmit` passes
+- [ ] `npm run typecheck` passes
+- [ ] `npm run format:check` passes
 - [ ] README updated (if applicable)
