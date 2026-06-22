@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { Bookmark, Code2, Copy, Zap } from 'lucide-react';
 
 /**
  * Bookmarklet that scrapes the Quick Flows editor page DOM and
@@ -63,15 +64,31 @@ export default function BookmarkletPanel() {
   };
 
   return (
-    <div className="bg-white dark:bg-midnight-800 border border-slate-200 dark:border-midnight-700 rounded-xl shadow-sm p-5 space-y-3">
-      <div className="flex items-center gap-2">
-        <span className="font-semibold text-sm text-blue-600 dark:text-blue-400 font-mono">
+    <div className="bg-white/70 dark:bg-midnight-800/70 border border-slate-200 dark:border-midnight-700 rounded-lg p-4 space-y-3">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <span className="inline-flex items-center gap-2 font-semibold text-sm text-blue-600 dark:text-blue-400">
+          <Bookmark aria-hidden="true" className="h-4 w-4" />
           Bookmarklet
         </span>
+        <div className="flex gap-2">
+          <button
+            onClick={() => setShowCode(!showCode)}
+            className="inline-flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400"
+          >
+            <Code2 aria-hidden="true" className="h-3.5 w-3.5" />
+            {showCode ? 'Hide source' : 'View source'}
+          </button>
+          <button
+            onClick={copyCode}
+            className="inline-flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400"
+          >
+            <Copy aria-hidden="true" className="h-3.5 w-3.5" />
+            {copied ? 'Copied!' : 'Copy URL'}
+          </button>
+        </div>
       </div>
       <p className="text-xs text-slate-500 dark:text-slate-400">
-        Drag the button below to your bookmarks bar. When you're on a Quick Flows editor
-        page, click it to instantly copy the flow content to your clipboard.
+        Drag once to your bookmarks bar, then run it from a Quick Flows editor page.
       </p>
 
       <div className="flex items-center gap-3 flex-wrap">
@@ -80,29 +97,15 @@ export default function BookmarkletPanel() {
           ref={linkRef}
           href="#"
           onClick={(e) => e.preventDefault()}
-          className="inline-flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold shadow-lg shadow-blue-500/20 hover:bg-blue-500 cursor-grab active:cursor-grabbing select-none"
+          className="inline-flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-semibold shadow-sm shadow-blue-500/20 hover:bg-blue-500 cursor-grab active:cursor-grabbing select-none"
           title="Drag this to your bookmarks bar"
         >
-          {'\u26A1'} Quick Flow Export
+          <Zap aria-hidden="true" className="h-4 w-4" />
+          Quick Flow Export
         </a>
         <span className="text-xs text-slate-400 dark:text-slate-500">
           &larr; Drag to bookmarks bar
         </span>
-      </div>
-
-      <div className="flex gap-2">
-        <button
-          onClick={() => setShowCode(!showCode)}
-          className="text-xs text-blue-600 dark:text-blue-500 hover:text-blue-500 dark:hover:text-blue-400 underline py-1"
-        >
-          {showCode ? 'Hide source' : 'View source'}
-        </button>
-        <button
-          onClick={copyCode}
-          className="text-xs text-blue-600 dark:text-blue-500 hover:text-blue-500 dark:hover:text-blue-400 underline py-1"
-        >
-          {copied ? 'Copied!' : 'Copy bookmarklet URL'}
-        </button>
       </div>
 
       {showCode && (

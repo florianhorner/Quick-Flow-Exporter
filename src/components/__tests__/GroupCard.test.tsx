@@ -168,7 +168,7 @@ describe('GroupCard', () => {
         />
       );
       await user.click(screen.getByRole('button', { expanded: false }));
-      await user.click(screen.getByText('+ Step'));
+      await user.click(screen.getByRole('button', { name: /add step/i }));
       expect(onChange).toHaveBeenCalledWith(
         expect.objectContaining({ steps: expect.arrayContaining([expect.any(Object)]) })
       );

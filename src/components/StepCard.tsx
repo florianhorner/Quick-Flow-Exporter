@@ -2,6 +2,8 @@ import { useState } from 'react';
 import type { Step, StepType } from '../types';
 import { STEP_TYPES } from '../constants';
 import StepFields from './StepFields';
+import IconButton from './IconButton';
+import { ArrowDown, ArrowUp, ChevronDown, ChevronRight, Trash2 } from 'lucide-react';
 
 interface StepCardProps {
   step: Step;
@@ -29,12 +31,12 @@ export default function StepCard({
 
   return (
     <div
-      className="border border-slate-200 dark:border-midnight-700 rounded-lg bg-white dark:bg-midnight-800"
+      className="border border-slate-200 dark:border-midnight-700 rounded-md bg-white dark:bg-midnight-800"
       role="region"
       aria-label={label}
     >
       <div
-        className="flex items-center justify-between px-3 py-2 bg-slate-50 dark:bg-midnight-900/50 rounded-t-lg cursor-pointer hover:bg-slate-100 dark:hover:bg-midnight-800 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-inset"
+        className="flex items-center justify-between gap-2 px-3 py-2 bg-slate-50 dark:bg-midnight-900/50 rounded-t-md cursor-pointer hover:bg-slate-100 dark:hover:bg-midnight-800 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-inset"
         role="button"
         tabIndex={0}
         aria-expanded={open}
@@ -55,47 +57,49 @@ export default function StepCard({
             {label}
           </span>
         </div>
-        <div className="flex items-center gap-1 shrink-0">
+        <div className="flex items-center gap-0.5 shrink-0">
           {!isFirst && (
-            <button
+            <IconButton
+              icon={ArrowUp}
+              label={`Move ${label} up`}
+              tone="ghost"
               onClick={(e) => {
                 e.stopPropagation();
                 onMoveUp();
               }}
-              className="text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 text-xs p-2 min-w-[36px] min-h-[36px] flex items-center justify-center"
-              aria-label={`Move ${label} up`}
-            >
-              {'\u25B2'}
-            </button>
+            />
           )}
           {!isLast && (
-            <button
+            <IconButton
+              icon={ArrowDown}
+              label={`Move ${label} down`}
+              tone="ghost"
               onClick={(e) => {
                 e.stopPropagation();
                 onMoveDown();
               }}
-              className="text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 text-xs p-2 min-w-[36px] min-h-[36px] flex items-center justify-center"
-              aria-label={`Move ${label} down`}
-            >
-              {'\u25BC'}
-            </button>
+            />
           )}
-          <span
-            className="text-xs text-slate-400 dark:text-slate-500 ml-1"
-            aria-hidden="true"
-          >
-            {open ? '\u25BE' : '\u25B8'}
-          </span>
-          <button
+          {open ? (
+            <ChevronDown
+              aria-hidden="true"
+              className="h-4 w-4 text-slate-400 dark:text-slate-500"
+            />
+          ) : (
+            <ChevronRight
+              aria-hidden="true"
+              className="h-4 w-4 text-slate-400 dark:text-slate-500"
+            />
+          )}
+          <IconButton
+            icon={Trash2}
+            label={`Remove ${label}`}
+            tone="danger"
             onClick={(e) => {
               e.stopPropagation();
               onRemove();
             }}
-            className="text-red-500 hover:text-red-400 text-xs ml-1 p-2 min-w-[36px] min-h-[36px] flex items-center justify-center"
-            aria-label={`Remove ${label}`}
-          >
-            {'\u2715'}
-          </button>
+          />
         </div>
       </div>
 

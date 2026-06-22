@@ -3,6 +3,16 @@ import type { Group, Step, StepType } from '../types';
 import { STEP_TYPES, RUN_CONDITIONS } from '../constants';
 import { createEmptyStep } from '../lib/flow';
 import StepCard from './StepCard';
+import IconButton from './IconButton';
+import {
+  ArrowDown,
+  ArrowUp,
+  ChevronDown,
+  ChevronRight,
+  Plus,
+  RotateCw,
+  Trash2,
+} from 'lucide-react';
 
 interface GroupCardProps {
   group: Group;
@@ -47,12 +57,12 @@ export default function GroupCard({
 
   return (
     <div
-      className="border border-purple-300 dark:border-purple-800 border-l-4 border-l-purple-500 rounded-lg bg-white dark:bg-midnight-800"
+      className="border border-purple-300 dark:border-purple-800 border-l-4 border-l-purple-500 rounded-md bg-white dark:bg-midnight-800"
       role="region"
       aria-label={label}
     >
       <div
-        className="flex items-center justify-between px-3 py-2 bg-purple-50 dark:bg-purple-900/20 rounded-t-lg cursor-pointer hover:bg-purple-100 dark:hover:bg-purple-900/40 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-inset"
+        className="flex items-center justify-between gap-2 px-3 py-2 bg-purple-50 dark:bg-purple-900/20 rounded-t-md cursor-pointer hover:bg-purple-100 dark:hover:bg-purple-900/40 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-inset"
         role="button"
         tabIndex={0}
         aria-expanded={open}
@@ -66,7 +76,10 @@ export default function GroupCard({
         }}
       >
         <div className="flex items-center gap-2 min-w-0">
-          <span aria-hidden="true">{'\uD83D\uDD04'}</span>
+          <RotateCw
+            aria-hidden="true"
+            className="h-4 w-4 shrink-0 text-purple-600 dark:text-purple-300"
+          />
           <span className="font-medium text-sm text-purple-700 dark:text-purple-300 truncate">
             {label}
           </span>
@@ -74,47 +87,49 @@ export default function GroupCard({
             ({group.steps.length} steps)
           </span>
         </div>
-        <div className="flex items-center gap-1 shrink-0">
+        <div className="flex items-center gap-0.5 shrink-0">
           {!isFirst && (
-            <button
+            <IconButton
+              icon={ArrowUp}
+              label={`Move ${label} up`}
+              tone="purple"
               onClick={(e) => {
                 e.stopPropagation();
                 onMoveUp();
               }}
-              className="text-purple-400 dark:text-purple-500 hover:text-purple-600 dark:hover:text-purple-300 text-xs p-2 min-w-[36px] min-h-[36px] flex items-center justify-center"
-              aria-label={`Move ${label} up`}
-            >
-              {'\u25B2'}
-            </button>
+            />
           )}
           {!isLast && (
-            <button
+            <IconButton
+              icon={ArrowDown}
+              label={`Move ${label} down`}
+              tone="purple"
               onClick={(e) => {
                 e.stopPropagation();
                 onMoveDown();
               }}
-              className="text-purple-400 dark:text-purple-500 hover:text-purple-600 dark:hover:text-purple-300 text-xs p-2 min-w-[36px] min-h-[36px] flex items-center justify-center"
-              aria-label={`Move ${label} down`}
-            >
-              {'\u25BC'}
-            </button>
+            />
           )}
-          <span
-            className="text-xs text-purple-400 dark:text-purple-500 ml-1"
-            aria-hidden="true"
-          >
-            {open ? '\u25BE' : '\u25B8'}
-          </span>
-          <button
+          {open ? (
+            <ChevronDown
+              aria-hidden="true"
+              className="h-4 w-4 text-purple-400 dark:text-purple-500"
+            />
+          ) : (
+            <ChevronRight
+              aria-hidden="true"
+              className="h-4 w-4 text-purple-400 dark:text-purple-500"
+            />
+          )}
+          <IconButton
+            icon={Trash2}
+            label={`Remove ${label}`}
+            tone="danger"
             onClick={(e) => {
               e.stopPropagation();
               onRemove();
             }}
-            className="text-red-500 hover:text-red-400 text-xs ml-1 p-2 min-w-[36px] min-h-[36px] flex items-center justify-center"
-            aria-label={`Remove ${label}`}
-          >
-            {'\u2715'}
-          </button>
+          />
         </div>
       </div>
 
@@ -163,7 +178,7 @@ export default function GroupCard({
           />
 
           <div
-            className="space-y-2 ml-2 border-l-2 border-purple-300 dark:border-purple-800 pl-3"
+            className="space-y-2 ml-1 border-l-2 border-purple-300 dark:border-purple-800 pl-3"
             role="list"
             aria-label="Group steps"
           >
@@ -197,15 +212,17 @@ export default function GroupCard({
                 ))}
               </select>
               <button
+                aria-label="Add step"
                 onClick={() =>
                   onChange({
                     ...group,
                     steps: [...group.steps, createEmptyStep(addType)],
                   })
                 }
-                className="bg-purple-600 text-white text-xs px-3 py-1 rounded hover:bg-purple-700"
+                className="inline-flex items-center gap-1.5 bg-purple-600 text-white text-xs px-3 py-1.5 rounded-md hover:bg-purple-700"
               >
-                + Step
+                <Plus aria-hidden="true" className="h-3.5 w-3.5" />
+                Step
               </button>
             </div>
           </div>

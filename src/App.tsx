@@ -13,6 +13,19 @@ import ReviewPhase from './components/ReviewPhase';
 import ExportPhase from './components/ExportPhase';
 import FlowGraph from './components/FlowGraph';
 import DiffPhase from './components/DiffPhase';
+import IconButton from './components/IconButton';
+import {
+  Boxes,
+  ClipboardPaste,
+  FileText,
+  GitCompare,
+  ListChecks,
+  Monitor,
+  Moon,
+  Network,
+  RotateCcw,
+  Sun,
+} from 'lucide-react';
 
 // Stable reference so DiffPhase's loadExampleDiff useCallback isn't invalidated
 // on every App render by a freshly-allocated prop object.
@@ -95,21 +108,20 @@ export default function App() {
   const hasFlow = flow.items.length > 0;
   const groups = allGroups(flow.items);
 
-  const themeIcon =
-    mode === 'light' ? '\u2600\uFE0F' : mode === 'dark' ? '\uD83C\uDF19' : '\uD83D\uDCBB';
+  const ThemeIcon = mode === 'light' ? Sun : mode === 'dark' ? Moon : Monitor;
   const themeLabel = mode === 'light' ? 'Light' : mode === 'dark' ? 'Dark' : 'System';
 
   const navBtn = (active: boolean, activeColor: string) =>
-    `px-3 py-2 text-sm rounded font-medium transition-colors ${
+    `inline-flex items-center gap-1.5 px-2.5 py-2 text-sm rounded-md font-medium transition-colors ${
       active
         ? `${activeColor} text-white`
-        : 'bg-white dark:bg-midnight-800 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-midnight-700 border border-slate-200 dark:border-midnight-700'
+        : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-midnight-700 border border-transparent'
     }`;
 
   return (
     <div className="min-h-screen">
       {/* Header */}
-      <div className="bg-white dark:bg-midnight-800 border-b border-slate-200 dark:border-midnight-700 sticky top-0 z-10">
+      <div className="bg-white/95 dark:bg-midnight-800/95 backdrop-blur border-b border-slate-200 dark:border-midnight-700 sticky top-0 z-10">
         <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between flex-wrap gap-2">
           <div className="flex items-center gap-3">
             <span className="text-lg font-bold font-mono text-blue-600 dark:text-blue-400">
@@ -123,7 +135,7 @@ export default function App() {
           </div>
 
           <div
-            className="flex gap-2 items-center"
+            className="flex flex-wrap gap-1.5 items-center justify-end"
             role="navigation"
             aria-label="Phase navigation"
           >
@@ -134,6 +146,7 @@ export default function App() {
                     onClick={() => setPhase('groups')}
                     className={navBtn(phase === 'groups', 'bg-purple-700')}
                   >
+                    <Boxes aria-hidden="true" className="h-4 w-4" />
                     Groups
                   </button>
                 )}
@@ -141,18 +154,21 @@ export default function App() {
                   onClick={() => setPhase('review')}
                   className={navBtn(phase === 'review', 'bg-blue-700')}
                 >
+                  <ListChecks aria-hidden="true" className="h-4 w-4" />
                   Review
                 </button>
                 <button
                   onClick={() => setPhase('graph')}
                   className={navBtn(phase === 'graph', 'bg-blue-700')}
                 >
+                  <Network aria-hidden="true" className="h-4 w-4" />
                   Graph
                 </button>
                 <button
                   onClick={() => setPhase('export')}
                   className={navBtn(phase === 'export', 'bg-blue-700')}
                 >
+                  <FileText aria-hidden="true" className="h-4 w-4" />
                   Export
                 </button>
               </>
@@ -161,22 +177,26 @@ export default function App() {
               onClick={() => setPhase('diff')}
               className={navBtn(phase === 'diff', 'bg-orange-700')}
             >
+              <GitCompare aria-hidden="true" className="h-4 w-4" />
               Diff
             </button>
             <button
               onClick={resetToNew}
-              className="px-3 py-2 text-sm rounded font-medium bg-blue-600 text-white hover:bg-blue-500 shadow-lg shadow-blue-500/20"
+              className="inline-flex items-center gap-1.5 px-3 py-2 text-sm rounded-md font-medium bg-blue-600 text-white hover:bg-blue-500 shadow-sm shadow-blue-500/20 transition-colors"
             >
+              {phase === 'paste' ? (
+                <ClipboardPaste aria-hidden="true" className="h-4 w-4" />
+              ) : (
+                <RotateCcw aria-hidden="true" className="h-4 w-4" />
+              )}
               {phase === 'paste' ? 'Paste Mode' : 'New Export'}
             </button>
-            <button
+            <IconButton
+              icon={ThemeIcon}
+              label={`Theme: ${themeLabel}. Click to cycle.`}
               onClick={toggle}
-              className="px-2 py-1.5 text-sm rounded font-medium bg-slate-100 dark:bg-midnight-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-midnight-600 border border-slate-200 dark:border-midnight-600 transition-colors"
-              aria-label={`Theme: ${themeLabel}. Click to cycle.`}
-              title={`Theme: ${themeLabel}`}
-            >
-              {themeIcon}
-            </button>
+              tone="neutral"
+            />
           </div>
         </div>
       </div>

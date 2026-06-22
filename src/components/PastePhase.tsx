@@ -3,6 +3,14 @@ import type { HistoryEntry } from '../types';
 import BookmarkletPanel from './BookmarkletPanel';
 import { DEMO_MODE_MESSAGE } from '../config';
 import {
+  AlertTriangle,
+  Bot,
+  ClipboardPaste,
+  KeyRound,
+  Play,
+  Settings,
+} from 'lucide-react';
+import {
   getApiKey,
   setApiKey,
   getProvider,
@@ -67,38 +75,60 @@ export default function PastePhase({
   };
 
   return (
-    <div className="space-y-4">
-      <div className="bg-white dark:bg-midnight-800 border border-slate-200 dark:border-midnight-700 rounded-xl shadow-sm p-6 space-y-4">
-        <div className="space-y-1">
-          <h2 className="text-lg font-bold font-mono text-slate-900 dark:text-white">
-            Paste your flow
-          </h2>
-          <p className="text-slate-500 dark:text-slate-400 text-sm">
-            Open your flow in the Quick Flows editor, then{' '}
-            <kbd className="px-1.5 py-0.5 bg-slate-100 dark:bg-midnight-900 border border-slate-200 dark:border-midnight-700 rounded text-xs font-mono text-blue-600 dark:text-blue-400">
-              Ctrl+A
-            </kbd>{' '}
-            <kbd className="px-1.5 py-0.5 bg-slate-100 dark:bg-midnight-900 border border-slate-200 dark:border-midnight-700 rounded text-xs font-mono text-blue-600 dark:text-blue-400">
-              Ctrl+C
-            </kbd>{' '}
-            <kbd className="px-1.5 py-0.5 bg-slate-100 dark:bg-midnight-900 border border-slate-200 dark:border-midnight-700 rounded text-xs font-mono text-blue-600 dark:text-blue-400">
-              Ctrl+V
-            </kbd>
-            {' here.'}
-          </p>
+    <div className="space-y-3">
+      <div className="bg-white dark:bg-midnight-800 border border-slate-200 dark:border-midnight-700 rounded-lg shadow-sm p-5 space-y-4">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+          <div className="space-y-1">
+            <h2 className="text-base font-bold font-mono text-slate-900 dark:text-white">
+              Paste your flow
+            </h2>
+            <p className="text-slate-500 dark:text-slate-400 text-sm">
+              Copy all text from the Quick Flows editor with{' '}
+              <kbd className="px-1.5 py-0.5 bg-slate-100 dark:bg-midnight-900 border border-slate-200 dark:border-midnight-700 rounded text-xs font-mono text-blue-600 dark:text-blue-400">
+                Ctrl+A
+              </kbd>{' '}
+              <kbd className="px-1.5 py-0.5 bg-slate-100 dark:bg-midnight-900 border border-slate-200 dark:border-midnight-700 rounded text-xs font-mono text-blue-600 dark:text-blue-400">
+                Ctrl+C
+              </kbd>{' '}
+              <kbd className="px-1.5 py-0.5 bg-slate-100 dark:bg-midnight-900 border border-slate-200 dark:border-midnight-700 rounded text-xs font-mono text-blue-600 dark:text-blue-400">
+                Ctrl+V
+              </kbd>
+              .
+            </p>
+          </div>
+          {!demoMode && (
+            <button
+              onClick={() => {
+                setNeedsKey(true);
+                setKeyValue(getApiKey());
+              }}
+              className={`inline-flex items-center gap-1.5 text-xs ${
+                hasKey || isBedrock
+                  ? 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-100'
+                  : 'font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300'
+              }`}
+            >
+              <Settings aria-hidden="true" className="h-3.5 w-3.5" />
+              {hasKey || isBedrock ? 'Settings' : 'Set API key'}
+            </button>
+          )}
         </div>
 
         {demoMode && (
-          <div className="rounded-lg border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20 p-4 text-sm text-blue-700 dark:text-blue-300">
-            <div className="font-semibold">Hosted demo mode</div>
-            <p className="mt-1">
+          <div className="rounded-md border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20 p-3 text-sm text-blue-700 dark:text-blue-300">
+            <div className="flex items-center gap-2 font-semibold">
+              <Bot aria-hidden="true" className="h-4 w-4" />
+              Hosted demo mode
+            </div>
+            <p className="mt-1 text-xs leading-5">
               {DEMO_MODE_MESSAGE} Use the bundled example to inspect the graph, export
               formats, and diff workflow without sending data to an AI provider.
             </p>
             <button
               onClick={onLoadExample}
-              className="mt-3 px-4 py-2 rounded-lg text-sm font-semibold bg-blue-600 text-white hover:bg-blue-500 shadow-lg shadow-blue-500/20"
+              className="mt-3 inline-flex items-center gap-2 px-3 py-2 rounded-md text-sm font-semibold bg-blue-600 text-white hover:bg-blue-500 shadow-sm shadow-blue-500/20"
             >
+              <ClipboardPaste aria-hidden="true" className="h-4 w-4" />
               Load example
             </button>
           </div>
@@ -112,7 +142,7 @@ export default function PastePhase({
           className="w-full border border-slate-200 dark:border-midnight-700 rounded-lg px-4 py-3 text-sm font-mono bg-slate-50 dark:bg-[#0d1117] text-slate-700 dark:text-slate-300 placeholder-slate-400 dark:placeholder-slate-600 focus:border-blue-500 focus:ring-1 focus:ring-blue-500/30 transition-colors"
           rows={12}
           placeholder={
-            '// Paste your flow content here...\n\nTip: In the Quick Flows editor, press Ctrl+A to select all, then Ctrl+C to copy.'
+            '// Paste your flow content here...\n\nTip: Ctrl+A, Ctrl+C in the Quick Flows editor, then Ctrl+V here.'
           }
           value={raw}
           onChange={(e) => onRawChange(e.target.value)}
@@ -120,8 +150,12 @@ export default function PastePhase({
         />
 
         {!demoMode && needsKey && (
-          <div className="bg-slate-100 dark:bg-midnight-900 border border-blue-300/50 dark:border-blue-800/50 rounded-lg p-4 space-y-3">
+          <div className="bg-slate-50 dark:bg-midnight-900 border border-blue-300/50 dark:border-blue-800/50 rounded-lg p-4 space-y-3">
             <div className="flex items-center gap-2">
+              <KeyRound
+                aria-hidden="true"
+                className="h-4 w-4 text-blue-600 dark:text-blue-400"
+              />
               <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">
                 Configure AI provider
               </span>
@@ -167,8 +201,9 @@ export default function PastePhase({
                 <button
                   onClick={handleKeySaveAndParse}
                   disabled={!keyValue.trim() || !raw.trim()}
-                  className="px-4 py-2 rounded-lg text-sm font-semibold bg-blue-600 text-white hover:bg-blue-500 disabled:bg-slate-200 dark:disabled:bg-midnight-700 disabled:text-slate-400 dark:disabled:text-slate-500"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold bg-blue-600 text-white hover:bg-blue-500 disabled:bg-slate-200 dark:disabled:bg-midnight-700 disabled:text-slate-400 dark:disabled:text-slate-500"
                 >
+                  <Play aria-hidden="true" className="h-4 w-4" />
                   Save & Parse
                 </button>
               </div>
@@ -190,8 +225,9 @@ export default function PastePhase({
                     onParse();
                   }}
                   disabled={!raw.trim()}
-                  className="px-4 py-2 rounded-lg text-sm font-semibold bg-blue-600 text-white hover:bg-blue-500 disabled:bg-slate-200 dark:disabled:bg-midnight-700 disabled:text-slate-400 dark:disabled:text-slate-500"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold bg-blue-600 text-white hover:bg-blue-500 disabled:bg-slate-200 dark:disabled:bg-midnight-700 disabled:text-slate-400 dark:disabled:text-slate-500"
                 >
+                  <Play aria-hidden="true" className="h-4 w-4" />
                   Parse
                 </button>
               </div>
@@ -225,25 +261,15 @@ export default function PastePhase({
         )}
 
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2 text-xs text-slate-400 dark:text-slate-500">
             <span className="text-xs text-slate-400 dark:text-slate-500 font-mono">
               {raw.length > 0 ? `${raw.length.toLocaleString()} chars` : ''}
             </span>
             {!demoMode && (
               <>
-                {/* Provider badge */}
-                <span className="text-xs text-slate-400 dark:text-slate-600">
+                <span className="rounded border border-slate-200 dark:border-midnight-700 px-2 py-1 text-xs text-slate-500 dark:text-slate-400">
                   {currentProviderInfo.label}
                 </span>
-                <button
-                  onClick={() => {
-                    setNeedsKey(true);
-                    setKeyValue(getApiKey());
-                  }}
-                  className="text-xs text-slate-400 dark:text-slate-600 hover:text-slate-600 dark:hover:text-slate-400"
-                >
-                  {hasKey || isBedrock ? 'Settings' : 'Set API key'}
-                </button>
               </>
             )}
           </div>
@@ -251,20 +277,22 @@ export default function PastePhase({
             {!demoMode && (
               <button
                 onClick={onLoadExample}
-                className="w-full px-4 py-2.5 rounded-lg text-sm font-semibold bg-slate-100 dark:bg-midnight-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-midnight-600 border border-slate-200 dark:border-midnight-600 sm:w-auto"
+                className="inline-flex w-full items-center justify-center gap-2 px-4 py-2.5 rounded-md text-sm font-semibold bg-slate-100 dark:bg-midnight-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-midnight-600 border border-slate-200 dark:border-midnight-600 sm:w-auto"
               >
+                <ClipboardPaste aria-hidden="true" className="h-4 w-4" />
                 Load example
               </button>
             )}
             <button
               onClick={handleParse}
               disabled={!canParse}
-              className={`w-full px-6 py-2.5 rounded-lg text-sm font-semibold transition-all sm:w-auto ${
+              className={`inline-flex w-full items-center justify-center gap-2 px-6 py-2.5 rounded-md text-sm font-semibold transition-all sm:w-auto ${
                 canParse
-                  ? 'bg-blue-600 text-white hover:bg-blue-500 shadow-lg shadow-blue-500/25'
+                  ? 'bg-blue-600 text-white hover:bg-blue-500 shadow-sm shadow-blue-500/25'
                   : 'bg-slate-200 dark:bg-midnight-700 text-slate-400 dark:text-slate-500'
               }`}
             >
+              <Play aria-hidden="true" className="h-4 w-4" />
               {demoMode
                 ? 'Run locally to parse'
                 : parsing
@@ -279,14 +307,15 @@ export default function PastePhase({
             role="alert"
             className="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg p-3 text-sm text-red-600 dark:text-red-400"
           >
-            ⚠ {parseError}
+            <AlertTriangle aria-hidden="true" className="mr-2 inline h-4 w-4" />
+            {parseError}
           </div>
         )}
       </div>
 
       {history.length > 0 && (
-        <div className="bg-white dark:bg-midnight-800 border border-slate-200 dark:border-midnight-700 rounded-xl shadow-sm p-4">
-          <h3 className="text-sm font-semibold text-slate-400 dark:text-slate-500 mb-2 font-mono">
+        <div className="bg-white/70 dark:bg-midnight-800/70 border border-slate-200 dark:border-midnight-700 rounded-lg p-3">
+          <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-400 dark:text-slate-500 mb-2">
             Recent Exports
           </h3>
           <div className="space-y-1">
