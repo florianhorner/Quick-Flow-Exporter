@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import type { Flow } from '../types';
 import { generateMarkdown } from '../lib/markdown';
 import { generateMermaid } from '../lib/mermaid';
+import { ArrowLeft, Braces, Copy, Download, FileText, Workflow } from 'lucide-react';
 
 type ExportFormat = 'markdown' | 'mermaid' | 'json';
 
@@ -54,48 +55,57 @@ export default function ExportPhase({ flow, onDownload, onBack }: ExportPhasePro
     onDownload(); // record in history regardless of format
   };
 
-  const formats: { key: ExportFormat; label: string; icon: string; desc: string }[] = [
+  const formats: {
+    key: ExportFormat;
+    label: string;
+    icon: typeof FileText;
+    desc: string;
+  }[] = [
     {
       key: 'markdown',
       label: 'Markdown',
-      icon: '.md',
+      icon: FileText,
       desc: 'Human-readable documentation',
     },
     {
       key: 'mermaid',
       label: 'Mermaid',
-      icon: '.mmd',
+      icon: Workflow,
       desc: 'Flowchart diagram (GitHub/Quip)',
     },
-    { key: 'json', label: 'JSON', icon: '{ }', desc: 'Canonical re-importable format' },
+    { key: 'json', label: 'JSON', icon: Braces, desc: 'Canonical re-importable format' },
   ];
 
   return (
-    <div className="space-y-4">
-      <div className="bg-white dark:bg-midnight-800 border border-slate-200 dark:border-midnight-700 rounded-xl shadow-sm p-4 flex flex-wrap gap-3 items-center">
+    <div className="space-y-3">
+      <div className="bg-white dark:bg-midnight-800 border border-slate-200 dark:border-midnight-700 rounded-lg shadow-sm p-4 flex flex-wrap gap-3 items-center">
         {/* Format selector */}
         <div className="flex gap-1 bg-slate-100 dark:bg-midnight-900 rounded-lg p-1">
-          {formats.map((f) => (
-            <button
-              key={f.key}
-              onClick={() => setFormat(f.key)}
-              className={`px-3 py-2 text-sm rounded-md transition-all ${
-                format === f.key
-                  ? 'bg-white dark:bg-midnight-700 shadow font-semibold text-slate-900 dark:text-white'
-                  : 'text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
-              }`}
-              title={f.desc}
-            >
-              {f.icon} {f.label}
-            </button>
-          ))}
+          {formats.map((f) => {
+            const FormatIcon = f.icon;
+            return (
+              <button
+                key={f.key}
+                onClick={() => setFormat(f.key)}
+                className={`inline-flex items-center gap-1.5 px-3 py-2 text-sm rounded-md transition-all ${
+                  format === f.key
+                    ? 'bg-white dark:bg-midnight-700 shadow font-semibold text-slate-900 dark:text-white'
+                    : 'text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
+                }`}
+                title={f.desc}
+              >
+                <FormatIcon aria-hidden="true" className="h-4 w-4" />
+                {f.label}
+              </button>
+            );
+          })}
         </div>
 
         <div className="flex-1" />
 
         <button
           onClick={copyContent}
-          className={`px-5 py-2 rounded-lg text-sm font-semibold shadow ${
+          className={`inline-flex items-center gap-2 px-4 py-2 rounded-md text-sm font-semibold shadow ${
             formatCopied
               ? 'bg-blue-600 text-white'
               : copyError
@@ -104,19 +114,22 @@ export default function ExportPhase({ flow, onDownload, onBack }: ExportPhasePro
           }`}
           aria-live="polite"
         >
+          <Copy aria-hidden="true" className="h-4 w-4" />
           {formatCopied ? 'Copied!' : copyError ? 'Select text & Ctrl+C' : 'Copy'}
         </button>
         <button
           onClick={downloadContent}
-          className="bg-blue-600 text-white px-5 py-2 rounded-lg text-sm font-semibold hover:bg-blue-700 shadow"
+          className="inline-flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-semibold hover:bg-blue-700 shadow"
         >
+          <Download aria-hidden="true" className="h-4 w-4" />
           Download
         </button>
         <button
           onClick={onBack}
-          className="text-sm text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:rounded"
+          className="inline-flex items-center gap-1.5 text-sm text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:rounded"
         >
-          &larr; Back
+          <ArrowLeft aria-hidden="true" className="h-4 w-4" />
+          Back
         </button>
       </div>
 
@@ -128,7 +141,7 @@ export default function ExportPhase({ flow, onDownload, onBack }: ExportPhasePro
         </div>
       )}
 
-      <pre className="bg-slate-50 dark:bg-[#0d1117] border border-slate-200 dark:border-midnight-700 rounded-xl shadow-sm p-5 text-sm font-mono whitespace-pre-wrap overflow-auto max-h-[70vh] text-slate-700 dark:text-slate-300 select-all cursor-text">
+      <pre className="bg-slate-50 dark:bg-[#0d1117] border border-slate-200 dark:border-midnight-700 rounded-lg shadow-sm p-5 text-sm font-mono whitespace-pre-wrap overflow-auto max-h-[70vh] text-slate-700 dark:text-slate-300 select-all cursor-text">
         {content}
       </pre>
     </div>

@@ -3,6 +3,20 @@ import type { Flow } from '../types';
 import { parseFlow } from '../lib/parser';
 import { diffFlows, wordDiffSegments, type FlowDiffResult } from '../lib/diff';
 import { DEMO_MODE_MESSAGE } from '../config';
+import {
+  AlertTriangle,
+  ArrowLeft,
+  Bot,
+  CheckCircle2,
+  ChevronDown,
+  ChevronRight,
+  GitCompare,
+  Minus,
+  Pencil,
+  Play,
+  Plus,
+  RotateCcw,
+} from 'lucide-react';
 
 interface DiffPhaseProps {
   currentFlow: Flow | null;
@@ -79,10 +93,14 @@ export default function DiffPhase({
 
   if (state === 'input') {
     return (
-      <div className="space-y-4">
-        <div className="bg-white dark:bg-midnight-800 border border-slate-200 dark:border-midnight-700 rounded-xl shadow-sm p-6 space-y-4">
+      <div className="space-y-3">
+        <div className="bg-white dark:bg-midnight-800 border border-slate-200 dark:border-midnight-700 rounded-lg shadow-sm p-5 space-y-4">
           <div className="space-y-1">
-            <h2 className="text-lg font-bold font-mono text-slate-900 dark:text-white">
+            <h2 className="flex items-center gap-2 text-base font-bold font-mono text-slate-900 dark:text-white">
+              <GitCompare
+                aria-hidden="true"
+                className="h-4 w-4 text-orange-600 dark:text-orange-400"
+              />
               Compare flows
             </h2>
             <p className="text-slate-500 dark:text-slate-400 text-sm">
@@ -91,17 +109,21 @@ export default function DiffPhase({
           </div>
 
           {demoMode && (
-            <div className="rounded-lg border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20 p-4 text-sm text-blue-700 dark:text-blue-300">
-              <div className="font-semibold">Hosted demo mode</div>
-              <p className="mt-1">
+            <div className="rounded-md border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20 p-3 text-sm text-blue-700 dark:text-blue-300">
+              <div className="flex items-center gap-2 font-semibold">
+                <Bot aria-hidden="true" className="h-4 w-4" />
+                Hosted demo mode
+              </div>
+              <p className="mt-1 text-xs leading-5">
                 {DEMO_MODE_MESSAGE} Load the bundled before/after pair to inspect the diff
                 workflow without calling the AI proxy.
               </p>
               {exampleDiff && (
                 <button
                   onClick={loadExampleDiff}
-                  className="mt-3 px-4 py-2 rounded-lg text-sm font-semibold bg-blue-600 text-white hover:bg-blue-500 shadow-lg shadow-blue-500/20"
+                  className="mt-3 inline-flex items-center gap-2 px-3 py-2 rounded-md text-sm font-semibold bg-blue-600 text-white hover:bg-blue-500 shadow-sm shadow-blue-500/20"
                 >
+                  <GitCompare aria-hidden="true" className="h-4 w-4" />
                   Load example diff
                 </button>
               )}
@@ -148,19 +170,21 @@ export default function DiffPhase({
           <div className="flex items-center justify-between">
             <button
               onClick={onBack}
-              className="text-sm text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:rounded"
+              className="inline-flex items-center gap-1.5 text-sm text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:rounded"
             >
-              &larr; Back
+              <ArrowLeft aria-hidden="true" className="h-4 w-4" />
+              Back
             </button>
             <button
               onClick={handleDiff}
               disabled={!canCompare}
-              className={`px-6 py-2.5 rounded-lg text-sm font-semibold transition-all ${
+              className={`inline-flex items-center gap-2 px-6 py-2.5 rounded-md text-sm font-semibold transition-all ${
                 canCompare
-                  ? 'bg-blue-600 text-white hover:bg-blue-500 shadow-lg shadow-blue-500/25'
+                  ? 'bg-blue-600 text-white hover:bg-blue-500 shadow-sm shadow-blue-500/25'
                   : 'bg-slate-200 dark:bg-midnight-700 text-slate-400 dark:text-slate-500'
               }`}
             >
+              <Play aria-hidden="true" className="h-4 w-4" />
               {demoMode
                 ? 'Run locally to compare'
                 : parsing
@@ -171,7 +195,8 @@ export default function DiffPhase({
 
           {error && (
             <div className="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg p-3 text-sm text-red-600 dark:text-red-400">
-              ⚠ {error}
+              <AlertTriangle aria-hidden="true" className="mr-2 inline h-4 w-4" />
+              {error}
             </div>
           )}
         </div>
@@ -185,11 +210,12 @@ export default function DiffPhase({
   const noChanges = changes.length === 0;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       {/* Summary bar */}
-      <div className="bg-white dark:bg-midnight-800 border border-slate-200 dark:border-midnight-700 rounded-xl shadow-sm p-4 flex flex-wrap gap-4 items-center">
+      <div className="bg-white dark:bg-midnight-800 border border-slate-200 dark:border-midnight-700 rounded-lg shadow-sm p-4 flex flex-wrap gap-3 items-center">
         <div className="flex items-center gap-2">
-          <span className="text-sm font-bold text-blue-600 dark:text-blue-400 font-mono">
+          <span className="inline-flex items-center gap-1.5 text-sm font-bold text-blue-600 dark:text-blue-400 font-mono">
+            <GitCompare aria-hidden="true" className="h-4 w-4" />
             DIFF
           </span>
           <div>
@@ -203,20 +229,22 @@ export default function DiffPhase({
             </div>
           </div>
         </div>
-        <div className="flex gap-3 text-xs">
+        <div className="flex flex-wrap gap-2 text-xs">
           {summary.added > 0 && (
-            <span className="bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 px-2 py-1 rounded-full font-medium border border-blue-200 dark:border-blue-800">
-              +{summary.added} added
+            <span className="inline-flex items-center gap-1 bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 px-2 py-1 rounded-full font-medium border border-blue-200 dark:border-blue-800">
+              <Plus aria-hidden="true" className="h-3.5 w-3.5" />+{summary.added} added
             </span>
           )}
           {summary.removed > 0 && (
-            <span className="bg-red-100 dark:bg-red-900/40 text-red-600 dark:text-red-400 px-2 py-1 rounded-full font-medium border border-red-200 dark:border-red-800">
+            <span className="inline-flex items-center gap-1 bg-red-100 dark:bg-red-900/40 text-red-600 dark:text-red-400 px-2 py-1 rounded-full font-medium border border-red-200 dark:border-red-800">
+              <Minus aria-hidden="true" className="h-3.5 w-3.5" />
               &minus;{summary.removed} removed
             </span>
           )}
           {summary.modified > 0 && (
-            <span className="bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 px-2 py-1 rounded-full font-medium border border-amber-200 dark:border-amber-800">
-              ~{summary.modified} modified
+            <span className="inline-flex items-center gap-1 bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 px-2 py-1 rounded-full font-medium border border-amber-200 dark:border-amber-800">
+              <Pencil aria-hidden="true" className="h-3.5 w-3.5" />~{summary.modified}{' '}
+              modified
             </span>
           )}
         </div>
@@ -227,22 +255,25 @@ export default function DiffPhase({
             setRightFlow(null);
             setRightRaw('');
           }}
-          className="text-sm text-blue-600 dark:text-blue-500 hover:text-blue-500 dark:hover:text-blue-400"
+          className="inline-flex items-center gap-1.5 text-sm text-blue-600 dark:text-blue-500 hover:text-blue-500 dark:hover:text-blue-400"
         >
-          &orarr; New Diff
+          <RotateCcw aria-hidden="true" className="h-4 w-4" />
+          New Diff
         </button>
         <button
           onClick={onBack}
-          className="text-sm text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:rounded"
+          className="inline-flex items-center gap-1.5 text-sm text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:rounded"
         >
-          &larr; Back
+          <ArrowLeft aria-hidden="true" className="h-4 w-4" />
+          Back
         </button>
       </div>
 
       {noChanges ? (
-        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl shadow-sm p-8 text-center">
-          <div className="text-sm font-bold text-blue-600 dark:text-blue-400 font-mono mb-2">
-            ✓ NO CHANGES
+        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg shadow-sm p-8 text-center">
+          <div className="mb-2 inline-flex items-center gap-2 text-sm font-bold text-blue-600 dark:text-blue-400 font-mono">
+            <CheckCircle2 aria-hidden="true" className="h-4 w-4" />
+            NO CHANGES
           </div>
           <div className="font-semibold text-blue-600 dark:text-blue-400">
             Flows are identical
@@ -264,7 +295,7 @@ export default function DiffPhase({
             return (
               <div
                 key={change.path}
-                className={`bg-white dark:bg-midnight-800 rounded-lg shadow-sm border-l-4 border border-slate-200 dark:border-midnight-700 ${
+                className={`bg-white dark:bg-midnight-800 rounded-md shadow-sm border-l-4 border border-slate-200 dark:border-midnight-700 ${
                   change.type === 'added'
                     ? 'border-l-blue-500'
                     : change.type === 'removed'
@@ -277,7 +308,7 @@ export default function DiffPhase({
                   onClick={() => toggleExpand(change.path)}
                 >
                   <span
-                    className={`text-xs font-bold uppercase px-2 py-0.5 rounded ${
+                    className={`inline-flex h-7 w-7 items-center justify-center rounded text-xs font-bold uppercase ${
                       change.type === 'added'
                         ? 'bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400'
                         : change.type === 'removed'
@@ -285,20 +316,29 @@ export default function DiffPhase({
                           : 'bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400'
                     }`}
                   >
-                    {change.type === 'added'
-                      ? '+'
-                      : change.type === 'removed'
-                        ? '\u2212'
-                        : '~'}
+                    {change.type === 'added' ? (
+                      <Plus aria-hidden="true" className="h-4 w-4" />
+                    ) : change.type === 'removed' ? (
+                      <Minus aria-hidden="true" className="h-4 w-4" />
+                    ) : (
+                      <Pencil aria-hidden="true" className="h-4 w-4" />
+                    )}
                   </span>
                   <span className="text-sm font-medium text-slate-700 dark:text-slate-200 flex-1">
                     {change.label}
                   </span>
-                  {(isPromptChange || hasLongContent) && (
-                    <span className="text-xs text-slate-400 dark:text-slate-500">
-                      {expanded ? '\u25BE' : '\u25B8'}
-                    </span>
-                  )}
+                  {(isPromptChange || hasLongContent) &&
+                    (expanded ? (
+                      <ChevronDown
+                        aria-hidden="true"
+                        className="h-4 w-4 text-slate-400 dark:text-slate-500"
+                      />
+                    ) : (
+                      <ChevronRight
+                        aria-hidden="true"
+                        className="h-4 w-4 text-slate-400 dark:text-slate-500"
+                      />
+                    ))}
                 </div>
 
                 {/* Inline preview for short values */}

@@ -4,6 +4,7 @@ import { createEmptyStep, createEmptyGroup, allSteps, allGroups } from '../lib/f
 import StepCard from './StepCard';
 import GroupCard from './GroupCard';
 import { useState } from 'react';
+import { Boxes, FileText, ListChecks, Plus } from 'lucide-react';
 
 interface ReviewPhaseProps {
   flow: Flow;
@@ -34,40 +35,42 @@ export default function ReviewPhase({ flow, onFlowChange, onExport }: ReviewPhas
   };
 
   return (
-    <div className="space-y-4">
-      <div className="bg-white dark:bg-midnight-800 border border-slate-200 dark:border-midnight-700 rounded-xl shadow-sm p-4 flex flex-wrap gap-4 items-center">
-        <div className="flex items-center gap-2">
-          <span className="text-sm font-bold text-blue-600 dark:text-blue-400 font-mono">
-            REVIEW
-          </span>
-          <div>
-            <div className="font-semibold text-sm text-slate-900 dark:text-white">
-              {flow.title || '(Untitled)'}
-            </div>
-            <div className="text-xs text-slate-400 dark:text-slate-500">
-              {steps.length} steps · {groups.length} groups · {flow.status}
+    <div className="space-y-3">
+      <div className="bg-white dark:bg-midnight-800 border border-slate-200 dark:border-midnight-700 rounded-lg shadow-sm p-4 space-y-3">
+        <div className="flex flex-wrap gap-3 items-center">
+          <div className="flex items-center gap-2 min-w-0">
+            <ListChecks
+              aria-hidden="true"
+              className="h-4 w-4 text-blue-600 dark:text-blue-400"
+            />
+            <div className="min-w-0">
+              <div className="font-semibold text-sm text-slate-900 dark:text-white truncate">
+                {flow.title || '(Untitled)'}
+              </div>
+              <div className="text-xs text-slate-400 dark:text-slate-500">
+                {steps.length} steps · {groups.length} groups · {flow.status}
+              </div>
             </div>
           </div>
+          <div className="flex-1" />
+          <button
+            onClick={onExport}
+            className="inline-flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-semibold hover:bg-blue-500 shadow-sm shadow-blue-500/20"
+          >
+            <FileText aria-hidden="true" className="h-4 w-4" />
+            Export
+          </button>
         </div>
-        <div className="flex-1" />
-        <button
-          onClick={onExport}
-          className="bg-blue-600 text-white px-5 py-2 rounded-lg text-sm font-semibold hover:bg-blue-500 shadow-lg shadow-blue-500/20"
-        >
-          Export
-        </button>
-      </div>
 
-      <div className="bg-white dark:bg-midnight-800 border border-slate-200 dark:border-midnight-700 rounded-lg shadow-sm p-4 space-y-2">
-        <div className="flex gap-2 flex-wrap">
+        <div className="grid gap-2 md:grid-cols-[1fr_auto_auto]">
           <input
-            className="flex-1 min-w-48 border border-slate-200 dark:border-midnight-700 rounded px-3 py-2 text-sm font-semibold bg-slate-100 dark:bg-midnight-900 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-600 focus:border-blue-500"
+            className="min-w-0 border border-slate-200 dark:border-midnight-700 rounded px-3 py-2 text-sm font-semibold bg-slate-100 dark:bg-midnight-900 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-600 focus:border-blue-500"
             placeholder="Flow Title"
             value={flow.title}
             onChange={(e) => onFlowChange({ ...flow, title: e.target.value })}
           />
           <select
-            className="border border-slate-200 dark:border-midnight-700 rounded px-2 py-1 text-sm bg-slate-100 dark:bg-midnight-900 text-slate-700 dark:text-slate-300"
+            className="border border-slate-200 dark:border-midnight-700 rounded px-2 py-2 text-sm bg-slate-100 dark:bg-midnight-900 text-slate-700 dark:text-slate-300"
             value={flow.status}
             onChange={(e) =>
               onFlowChange({
@@ -79,7 +82,7 @@ export default function ReviewPhase({ flow, onFlowChange, onExport }: ReviewPhas
             <option>Draft</option>
             <option>Published</option>
           </select>
-          <label className="flex items-center gap-1 text-sm text-slate-500 dark:text-slate-400">
+          <label className="flex min-h-10 items-center gap-2 rounded border border-slate-200 dark:border-midnight-700 bg-slate-100 dark:bg-midnight-900 px-3 text-sm text-slate-500 dark:text-slate-400">
             <input
               type="checkbox"
               checked={flow.shared}
@@ -98,7 +101,7 @@ export default function ReviewPhase({ flow, onFlowChange, onExport }: ReviewPhas
         />
       </div>
 
-      <div className="space-y-3">
+      <div className="space-y-2">
         {flow.items.map((item, i) =>
           item.isGroup ? (
             <GroupCard
@@ -126,7 +129,7 @@ export default function ReviewPhase({ flow, onFlowChange, onExport }: ReviewPhas
         )}
       </div>
 
-      <div className="bg-white dark:bg-midnight-800 border border-slate-200 dark:border-midnight-700 rounded-lg shadow-sm p-3 flex flex-wrap gap-2 items-center">
+      <div className="bg-white/70 dark:bg-midnight-800/70 border border-slate-200 dark:border-midnight-700 rounded-lg p-3 flex flex-wrap gap-2 items-center">
         <select
           className="border border-slate-200 dark:border-midnight-700 rounded px-2 py-1 text-sm bg-slate-100 dark:bg-midnight-900 text-slate-700 dark:text-slate-300"
           value={addType}
@@ -139,26 +142,30 @@ export default function ReviewPhase({ flow, onFlowChange, onExport }: ReviewPhas
           ))}
         </select>
         <button
+          aria-label="Add step"
           onClick={() =>
             onFlowChange({
               ...flow,
               items: [...flow.items, createEmptyStep(addType)],
             })
           }
-          className="bg-blue-600 text-white text-sm px-4 py-2 rounded hover:bg-blue-500"
+          className="inline-flex items-center gap-1.5 bg-blue-600 text-white text-sm px-4 py-2 rounded-md hover:bg-blue-500"
         >
-          + Step
+          <Plus aria-hidden="true" className="h-4 w-4" />
+          Step
         </button>
         <button
+          aria-label="Add group"
           onClick={() =>
             onFlowChange({
               ...flow,
               items: [...flow.items, createEmptyGroup()],
             })
           }
-          className="bg-purple-600 text-white text-sm px-4 py-2 rounded hover:bg-purple-700"
+          className="inline-flex items-center gap-1.5 bg-purple-600 text-white text-sm px-4 py-2 rounded-md hover:bg-purple-700"
         >
-          + Group
+          <Boxes aria-hidden="true" className="h-4 w-4" />
+          Group
         </button>
       </div>
     </div>

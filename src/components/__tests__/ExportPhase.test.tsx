@@ -54,7 +54,7 @@ describe('ExportPhase', () => {
   it('calls onBack when Back is clicked', async () => {
     const user = userEvent.setup();
     render(<ExportPhase flow={makeFlow()} onDownload={onDownload} onBack={onBack} />);
-    await user.click(screen.getByText(/← Back/));
+    await user.click(screen.getByRole('button', { name: /back/i }));
     expect(onBack).toHaveBeenCalledOnce();
   });
 

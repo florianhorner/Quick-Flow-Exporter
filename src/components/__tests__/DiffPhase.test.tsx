@@ -79,7 +79,7 @@ describe('DiffPhase', () => {
     it('calls onBack when Back is clicked', async () => {
       const user = userEvent.setup();
       render(<DiffPhase currentFlow={null} onBack={onBack} />);
-      await user.click(screen.getByText(/← Back/));
+      await user.click(screen.getByRole('button', { name: /back/i }));
       expect(onBack).toHaveBeenCalledOnce();
     });
   });
@@ -191,7 +191,7 @@ describe('DiffPhase', () => {
       vi.mocked(parseFlow).mockResolvedValue(flow);
       const user = userEvent.setup();
       await driveToResult(user, flow);
-      expect(await screen.findByText('✓ NO CHANGES')).toBeInTheDocument();
+      expect(await screen.findByText(/NO CHANGES/)).toBeInTheDocument();
     });
 
     it('shows change count when flows differ', async () => {
@@ -223,7 +223,7 @@ describe('DiffPhase', () => {
       vi.mocked(parseFlow).mockResolvedValue(flow);
       const user = userEvent.setup();
       await driveToResult(user, flow);
-      await user.click(await screen.findByText(/New Diff/));
+      await user.click(await screen.findByRole('button', { name: /new diff/i }));
       expect(screen.getByText('Compare flows')).toBeInTheDocument();
     });
 
@@ -233,7 +233,7 @@ describe('DiffPhase', () => {
       const user = userEvent.setup();
       await driveToResult(user, flow);
       await screen.findByText('DIFF');
-      const backBtns = screen.getAllByText(/← Back/);
+      const backBtns = screen.getAllByRole('button', { name: /back/i });
       await user.click(backBtns[backBtns.length - 1]!);
       expect(onBack).toHaveBeenCalledOnce();
     });

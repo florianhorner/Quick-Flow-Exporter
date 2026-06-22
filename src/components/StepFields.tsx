@@ -7,9 +7,9 @@ interface StepFieldsProps {
 }
 
 const inputClass =
-  'w-full border border-slate-200 dark:border-midnight-700 rounded px-2 py-1 text-sm bg-slate-100 dark:bg-midnight-900 text-slate-700 dark:text-slate-300 placeholder-slate-400 dark:placeholder-slate-600 focus:border-blue-500';
+  'w-full border border-slate-200 dark:border-midnight-700 rounded px-2 py-1.5 text-sm bg-slate-100 dark:bg-midnight-900 text-slate-700 dark:text-slate-300 placeholder-slate-400 dark:placeholder-slate-600 focus:border-blue-500';
 const selectClass =
-  'border border-slate-200 dark:border-midnight-700 rounded px-2 py-1 text-xs bg-slate-100 dark:bg-midnight-900 text-slate-700 dark:text-slate-300';
+  'border border-slate-200 dark:border-midnight-700 rounded px-2 py-1.5 text-xs bg-slate-100 dark:bg-midnight-900 text-slate-700 dark:text-slate-300';
 
 export default function StepFields({ step, onChange }: StepFieldsProps) {
   const update = <K extends keyof Step>(field: K, value: Step[K]) =>
@@ -18,7 +18,7 @@ export default function StepFields({ step, onChange }: StepFieldsProps) {
   const uid = step.id;
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-1.5">
       <label htmlFor={`title-${uid}`} className="sr-only">
         Step title
       </label>
@@ -107,8 +107,8 @@ export default function StepFields({ step, onChange }: StepFieldsProps) {
           </label>
           <textarea
             id={`prompt-${uid}`}
-            className="w-full border border-slate-200 dark:border-midnight-700 rounded px-2 py-1 text-sm bg-slate-50 dark:bg-[#0d1117] text-slate-700 dark:text-slate-300 font-mono placeholder-slate-400 dark:placeholder-slate-600 focus:border-blue-500"
-            rows={4}
+            className="w-full border border-slate-200 dark:border-midnight-700 rounded px-2 py-1.5 text-sm bg-slate-50 dark:bg-[#0d1117] text-slate-700 dark:text-slate-300 font-mono placeholder-slate-400 dark:placeholder-slate-600 focus:border-blue-500"
+            rows={3}
             placeholder="Prompt / Instructions"
             value={step.prompt}
             onChange={(e) => update('prompt', e.target.value)}
@@ -149,7 +149,7 @@ export default function StepFields({ step, onChange }: StepFieldsProps) {
           </label>
           <textarea
             id={`config-${uid}`}
-            className="w-full border border-slate-200 dark:border-midnight-700 rounded px-2 py-1 text-sm bg-slate-50 dark:bg-[#0d1117] text-slate-700 dark:text-slate-300 font-mono placeholder-slate-400 dark:placeholder-slate-600 focus:border-blue-500"
+            className="w-full border border-slate-200 dark:border-midnight-700 rounded px-2 py-1.5 text-sm bg-slate-50 dark:bg-[#0d1117] text-slate-700 dark:text-slate-300 font-mono placeholder-slate-400 dark:placeholder-slate-600 focus:border-blue-500"
             rows={3}
             placeholder="Configuration"
             value={step.config}
