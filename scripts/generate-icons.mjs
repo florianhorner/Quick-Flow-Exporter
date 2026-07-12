@@ -1,15 +1,17 @@
 /**
- * Generate simple PNG icons for the browser extension.
+ * Generate simple PNG icons for the browser extension and web favicon.
  * Creates a cyan lightning bolt on a dark background at 16x16, 48x48, and 128x128.
  */
 
-import { writeFileSync } from 'fs';
+import { mkdirSync, writeFileSync } from 'fs';
 import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { deflateSync } from 'zlib';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const iconsDir = resolve(__dirname, '..', 'extension', 'icons');
+const projectRoot = resolve(__dirname, '..');
+const iconsDir = resolve(projectRoot, 'extension', 'icons');
+const faviconPath = resolve(projectRoot, 'public', 'favicon.png');
 
 // Minimal PNG encoder for simple RGBA images
 function createPNG(width, height, pixels) {
@@ -191,4 +193,10 @@ for (const size of sizes) {
   const path = resolve(iconsDir, `icon-${size}.png`);
   writeFileSync(path, png);
   console.log(`Generated ${path} (${size}x${size})`);
+
+  if (size === 128) {
+    mkdirSync(dirname(faviconPath), { recursive: true });
+    writeFileSync(faviconPath, png);
+    console.log(`Generated ${faviconPath} (${size}x${size})`);
+  }
 }
