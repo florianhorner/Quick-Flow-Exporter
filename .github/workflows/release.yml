@@ -36,7 +36,7 @@ jobs:
           PR_TITLE: ${{ github.event.pull_request.title }}
           PR_NUM: ${{ github.event.pull_request.number }}
         run: |
-          # Use env vars (not ${{ }}) to prevent script injection via PR title
+          # Use environment variables instead of inline expressions to prevent script injection via PR title
           if echo "$PR_TITLE" | grep -qiE '^feat(\(|:)'; then
             echo "type=minor" >> "$GITHUB_OUTPUT"
           elif echo "$PR_TITLE" | grep -qiE '^fix(\(|:)'; then
