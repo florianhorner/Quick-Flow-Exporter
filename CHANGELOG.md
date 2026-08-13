@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.4.1] - 2026-08-13
+
+### Changed
+
+- refresh green dependency updates (#57)
+
 ## [1.4.0] - 2026-06-20
 
 ### Added
