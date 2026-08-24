@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.4.4] - 2026-08-24
+
+### Changed
+
+- bump prettier from 3.8.2 to 3.8.4 (#48)
+
 ## [1.4.3] - 2026-08-21
 
 ### Changed
