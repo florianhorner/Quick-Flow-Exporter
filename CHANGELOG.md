@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.4.5] - 2026-09-09
+
+### Changed
+
+- bump vitest from 4.1.9 to 4.1.11 (#65)
+
 ## [1.4.4] - 2026-08-24
 
 ### Changed
