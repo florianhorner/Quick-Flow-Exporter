@@ -34,4 +34,4 @@ in `package.json` scripts and `README.md`; only the non-obvious caveats are capt
 ### Commits
 
 - Commit messages must follow Conventional Commits (`type(scope): subject`, ≤72 chars); a
-  `commit-msg` hook and CI validate them via `.config/commit-rules.json`. See `CONTRIBUTING.md`.
+  `commit-msg` hook and CI validate them. See `CONTRIBUTING.md`.
