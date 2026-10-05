@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.4.6] - 2026-10-05
+
+### Changed
+
+- run the commit check from this repository (#68)
+
 ## [1.4.5] - 2026-09-09
 
 ### Changed
