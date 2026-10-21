@@ -50,6 +50,15 @@ test('rejects working-note variants without rejecting product documentation or s
     '.context/notes.md',
     'proof/run.txt',
     '.gstack/review.json',
+    'docs/agent-session.md',
+    'AGENT_SESSION.json',
+    'docs/agent-sessions/report.md',
+    'docs/session-records.txt',
+    'session_transcripts/run.json',
+    'docs/execution-receipt.md',
+    'docs/execution-receipts/run.json',
+    'EXECUTION.LOG.txt',
+    'docs/ＡＧＥＮＴ＿ＳＥＳＳＩＯＮ.md',
   ]) {
     assert.equal(isPrivateWorkingFile(name), true, name);
   }
@@ -63,6 +72,10 @@ test('rejects working-note variants without rejecting product documentation or s
     'src/data/examples.ts',
     'package-lock.json',
     'docs/explanation.md',
+    'docs/SESSION_STORAGE.md',
+    'docs/session-management.md',
+    'docs/receipt-format.md',
+    'src/lib/session-records.ts',
   ]) {
     assert.equal(isPrivateWorkingFile(name), false, name);
   }
@@ -113,29 +126,46 @@ test('invalid usage and unreadable Git state fail closed', (t) => {
 test('vendored validator rejects generic operator attribution and accepts engineering reasons', (t) => {
   const repo = repository(t);
   const messageFile = path.join(repo, 'message.txt');
-  const validate = (message) => {
+  const validate = (message, committed = false) => {
     writeFileSync(messageFile, message);
     return spawnSync(
       'bash',
       [path.join(root, '.config/commit-lint/commit-msg'), messageFile],
       {
         encoding: 'utf8',
+        env: { ...process.env, COMMIT_LINT_COMMITTED: committed ? '1' : '' },
       }
     );
   };
   for (const body of [
     'ExampleUser asked me to fix it.',
+    'ExampleUser asked us to fix it.',
+    'The operator asked us to change this.',
     'As requested, fix it.',
     'Per my request.',
+    'Per request, validate empty input.',
   ]) {
-    const result = validate(`fix: handle empty input\n\n${body}\n`);
-    assert.equal(result.status, 1);
-    assert.match(result.stderr, /OPERATOR_ATTRIBUTION/);
+    for (const committed of [false, true]) {
+      const result = validate(`fix: handle empty input\n\n${body}\n`, committed);
+      assert.equal(result.status, 1, body);
+      assert.match(result.stderr, /OPERATOR_ATTRIBUTION/);
+    }
   }
-  assert.equal(
-    validate('fix: handle empty input\n\nAvoid accessing a missing first item.\n').status,
-    0
-  );
+  for (const body of [
+    'Avoid accessing a missing first item.',
+    'Avoid a crash when asked to export an empty flow.',
+    'Return an empty result if asked to export no steps.',
+    'Document frequently asked questions.',
+    'Return the previously asked question.',
+  ]) {
+    for (const committed of [false, true]) {
+      assert.equal(
+        validate(`fix: handle empty input\n\n${body}\n`, committed).status,
+        0,
+        body
+      );
+    }
+  }
   assert.equal(validate('not a conventional subject\n').status, 1);
 });
 
@@ -149,4 +179,10 @@ test('vendored manifest matches the actual files', () => {
       .digest('hex');
     assert.equal(actual, expected, filename);
   }
+  const rules = JSON.parse(readFileSync(path.join(root, '.config/commit-rules.json')));
+  const operatorRule = rules.banned_patterns.body_only.find(
+    (rule) => rule.rule_id === 'OPERATOR_ATTRIBUTION'
+  );
+  const hook = readFileSync(path.join(root, '.config/commit-lint/commit-msg'), 'utf8');
+  assert.equal(hook.match(/OPERATOR_ATTRIBUTION_RE='([^']+)'/)[1], operatorRule.pattern);
 });

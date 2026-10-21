@@ -19,7 +19,8 @@ const privateDirectories = new Set([
   'proof',
 ]);
 const sourceExtension = /\.(ts|tsx|js|jsx|mjs|cjs|css|scss|sh)$/i;
-const workingNote = /(^|[._ -])(todos?|plans?|retro(?:spective)?s?)([._ -]|$)/i;
+const workingNote =
+  /(^|[._ -])(todos?|plans?|retro(?:spective)?s?|agent[._ -]+sessions?|session[._ -]+(?:records?|logs?|transcripts?)|execution[._ -]+(?:receipts?|records?|logs?))([._ -]|$)/i;
 
 export function isPrivateWorkingFile(filename) {
   const parts = filename.normalize('NFKC').toLowerCase().split('/');

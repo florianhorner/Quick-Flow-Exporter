@@ -3,11 +3,12 @@
   "source_revision": "ed6a4e9c758c436d664a53aea0f858b6d2e7b07f",
   "rules_schema_version": "1.2.0",
   "files": {
-    ".config/commit-lint/commit-msg": "8ab1a06577fd1ad4cce0e989509c5d0c2393b18362d9ebd56fc3912dcce79d6e",
+    ".config/commit-lint/commit-msg": "58160f2331d52bedf2dffcf0ceced6a25cf36ef751660ca779cf3795527d8563",
     ".config/commit-lint/validate-pr.sh": "19f5430a053885ed756d413b5c4b08ae97c98c1416dcccf992f630a7639e8531",
     ".github/workflows/commit-lint.yml": "788358beac9bc3c3959083ed3d1806da33ec0c2846e8137f5ddfc7d0a3f823cc"
   },
   "local_modifications": [
-    "Use generic operator attribution in the validator and fix hint."
+    "Use generic operator attribution in the validator and fix hint.",
+    "Require a direct request to the author when matching named operator attribution."
   ]
 }

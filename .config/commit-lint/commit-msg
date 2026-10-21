@@ -122,8 +122,9 @@ esac
 if [ -n "$BODY" ]; then
 
     # Body-only banned pattern: OPERATOR_ATTRIBUTION
-    if printf '%s' "$BODY" | grep -E -i -q '[[:alpha:]][[:alnum:]_-]* asked|as requested|per request|per my request'; then
-        OFFENDING_LINE="$(printf '%s' "$BODY" | grep -E -i -m 1 '[[:alpha:]][[:alnum:]_-]* asked|as requested|per request|per my request')"
+    OPERATOR_ATTRIBUTION_RE='[[:alpha:]][[:alnum:]_-]* asked (me|us) to|as requested|per request|per my request'
+    if printf '%s' "$BODY" | grep -E -i -q "$OPERATOR_ATTRIBUTION_RE"; then
+        OFFENDING_LINE="$(printf '%s' "$BODY" | grep -E -i -m 1 "$OPERATOR_ATTRIBUTION_RE")"
         emit_block 'OPERATOR_ATTRIBUTION' 'Don'"'"'t attribute the commit to the operator/prompter; explain WHY the change is needed instead.' 'Replace operator attribution with the engineering reason: '"'"'fix X because Y'"'"'.' "$OFFENDING_LINE"
     fi
 

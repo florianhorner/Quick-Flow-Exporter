@@ -56,7 +56,7 @@
     "body_only": [
       {
         "rule_id": "OPERATOR_ATTRIBUTION",
-        "pattern": "[[:alpha:]][[:alnum:]_-]* asked|as requested|per request|per my request",
+        "pattern": "[[:alpha:]][[:alnum:]_-]* asked (me|us) to|as requested|per request|per my request",
         "flags": "i",
         "severity": "block",
         "message": "Don't attribute the commit to the operator/prompter; explain WHY the change is needed instead.",

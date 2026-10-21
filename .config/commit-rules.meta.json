@@ -4,6 +4,7 @@
   "fetched_at": "2026-07-05T01:37:29Z",
   "local_modifications": [
     "Use generic operator attribution and contributor-facing explanations.",
-    "Omit local tool telemetry and unsupported override instructions."
+    "Omit local tool telemetry and unsupported override instructions.",
+    "Require a direct request to the author when matching named operator attribution."
   ]
 }
