@@ -1,5 +1,19 @@
 # AGENTS.md
 
+## Repository content
+
+- Do not create or commit TODO files, working plans, retrospectives, agent session
+  records, or execution receipts. This includes renamed variants and files under
+  `docs/`. Keep public documentation focused on supported product behavior and
+  reproducible contributor instructions.
+- Keep local task lists in the gitignored `.context/` directory. Sanitize tasks
+  before proposing GitHub issues; publishing an issue requires approval.
+- Keep private audit evidence and backups outside the repository. Never copy
+  personal context, customer data, private strategy, or real private identifiers
+  into source comments, fixtures, or regression tests.
+- `npm run check:public-files` checks the working tree; the pre-commit hook checks
+  the exact index, including force-added ignored files. Both checks must pass.
+
 ## Cursor Cloud specific instructions
 
 Quick Flow Exporter is a single npm product (React 19 + Vite SPA) with a companion local

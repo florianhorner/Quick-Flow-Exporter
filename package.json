@@ -15,10 +15,11 @@
     "build": "tsc -b && vite build",
     "preview": "vite preview",
     "lint": "eslint .",
-    "test": "vitest run",
+    "test": "node --test scripts/check-public-files.test.mjs && vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "format:check": "prettier --check .",
+    "check:public-files": "node scripts/check-public-files.mjs",
     "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.server.json",
     "build:extension": "node scripts/build-extension.mjs",
     "prepare": "husky"

@@ -24,7 +24,7 @@
   <a href="https://github.com/florianhorner/Quick-Flow-Exporter/stargazers"><img alt="Stars" src="https://img.shields.io/github/stars/florianhorner/Quick-Flow-Exporter?style=flat&color=2563eb" /></a>
   <a href="https://github.com/florianhorner/Quick-Flow-Exporter/commits/main"><img alt="Last commit" src="https://img.shields.io/github/last-commit/florianhorner/Quick-Flow-Exporter?color=2563eb" /></a>
   <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-64748b" /></a>
-  <img alt="TypeScript 5.9" src="https://img.shields.io/badge/TypeScript-5.9-64748b" />
+  <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-64748b" />
   <img alt="React 19" src="https://img.shields.io/badge/React-19-64748b" />
 </p>
 
@@ -62,14 +62,14 @@ Open `http://localhost:5173`. Bring an API key from [Anthropic](https://console.
 | -------------------------------------- | ------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
 | **Parse & Extract greyed out**         | Proxy not running, or no API key for the selected provider          | Confirm `npm start` is still running; make sure the provider key matches the provider you picked in the UI           |
 | **`429 Too Many Requests`**            | Rate limit — 20 requests / 60s per IP by default                    | Wait for the `Retry-After` window, or raise `RATE_LIMIT` on the proxy (see [AI Proxy Setup](docs/AI_PROXY_SETUP.md)) |
-| **`401` / auth error**                 | Wrong or expired key, or key for a different provider               | Re-enter the key for the selected provider; keys are stored per browser, not shared across providers                 |
+| **`401` / auth error**                 | Wrong or expired key, or key for a different provider               | Replace the UI key when switching providers; the tab stores a single key value                                       |
 | **Paste rejected as too large**        | Flow exceeds the 500 KB request cap                                 | Trim the pasted flow, or export fewer steps from the editor                                                          |
 | **CORS error on a self-hosted deploy** | Proxy `CORS_ORIGIN` defaults to `http://localhost:5173`             | Set `CORS_ORIGIN` to your deployed frontend origin                                                                   |
 | **Extension doesn't capture**          | Not on a Quick Flows editor tab, or installed before the tab loaded | Open the Quick Flows editor, reload the tab, then click the extension                                                |
 
 ## Features
 
-- 🧠 **Five AI providers** — Anthropic, OpenAI, Gemini, Perplexity, AWS Bedrock. Switch per request; keys stay on your machine via local proxy.
+- 🧠 **Five AI providers** — Anthropic, OpenAI, Gemini, Perplexity, AWS Bedrock. Send parsing requests through a local proxy to your selected provider. See [API-key handling](docs/AI_PROXY_SETUP.md).
 - 🔀 **Dependency graph** — color-coded DAG with `@reference` edges, reasoning-group subgraphs, and a minimap.
 - 🔍 **Version diffs** — word-level inline changes between any two flow versions, no git required.
 - 📄 **Three export formats** — Markdown for docs, Mermaid for GitHub and Quip, JSON for round-tripping.
@@ -99,23 +99,6 @@ Copy your flow from the Quick Flows editor (Ctrl+A → Ctrl+C), or use the [Chro
 - **[Step Types](docs/STEP_TYPES.md)** — every Quick Flows step type and how it renders
 - **[Scripts](docs/SCRIPTS.md)** — npm scripts, tech stack, prerequisites
 
-## Roadmap
-
-**Shipped**
-
-- [x] Browser extension (Chrome/Edge)
-- [x] Light & dark mode
-
-**Next**
-
-- [ ] Flow analytics (prompt complexity, reference graph completeness, cost estimation)
-- [ ] Shareable links (encode flow in URL for Slack/email sharing)
-
-**Nice-to-have**
-
-- [ ] Keyboard shortcuts
-- [ ] `npx quick-flow-exporter` for zero-setup local usage
-
 ## Contributing
 
 Issues, PRs, and feedback all move this forward.
@@ -129,13 +112,3 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for the full guide.
 ## License
 
 [MIT](LICENSE)
-
-<!--
-## Star history
-
-Uncomment once the repo hits ~50 stars — shows growth curve.
-
-<a href="https://star-history.com/#florianhorner/Quick-Flow-Exporter&Date">
-  <img src="https://api.star-history.com/svg?repos=florianhorner/Quick-Flow-Exporter&type=Date" alt="Star history" />
-</a>
--->

@@ -2,7 +2,9 @@
 
 [&larr; Back to README](../README.md)
 
-The parser uses AI to extract structured data from raw pasted text. Requests go through a local proxy to keep API keys out of the browser. Five providers are supported out of the box.
+The parser uses AI to extract structured data from raw pasted text. Requests go through a local proxy, which forwards the text to the selected AI provider. Five providers are supported out of the box.
+
+Keys configured in the proxy's environment are not sent to the browser. Keys entered in the UI are stored in the current tab's `sessionStorage` and sent to the proxy with each parse request. The UI has one key field; replace its value when switching providers. The proxy sends the applicable credentials to the selected provider.
 
 The hosted Vercel demo is example-only and does not run this proxy. To parse your own flow, run the app locally.
 
