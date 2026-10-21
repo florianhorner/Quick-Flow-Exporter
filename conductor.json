@@ -34,15 +34,6 @@
     ]
   },
   "general": {
-    "description": "TypeScript/React (Vite) SPA plus a Node AI proxy and a Chrome/Edge extension that exports Quick Flows into readable, reproducible Markdown.",
-    "rules": ["Solo developer — no team process overhead needed"],
-    "outputFormatting": {
-      "structure": "Always use markdown: headers (##/###), bullets, bold for key terms, tables for comparisons",
-      "tldr": "Lead every response with a single TL;DR line before any detail",
-      "decisions": "For multi-option decisions: Option A / B / C with explicit tradeoffs in a table or bullet list — never buried in prose",
-      "density": "Max 3 sentences per paragraph. Break up walls of text. Prefer visual hierarchy over long paragraphs.",
-      "codeBlocks": "Always fence code with a language hint (```rust, ```toml, ```bash). Never inline code longer than one expression.",
-      "citations": "When referencing files, use relative paths as inline code (`src/foo.rs`). When referencing external docs, link them."
-    }
+    "description": "TypeScript/React (Vite) SPA plus a Node AI proxy and a Chrome/Edge extension that exports Quick Flows into readable, reproducible Markdown."
   }
 }

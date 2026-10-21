@@ -113,7 +113,7 @@
     },
     "policy": {
       "fork_strip": ["Skill-Run", "Reviewed-By", "Tool"],
-      "fork_strip_rationale": "Strip agent telemetry trailers when committing to a fork branch destined upstream. Different audience (upstream maintainer vs portfolio recruiter). Preserves Co-Authored-By and Tested.",
+      "fork_strip_rationale": "Omit tool-specific telemetry from upstream contributions while retaining contributor and test attribution.",
       "fork_detection_command": "gh repo view --json isFork --jq .isFork",
       "preserved_on_fork": ["Co-Authored-By", "Tested", "Refs", "Signed-off-by"]
     },

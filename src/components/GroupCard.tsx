@@ -62,7 +62,7 @@ export default function GroupCard({
       aria-label={label}
     >
       <div
-        className="flex items-center justify-between gap-2 px-3 py-2 bg-purple-50 dark:bg-purple-900/20 rounded-t-md cursor-pointer hover:bg-purple-100 dark:hover:bg-purple-900/40 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-inset"
+        className="flex items-center justify-between gap-2 px-3 py-2 bg-purple-50 dark:bg-purple-900/20 rounded-t-md cursor-pointer hover:bg-purple-100 dark:hover:bg-purple-900/40 transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-inset"
         role="button"
         tabIndex={0}
         aria-expanded={open}
@@ -140,7 +140,7 @@ export default function GroupCard({
           </label>
           <input
             id={`group-title-${group.id}`}
-            className="w-full border border-slate-200 dark:border-midnight-700 rounded px-2 py-1 text-sm bg-slate-100 dark:bg-midnight-900 text-slate-700 dark:text-slate-300 placeholder-slate-400 dark:placeholder-slate-600 focus:border-purple-500"
+            className="w-full border border-slate-200 dark:border-midnight-700 rounded-sm px-2 py-1 text-sm bg-slate-100 dark:bg-midnight-900 text-slate-700 dark:text-slate-300 placeholder-slate-400 dark:placeholder-slate-600 focus:border-purple-500"
             placeholder="Group Title"
             value={group.title}
             onChange={(e) => onChange({ ...group, title: e.target.value })}
@@ -150,7 +150,7 @@ export default function GroupCard({
           </label>
           <select
             id={`run-cond-${group.id}`}
-            className="border border-slate-200 dark:border-midnight-700 rounded px-2 py-1 text-xs bg-slate-100 dark:bg-midnight-900 text-slate-700 dark:text-slate-300"
+            className="border border-slate-200 dark:border-midnight-700 rounded-sm px-2 py-1 text-xs bg-slate-100 dark:bg-midnight-900 text-slate-700 dark:text-slate-300"
             value={group.runCondition}
             onChange={(e) =>
               onChange({
@@ -168,7 +168,7 @@ export default function GroupCard({
           </label>
           <textarea
             id={`reasoning-${group.id}`}
-            className="w-full border border-slate-200 dark:border-midnight-700 rounded px-2 py-1 text-sm bg-slate-50 dark:bg-[#0d1117] text-slate-700 dark:text-slate-300 font-mono placeholder-slate-400 dark:placeholder-slate-600 focus:border-purple-500"
+            className="w-full border border-slate-200 dark:border-midnight-700 rounded-sm px-2 py-1 text-sm bg-slate-50 dark:bg-[#0d1117] text-slate-700 dark:text-slate-300 font-mono placeholder-slate-400 dark:placeholder-slate-600 focus:border-purple-500"
             rows={2}
             placeholder="Reasoning Instructions"
             value={group.reasoningInstructions}
@@ -201,7 +201,7 @@ export default function GroupCard({
               </label>
               <select
                 id={`add-step-type-${group.id}`}
-                className="border border-slate-200 dark:border-midnight-700 rounded px-2 py-1 text-xs bg-slate-100 dark:bg-midnight-900 text-slate-700 dark:text-slate-300"
+                className="border border-slate-200 dark:border-midnight-700 rounded-sm px-2 py-1 text-xs bg-slate-100 dark:bg-midnight-900 text-slate-700 dark:text-slate-300"
                 value={addType}
                 onChange={(e) => setAddType(e.target.value as StepType)}
               >

@@ -24,7 +24,7 @@
   <a href="https://github.com/florianhorner/Quick-Flow-Exporter/stargazers"><img alt="Stars" src="https://img.shields.io/github/stars/florianhorner/Quick-Flow-Exporter?style=flat&color=2563eb" /></a>
   <a href="https://github.com/florianhorner/Quick-Flow-Exporter/commits/main"><img alt="Last commit" src="https://img.shields.io/github/last-commit/florianhorner/Quick-Flow-Exporter?color=2563eb" /></a>
   <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-64748b" /></a>
-  <img alt="TypeScript 5.9" src="https://img.shields.io/badge/TypeScript-5.9-64748b" />
+  <img alt="TypeScript 6.0.3" src="https://img.shields.io/badge/TypeScript-6.0.3-64748b" />
   <img alt="React 19" src="https://img.shields.io/badge/React-19-64748b" />
 </p>
 
@@ -40,7 +40,7 @@ Amazon Quick Flows is AWS's visual builder for AI workflows (formerly QuickSuite
 
 **Try it online** → [quick-flow-exporter.vercel.app](https://quick-flow-exporter.vercel.app/). The hosted demo uses bundled example data, so you can inspect the graph, exports, and diff workflow without sending a real flow to an AI provider.
 
-**Run locally** (Node.js 22+, npm 10+):
+**Run locally** (Node.js 22.22.2 recommended, npm 10+):
 
 ```bash
 git clone https://github.com/florianhorner/Quick-Flow-Exporter.git
@@ -55,6 +55,16 @@ Open `http://localhost:5173`. Bring an API key from [Anthropic](https://console.
 > If parsing fails locally, confirm `npm start` is still running and the proxy process has the right provider key.
 
 > Under [Conductor](https://conductor.build), the **Run** button starts both processes via `scripts/conductor-run.sh` on `$CONDUCTOR_PORT`-derived ports (UI = `CONDUCTOR_PORT`, proxy = `+1`), so parallel workspaces never collide.
+
+## Compatibility and upgrades
+
+Use Node.js 22.22.2 (see `.nvmrc`), or another version matching
+`^22.22.2 || ^24.15.0 || >=26.0.0`. Installation rejects unsupported runtimes;
+Node 24.14.0 and earlier Node 22 patches cannot run the updated test environment.
+
+The web app requires Firefox 128+, Chrome/Edge 111+, or Safari 16.4+ after the
+Tailwind CSS 4 upgrade. Export formats and the application workflow are unchanged.
+The optional capture extension remains available for Chrome and Edge.
 
 ## Troubleshooting
 
@@ -129,13 +139,3 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for the full guide.
 ## License
 
 [MIT](LICENSE)
-
-<!--
-## Star history
-
-Uncomment once the repo hits ~50 stars — shows growth curve.
-
-<a href="https://star-history.com/#florianhorner/Quick-Flow-Exporter&Date">
-  <img src="https://api.star-history.com/svg?repos=florianhorner/Quick-Flow-Exporter&type=Date" alt="Star history" />
-</a>
--->

@@ -6,7 +6,7 @@
 set -euo pipefail
 
 BOLD='\033[1m'
-GREEN='\033[0;34m'   # Using blue — Florian is red-green colorblind
+GREEN='\033[0;34m'   # Blue status indicator
 YELLOW='\033[0;33m'
 RED='\033[0;31m'
 RESET='\033[0m'
@@ -17,28 +17,24 @@ warn()  { echo "${YELLOW}[setup] ⚠${RESET} $*"; }
 die()   { echo "${RED}[setup] ✗${RESET} $*" >&2; exit 1; }
 
 # ─── 1. Node version ───────────────────────────────────────────────────────────
-info "Checking Node.js version (need >= 22)..."
+info "Checking Node.js version..."
 
-REQUIRED_NODE=22
-CURRENT_NODE=$(node --version 2>/dev/null | sed 's/v//' | cut -d. -f1 || echo 0)
-
-if (( CURRENT_NODE < REQUIRED_NODE )); then
-  warn "Node $CURRENT_NODE found — need $REQUIRED_NODE+. Trying nvm..."
+REQUIRED_NODE=$(cat .nvmrc)
+if ! command -v node &>/dev/null || ! node scripts/check-node-version.mjs; then
+  warn "A supported Node version is required. Trying nvm..."
   if [[ -f "$HOME/.nvm/nvm.sh" ]]; then
     source "$HOME/.nvm/nvm.sh"
-    nvm install $REQUIRED_NODE --reinstall-packages-from=default || die "nvm install failed"
-    nvm use $REQUIRED_NODE
-    ok "Switched to Node $(node --version) via nvm"
+    nvm install "$REQUIRED_NODE" || die "nvm install failed"
+    nvm use "$REQUIRED_NODE"
   elif command -v brew &>/dev/null; then
-    brew install node@$REQUIRED_NODE || die "brew install node failed"
-    export PATH="$(brew --prefix node@$REQUIRED_NODE)/bin:$PATH"
-    ok "Installed Node $(node --version) via Homebrew"
+    brew install node@22 || die "brew install node failed"
+    export PATH="$(brew --prefix node@22)/bin:$PATH"
   else
-    die "Node $REQUIRED_NODE+ required. Install via https://nodejs.org or brew install node@22"
+    die "Install Node $REQUIRED_NODE or another version supported by package.json"
   fi
-else
-  ok "Node $(node --version)"
 fi
+node scripts/check-node-version.mjs || die "Unsupported Node version after setup"
+ok "Node $(node --version)"
 
 # ─── 2. npm version ────────────────────────────────────────────────────────────
 REQUIRED_NPM=10
@@ -77,26 +73,6 @@ ok "Husky hooks ready"
 # ─── 6. Quick health check ─────────────────────────────────────────────────────
 info "Running quick type-check..."
 npm run typecheck 2>&1 | tail -10 && ok "TypeScript clean" || warn "Type errors detected — run: npm run typecheck"
-
-# ─── 7. Wishlist check ─────────────────────────────────────────────────────────
-echo ""
-echo "${BOLD}── Tool wishlist status ─────────────────────────────────────${RESET}"
-
-check_tool() {
-  local name=$1; local cmd=$2
-  if command -v "$cmd" &>/dev/null; then
-    ok "$name ($(command -v "$cmd"))"
-  else
-    warn "$name not found — install with: $3"
-  fi
-}
-
-check_tool "gh (GitHub CLI)"   gh       "brew install gh"
-check_tool "jq"                jq       "brew install jq"
-check_tool "ripgrep (rg)"      rg       "brew install ripgrep"
-check_tool "fd"                fd       "brew install fd"
-check_tool "bat"               bat      "brew install bat"
-check_tool "delta (git-delta)" delta    "brew install git-delta"
 
 echo ""
 echo "${BOLD}── Workspace ready ──────────────────────────────────────────${RESET}"

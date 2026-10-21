@@ -21,7 +21,7 @@ export default function GroupsPhase({
 
   return (
     <div className="space-y-4">
-      <div className="bg-white dark:bg-midnight-800 border border-slate-200 dark:border-midnight-700 rounded-xl shadow-sm p-6 space-y-4">
+      <div className="bg-white dark:bg-midnight-800 border border-slate-200 dark:border-midnight-700 rounded-xl shadow-xs p-6 space-y-4">
         <div className="text-center space-y-2">
           <div className="text-4xl">{'\uD83D\uDD04'}</div>
           <h2 className="text-xl font-bold font-mono text-slate-900 dark:text-white">
@@ -51,14 +51,14 @@ export default function GroupsPhase({
         <div className="flex items-center justify-between pt-2">
           <button
             onClick={onBack}
-            className="text-sm text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:rounded"
+            className="text-sm text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:rounded-sm"
           >
             &larr; Back
           </button>
           <div className="flex gap-2">
             <button
               onClick={onContinue}
-              className="px-4 py-2 text-sm rounded bg-slate-200 dark:bg-midnight-700 hover:bg-slate-300 dark:hover:bg-midnight-600 text-slate-500 dark:text-slate-400"
+              className="px-4 py-2 text-sm rounded-sm bg-slate-200 dark:bg-midnight-700 hover:bg-slate-300 dark:hover:bg-midnight-600 text-slate-500 dark:text-slate-400"
             >
               Skip &rarr;
             </button>

@@ -27,7 +27,11 @@
 | `npm run format:check`    | Check formatting with Prettier                                  |
 | `npm run typecheck`       | Type-check client and server (`tsc --noEmit` + server tsconfig) |
 
+The CI checks also run `npm run check:node`, `npm run check:version`, and
+`npm run check:css` for runtime compatibility, package version consistency, and
+compiled styling. `npm test` includes the tooling regression tests.
+
 ## Prerequisites
 
-- Node.js 22 or newer
+- Node.js 22.22.2 recommended (`.nvmrc`); supported range: `^22.22.2 || ^24.15.0 || >=26.0.0`
 - npm 10 or newer

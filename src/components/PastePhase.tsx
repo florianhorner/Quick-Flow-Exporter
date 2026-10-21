@@ -76,7 +76,7 @@ export default function PastePhase({
 
   return (
     <div className="space-y-3">
-      <div className="bg-white dark:bg-midnight-800 border border-slate-200 dark:border-midnight-700 rounded-lg shadow-sm p-5 space-y-4">
+      <div className="bg-white dark:bg-midnight-800 border border-slate-200 dark:border-midnight-700 rounded-lg shadow-xs p-5 space-y-4">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
           <div className="space-y-1">
             <h2 className="text-base font-bold font-mono text-slate-900 dark:text-white">
@@ -84,13 +84,13 @@ export default function PastePhase({
             </h2>
             <p className="text-slate-500 dark:text-slate-400 text-sm">
               Copy all text from the Quick Flows editor with{' '}
-              <kbd className="px-1.5 py-0.5 bg-slate-100 dark:bg-midnight-900 border border-slate-200 dark:border-midnight-700 rounded text-xs font-mono text-blue-600 dark:text-blue-400">
+              <kbd className="px-1.5 py-0.5 bg-slate-100 dark:bg-midnight-900 border border-slate-200 dark:border-midnight-700 rounded-sm text-xs font-mono text-blue-600 dark:text-blue-400">
                 Ctrl+A
               </kbd>{' '}
-              <kbd className="px-1.5 py-0.5 bg-slate-100 dark:bg-midnight-900 border border-slate-200 dark:border-midnight-700 rounded text-xs font-mono text-blue-600 dark:text-blue-400">
+              <kbd className="px-1.5 py-0.5 bg-slate-100 dark:bg-midnight-900 border border-slate-200 dark:border-midnight-700 rounded-sm text-xs font-mono text-blue-600 dark:text-blue-400">
                 Ctrl+C
               </kbd>{' '}
-              <kbd className="px-1.5 py-0.5 bg-slate-100 dark:bg-midnight-900 border border-slate-200 dark:border-midnight-700 rounded text-xs font-mono text-blue-600 dark:text-blue-400">
+              <kbd className="px-1.5 py-0.5 bg-slate-100 dark:bg-midnight-900 border border-slate-200 dark:border-midnight-700 rounded-sm text-xs font-mono text-blue-600 dark:text-blue-400">
                 Ctrl+V
               </kbd>
               .
@@ -126,7 +126,7 @@ export default function PastePhase({
             </p>
             <button
               onClick={onLoadExample}
-              className="mt-3 inline-flex items-center gap-2 px-3 py-2 rounded-md text-sm font-semibold bg-blue-600 text-white hover:bg-blue-500 shadow-sm shadow-blue-500/20"
+              className="mt-3 inline-flex items-center gap-2 px-3 py-2 rounded-md text-sm font-semibold bg-blue-600 text-white hover:bg-blue-500 shadow-xs shadow-blue-500/20"
             >
               <ClipboardPaste aria-hidden="true" className="h-4 w-4" />
               Load example
@@ -173,7 +173,7 @@ export default function PastePhase({
                 id="provider-select"
                 value={selectedProvider}
                 onChange={(e) => handleProviderChange(e.target.value as Provider)}
-                className="w-full border border-slate-200 dark:border-midnight-700 rounded-lg px-3 py-2 text-sm bg-slate-50 dark:bg-[#0d1117] text-slate-700 dark:text-slate-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500/30"
+                className="mt-2 w-full border border-slate-200 dark:border-midnight-700 rounded-lg px-3 py-2 text-sm bg-slate-50 dark:bg-[#0d1117] text-slate-700 dark:text-slate-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500/30"
               >
                 {PROVIDERS.map((p) => (
                   <option key={p.value} value={p.value}>
@@ -267,7 +267,7 @@ export default function PastePhase({
             </span>
             {!demoMode && (
               <>
-                <span className="rounded border border-slate-200 dark:border-midnight-700 px-2 py-1 text-xs text-slate-500 dark:text-slate-400">
+                <span className="rounded-sm border border-slate-200 dark:border-midnight-700 px-2 py-1 text-xs text-slate-500 dark:text-slate-400">
                   {currentProviderInfo.label}
                 </span>
               </>
@@ -288,7 +288,7 @@ export default function PastePhase({
               disabled={!canParse}
               className={`inline-flex w-full items-center justify-center gap-2 px-6 py-2.5 rounded-md text-sm font-semibold transition-all sm:w-auto ${
                 canParse
-                  ? 'bg-blue-600 text-white hover:bg-blue-500 shadow-sm shadow-blue-500/25'
+                  ? 'bg-blue-600 text-white hover:bg-blue-500 shadow-xs shadow-blue-500/25'
                   : 'bg-slate-200 dark:bg-midnight-700 text-slate-400 dark:text-slate-500'
               }`}
             >
