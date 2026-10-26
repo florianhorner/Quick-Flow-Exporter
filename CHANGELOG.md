@@ -14,6 +14,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- Upgrade jest-dom to 7.0.1 and jsdom to 30.0.1. Declare the DOM testing peer and the supported Node runtime range.
 - Update PostCSS, React types, setup-node and the PR proof workflow. Align the React manifest range with the already installed React/React DOM 19.2.8 pair.
 
 ## [1.4.6] - 2026-10-05
