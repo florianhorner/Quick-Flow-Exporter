@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased]
+
+### Changed
+
+- Migrate to Tailwind CSS 4.3.3 and its PostCSS plugin while preserving the existing colors, spacing, typography and class-based dark theme. The app now requires Chrome/Edge 111+, Safari 16.4+, or Firefox 128+.
+
 ## [1.4.6] - 2026-10-05
 
 ### Changed

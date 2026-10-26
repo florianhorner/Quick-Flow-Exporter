@@ -94,7 +94,7 @@ export default function DiffPhase({
   if (state === 'input') {
     return (
       <div className="space-y-3">
-        <div className="bg-white dark:bg-midnight-800 border border-slate-200 dark:border-midnight-700 rounded-lg shadow-sm p-5 space-y-4">
+        <div className="bg-white dark:bg-midnight-800 border border-slate-200 dark:border-midnight-700 rounded-lg shadow-xs p-5 space-y-4">
           <div className="space-y-1">
             <h2 className="flex items-center gap-2 text-base font-bold font-mono text-slate-900 dark:text-white">
               <GitCompare
@@ -121,7 +121,7 @@ export default function DiffPhase({
               {exampleDiff && (
                 <button
                   onClick={loadExampleDiff}
-                  className="mt-3 inline-flex items-center gap-2 px-3 py-2 rounded-md text-sm font-semibold bg-blue-600 text-white hover:bg-blue-500 shadow-sm shadow-blue-500/20"
+                  className="mt-3 inline-flex items-center gap-2 px-3 py-2 rounded-md text-sm font-semibold bg-blue-600 text-white hover:bg-blue-500 shadow-xs shadow-blue-500/20"
                 >
                   <GitCompare aria-hidden="true" className="h-4 w-4" />
                   Load example diff
@@ -137,7 +137,7 @@ export default function DiffPhase({
                   &laquo; Before
                 </span>
                 {currentFlow && (
-                  <span className="text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 px-2 py-0.5 rounded border border-blue-200 dark:border-blue-800">
+                  <span className="text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 px-2 py-0.5 rounded-sm border border-blue-200 dark:border-blue-800">
                     ✓ Using current flow: {currentFlow.title}
                   </span>
                 )}
@@ -157,7 +157,7 @@ export default function DiffPhase({
                 After &raquo;
               </span>
               <textarea
-                className="w-full border border-blue-200 dark:border-blue-900/50 rounded-lg px-4 py-3 text-sm font-mono bg-slate-50 dark:bg-[#0d1117] text-slate-700 dark:text-slate-300 placeholder-slate-400 dark:placeholder-slate-600 focus:border-blue-500 focus:ring-1 focus:ring-blue-500/30 transition-colors"
+                className="mt-2 w-full border border-blue-200 dark:border-blue-900/50 rounded-lg px-4 py-3 text-sm font-mono bg-slate-50 dark:bg-[#0d1117] text-slate-700 dark:text-slate-300 placeholder-slate-400 dark:placeholder-slate-600 focus:border-blue-500 focus:ring-1 focus:ring-blue-500/30 transition-colors"
                 rows={10}
                 placeholder="Paste the AFTER version of the flow here..."
                 value={rightRaw}
@@ -170,7 +170,7 @@ export default function DiffPhase({
           <div className="flex items-center justify-between">
             <button
               onClick={onBack}
-              className="inline-flex items-center gap-1.5 text-sm text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:rounded"
+              className="inline-flex items-center gap-1.5 text-sm text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-100 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:rounded-sm"
             >
               <ArrowLeft aria-hidden="true" className="h-4 w-4" />
               Back
@@ -180,7 +180,7 @@ export default function DiffPhase({
               disabled={!canCompare}
               className={`inline-flex items-center gap-2 px-6 py-2.5 rounded-md text-sm font-semibold transition-all ${
                 canCompare
-                  ? 'bg-blue-600 text-white hover:bg-blue-500 shadow-sm shadow-blue-500/25'
+                  ? 'bg-blue-600 text-white hover:bg-blue-500 shadow-xs shadow-blue-500/25'
                   : 'bg-slate-200 dark:bg-midnight-700 text-slate-400 dark:text-slate-500'
               }`}
             >
@@ -212,7 +212,7 @@ export default function DiffPhase({
   return (
     <div className="space-y-3">
       {/* Summary bar */}
-      <div className="bg-white dark:bg-midnight-800 border border-slate-200 dark:border-midnight-700 rounded-lg shadow-sm p-4 flex flex-wrap gap-3 items-center">
+      <div className="bg-white dark:bg-midnight-800 border border-slate-200 dark:border-midnight-700 rounded-lg shadow-xs p-4 flex flex-wrap gap-3 items-center">
         <div className="flex items-center gap-2">
           <span className="inline-flex items-center gap-1.5 text-sm font-bold text-blue-600 dark:text-blue-400 font-mono">
             <GitCompare aria-hidden="true" className="h-4 w-4" />
@@ -262,7 +262,7 @@ export default function DiffPhase({
         </button>
         <button
           onClick={onBack}
-          className="inline-flex items-center gap-1.5 text-sm text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:rounded"
+          className="inline-flex items-center gap-1.5 text-sm text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-100 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:rounded-sm"
         >
           <ArrowLeft aria-hidden="true" className="h-4 w-4" />
           Back
@@ -270,7 +270,7 @@ export default function DiffPhase({
       </div>
 
       {noChanges ? (
-        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg shadow-sm p-8 text-center">
+        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg shadow-xs p-8 text-center">
           <div className="mb-2 inline-flex items-center gap-2 text-sm font-bold text-blue-600 dark:text-blue-400 font-mono">
             <CheckCircle2 aria-hidden="true" className="h-4 w-4" />
             NO CHANGES
@@ -295,7 +295,7 @@ export default function DiffPhase({
             return (
               <div
                 key={change.path}
-                className={`bg-white dark:bg-midnight-800 rounded-md shadow-sm border-l-4 border border-slate-200 dark:border-midnight-700 ${
+                className={`bg-white dark:bg-midnight-800 rounded-md shadow-xs border-l-4 border border-slate-200 dark:border-midnight-700 ${
                   change.type === 'added'
                     ? 'border-l-blue-500'
                     : change.type === 'removed'
@@ -308,7 +308,7 @@ export default function DiffPhase({
                   onClick={() => toggleExpand(change.path)}
                 >
                   <span
-                    className={`inline-flex h-7 w-7 items-center justify-center rounded text-xs font-bold uppercase ${
+                    className={`inline-flex h-7 w-7 items-center justify-center rounded-sm text-xs font-bold uppercase ${
                       change.type === 'added'
                         ? 'bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400'
                         : change.type === 'removed'
@@ -344,11 +344,11 @@ export default function DiffPhase({
                 {/* Inline preview for short values */}
                 {!isPromptChange && !hasLongContent && change.type === 'modified' && (
                   <div className="px-4 pb-3 flex items-center gap-2 text-sm">
-                    <span className="bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 px-2 py-0.5 rounded line-through">
+                    <span className="bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 px-2 py-0.5 rounded-sm line-through">
                       {change.leftValue}
                     </span>
                     <span className="text-slate-400 dark:text-slate-500">&rarr;</span>
-                    <span className="bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 px-2 py-0.5 rounded">
+                    <span className="bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 px-2 py-0.5 rounded-sm">
                       {change.rightValue}
                     </span>
                   </div>

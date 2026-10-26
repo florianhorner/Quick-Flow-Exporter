@@ -56,6 +56,11 @@ Open `http://localhost:5173`. Bring an API key from [Anthropic](https://console.
 
 > Under [Conductor](https://conductor.build), the **Run** button starts both processes via `scripts/conductor-run.sh` on `$CONDUCTOR_PORT`-derived ports (UI = `CONDUCTOR_PORT`, proxy = `+1`), so parallel workspaces never collide.
 
+## Browser compatibility
+
+The web app requires Chrome/Edge 111+, Safari 16.4+, or Firefox 128+ for
+Tailwind CSS 4. The optional capture extension targets Chrome/Edge 120+.
+
 ## Troubleshooting
 
 | Symptom                                | Cause                                                               | Fix                                                                                                                  |

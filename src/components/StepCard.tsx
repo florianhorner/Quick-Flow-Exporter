@@ -36,7 +36,7 @@ export default function StepCard({
       aria-label={label}
     >
       <div
-        className="flex items-center justify-between gap-2 px-3 py-2 bg-slate-50 dark:bg-midnight-900/50 rounded-t-md cursor-pointer hover:bg-slate-100 dark:hover:bg-midnight-800 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-inset"
+        className="flex items-center justify-between gap-2 px-3 py-2 bg-slate-50 dark:bg-midnight-900/50 rounded-t-md cursor-pointer hover:bg-slate-100 dark:hover:bg-midnight-800 transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-inset"
         role="button"
         tabIndex={0}
         aria-expanded={open}
@@ -110,7 +110,7 @@ export default function StepCard({
           </label>
           <select
             id={`step-type-${step.id}`}
-            className="border border-slate-200 dark:border-midnight-700 rounded px-2 py-1 text-xs bg-slate-100 dark:bg-midnight-900 text-slate-700 dark:text-slate-300"
+            className="border border-slate-200 dark:border-midnight-700 rounded-sm px-2 py-1 text-xs bg-slate-100 dark:bg-midnight-900 text-slate-700 dark:text-slate-300"
             value={step.type}
             onChange={(e) => onChange({ ...step, type: e.target.value as StepType })}
           >
