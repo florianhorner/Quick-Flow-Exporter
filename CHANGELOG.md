@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased]
+
+### Changed
+
+- Update PostCSS, React types, setup-node and the PR proof workflow. Align the React manifest range with the already installed React/React DOM 19.2.8 pair.
+
 ## [1.4.6] - 2026-10-05
 
 ### Changed
