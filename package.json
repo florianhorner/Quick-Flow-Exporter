@@ -1,6 +1,6 @@
 {
   "name": "quick-flow-exporter",
-  "version": "1.4.6",
+  "version": "1.4.7",
   "private": true,
   "description": "Export Quick Flows into readable, reproducible Markdown",
   "type": "module",
