@@ -40,7 +40,7 @@ Amazon Quick Flows is AWS's visual builder for AI workflows (formerly QuickSuite
 
 **Try it online** → [quick-flow-exporter.vercel.app](https://quick-flow-exporter.vercel.app/). The hosted demo uses bundled example data, so you can inspect the graph, exports, and diff workflow without sending a real flow to an AI provider.
 
-**Run locally** (Node.js 22+, npm 10+):
+**Run locally** (Node.js from the [supported range](#node-compatibility), npm 10+):
 
 ```bash
 git clone https://github.com/florianhorner/Quick-Flow-Exporter.git
@@ -55,6 +55,11 @@ Open `http://localhost:5173`. Bring an API key from [Anthropic](https://console.
 > If parsing fails locally, confirm `npm start` is still running and the proxy process has the right provider key.
 
 > Under [Conductor](https://conductor.build), the **Run** button starts both processes via `scripts/conductor-run.sh` on `$CONDUCTOR_PORT`-derived ports (UI = `CONDUCTOR_PORT`, proxy = `+1`), so parallel workspaces never collide.
+
+## Node compatibility
+
+The DOM test environment requires Node `^22.22.2 || ^24.15.0 || >=26.0.0`.
+Use `nvm use` to select the Node 22 version in `.nvmrc` before installing.
 
 ## Troubleshooting
 
