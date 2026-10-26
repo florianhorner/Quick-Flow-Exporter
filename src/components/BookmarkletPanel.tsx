@@ -97,7 +97,7 @@ export default function BookmarkletPanel() {
           ref={linkRef}
           href="#"
           onClick={(e) => e.preventDefault()}
-          className="inline-flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-semibold shadow-sm shadow-blue-500/20 hover:bg-blue-500 cursor-grab active:cursor-grabbing select-none"
+          className="inline-flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-semibold shadow-xs shadow-blue-500/20 hover:bg-blue-500 cursor-grab active:cursor-grabbing select-none"
           title="Drag this to your bookmarks bar"
         >
           <Zap aria-hidden="true" className="h-4 w-4" />

@@ -67,7 +67,7 @@ function StepNode({ data }: { data: { step: Step; index: number; isDark: boolean
       <Handle
         type="target"
         position={Position.Top}
-        className="!bg-slate-400 dark:!bg-slate-500 !w-3 !h-3"
+        className="bg-slate-400! dark:bg-slate-500! w-3! h-3!"
       />
       <div className="flex items-center gap-2 mb-1">
         <span className="text-lg">{meta?.icon ?? '?'}</span>
@@ -86,7 +86,7 @@ function StepNode({ data }: { data: { step: Step; index: number; isDark: boolean
       </div>
       {step.prompt && (
         <div
-          className="text-xs line-clamp-3 font-mono rounded p-1.5 mt-1"
+          className="text-xs line-clamp-3 font-mono rounded-sm p-1.5 mt-1"
           style={{
             background: isDark ? 'rgba(0,0,0,0.3)' : 'rgba(0,0,0,0.06)',
             color: isDark ? '#94a3b8' : '#64748b',
@@ -101,7 +101,7 @@ function StepNode({ data }: { data: { step: Step; index: number; isDark: boolean
           {step.references.split(',').map((ref, i) => (
             <span
               key={i}
-              className="text-[10px] rounded px-1.5 py-0.5"
+              className="text-[10px] rounded-sm px-1.5 py-0.5"
               style={{
                 background: isDark ? 'rgba(0,0,0,0.3)' : 'rgba(0,0,0,0.06)',
                 color: isDark ? '#94a3b8' : '#64748b',
@@ -116,7 +116,7 @@ function StepNode({ data }: { data: { step: Step; index: number; isDark: boolean
       <Handle
         type="source"
         position={Position.Bottom}
-        className="!bg-slate-400 dark:!bg-slate-500 !w-3 !h-3"
+        className="bg-slate-400! dark:bg-slate-500! w-3! h-3!"
       />
     </div>
   );
@@ -138,7 +138,7 @@ function GroupNode({
       <Handle
         type="target"
         position={Position.Top}
-        className="!bg-purple-400 !w-3 !h-3"
+        className="bg-purple-400! w-3! h-3!"
       />
       <div className="flex items-center gap-2 mb-1">
         <span className="text-lg">{'\uD83D\uDD04'}</span>
@@ -157,7 +157,7 @@ function GroupNode({
       </div>
       <div className="flex items-center gap-2 mt-1">
         <span
-          className="text-[10px] rounded px-2 py-0.5 font-medium"
+          className="text-[10px] rounded-sm px-2 py-0.5 font-medium"
           style={{
             background: isDark ? 'rgba(88,28,135,0.5)' : 'rgba(139,92,246,0.15)',
             color: isDark ? '#d8b4fe' : '#7c3aed',
@@ -172,7 +172,7 @@ function GroupNode({
       </div>
       {group.reasoningInstructions && (
         <div
-          className="text-xs font-mono rounded p-1.5 mt-1.5 line-clamp-2"
+          className="text-xs font-mono rounded-sm p-1.5 mt-1.5 line-clamp-2"
           style={{
             background: isDark ? 'rgba(0,0,0,0.3)' : 'rgba(0,0,0,0.06)',
             color: isDark ? '#94a3b8' : '#64748b',
@@ -185,7 +185,7 @@ function GroupNode({
       <Handle
         type="source"
         position={Position.Bottom}
-        className="!bg-purple-400 !w-3 !h-3"
+        className="bg-purple-400! w-3! h-3!"
       />
     </div>
   );
@@ -391,7 +391,7 @@ function DetailPanel({ step, onClose }: { step: Step | null; onClose: () => void
               {step.references.split(',').map((r, i) => (
                 <span
                   key={i}
-                  className="text-xs bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300 rounded px-2 py-0.5 border border-amber-200 dark:border-amber-800"
+                  className="text-xs bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300 rounded-sm px-2 py-0.5 border border-amber-200 dark:border-amber-800"
                 >
                   @{r.trim()}
                 </span>
@@ -422,7 +422,7 @@ function DetailPanel({ step, onClose }: { step: Step | null; onClose: () => void
         {step.config && (
           <div>
             <div className="text-xs text-slate-400 dark:text-slate-500 mb-1">Config</div>
-            <pre className="text-xs font-mono bg-slate-50 dark:bg-[#0d1117] rounded p-2 border border-slate-200 dark:border-midnight-700 text-slate-700 dark:text-slate-300">
+            <pre className="text-xs font-mono bg-slate-50 dark:bg-[#0d1117] rounded-sm p-2 border border-slate-200 dark:border-midnight-700 text-slate-700 dark:text-slate-300">
               {step.config}
             </pre>
           </div>
@@ -447,15 +447,15 @@ function Legend() {
     color: (palette[t.value] ?? defaultColor).border,
   }));
   return (
-    <div className="bg-white/90 dark:bg-midnight-800/90 backdrop-blur rounded-lg shadow-lg p-3 text-xs space-y-1.5 max-h-80 overflow-y-auto border border-slate-200 dark:border-midnight-700">
-      <div className="font-bold text-slate-700 dark:text-slate-300 mb-1">Legend</div>
+    <div className="bg-white/90 dark:bg-midnight-800/90 backdrop-blur-sm rounded-lg shadow-lg p-3 text-xs space-y-1.5 max-h-80 overflow-y-auto border border-slate-200 dark:border-midnight-700">
+      <div className="font-bold text-slate-700 dark:text-slate-300">Legend</div>
       {items.map((it) => (
         <div
           key={it.label}
           className="flex items-center gap-2 text-slate-500 dark:text-slate-400"
         >
           <div
-            className="w-3 h-3 rounded-sm border-2"
+            className="w-3 h-3 rounded-xs border-2"
             style={{ borderColor: it.color, background: it.color + '33' }}
           />
           <span>
@@ -465,7 +465,7 @@ function Legend() {
       ))}
       <div className="flex items-center gap-2 mt-1 pt-1 border-t border-slate-200 dark:border-midnight-700 text-slate-500 dark:text-slate-400">
         <div
-          className="w-3 h-3 rounded-sm border-2 border-dashed"
+          className="w-3 h-3 rounded-xs border-2 border-dashed"
           style={{ borderColor: groupStyle.border, background: groupStyle.bg }}
         />
         <span>{'\uD83D\uDD04'} Reasoning Group</span>
@@ -509,7 +509,7 @@ export default function FlowGraph({ flow, onBack }: FlowGraphProps) {
   if (flow.items.length === 0) {
     return (
       <div className="space-y-4">
-        <div className="bg-white dark:bg-midnight-800 border border-slate-200 dark:border-midnight-700 rounded-xl shadow-sm p-4 flex items-center gap-3">
+        <div className="bg-white dark:bg-midnight-800 border border-slate-200 dark:border-midnight-700 rounded-xl shadow-xs p-4 flex items-center gap-3">
           <span className="text-2xl">{'\uD83D\uDD00'}</span>
           <span className="font-semibold text-sm text-slate-900 dark:text-white">
             Flow Graph
@@ -522,7 +522,7 @@ export default function FlowGraph({ flow, onBack }: FlowGraphProps) {
             &larr; Back
           </button>
         </div>
-        <div className="bg-white dark:bg-midnight-800 border border-slate-200 dark:border-midnight-700 rounded-xl shadow-sm p-12 text-center">
+        <div className="bg-white dark:bg-midnight-800 border border-slate-200 dark:border-midnight-700 rounded-xl shadow-xs p-12 text-center">
           <div className="text-4xl mb-3">{'\uD83D\uDCCB'}</div>
           <div className="font-semibold text-slate-700 dark:text-slate-300">
             No flow loaded
@@ -537,7 +537,7 @@ export default function FlowGraph({ flow, onBack }: FlowGraphProps) {
 
   return (
     <div className="space-y-4">
-      <div className="bg-white dark:bg-midnight-800 border border-slate-200 dark:border-midnight-700 rounded-xl shadow-sm p-4 flex flex-wrap gap-3 items-center">
+      <div className="bg-white dark:bg-midnight-800 border border-slate-200 dark:border-midnight-700 rounded-xl shadow-xs p-4 flex flex-wrap gap-3 items-center">
         <div className="flex items-center gap-2">
           <span className="text-2xl">{'\uD83D\uDD00'}</span>
           <div>
@@ -560,7 +560,7 @@ export default function FlowGraph({ flow, onBack }: FlowGraphProps) {
       </div>
 
       <div
-        className="bg-white dark:bg-midnight-800 border border-slate-200 dark:border-midnight-700 rounded-xl shadow-sm overflow-hidden relative"
+        className="bg-white dark:bg-midnight-800 border border-slate-200 dark:border-midnight-700 rounded-xl shadow-xs overflow-hidden relative"
         style={{ height: '70vh' }}
       >
         <ReactFlow

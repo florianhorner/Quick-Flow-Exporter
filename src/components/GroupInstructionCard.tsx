@@ -63,11 +63,11 @@ export default function GroupInstructionCard({
             <span className="text-xs font-medium text-slate-400 dark:text-slate-500">
               Run Condition:
             </span>
-            <span className="text-xs bg-purple-100 dark:bg-purple-900/50 text-purple-700 dark:text-purple-300 px-2 py-0.5 rounded border border-purple-200 dark:border-purple-800">
+            <span className="text-xs bg-purple-100 dark:bg-purple-900/50 text-purple-700 dark:text-purple-300 px-2 py-0.5 rounded-sm border border-purple-200 dark:border-purple-800">
               {item.runCondition}
             </span>
           </div>
-          <div className="bg-slate-50 dark:bg-[#0d1117] border border-slate-200 dark:border-midnight-700 rounded p-3 text-sm font-mono whitespace-pre-wrap text-slate-700 dark:text-slate-300">
+          <div className="bg-slate-50 dark:bg-[#0d1117] border border-slate-200 dark:border-midnight-700 rounded-sm p-3 text-sm font-mono whitespace-pre-wrap text-slate-700 dark:text-slate-300">
             {item.reasoningInstructions}
           </div>
           <button
@@ -83,12 +83,12 @@ export default function GroupInstructionCard({
       ) : (
         <div className="space-y-2">
           {demoMode && (
-            <div className="rounded border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20 p-3 text-xs text-blue-700 dark:text-blue-300">
+            <div className="rounded-sm border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20 p-3 text-xs text-blue-700 dark:text-blue-300">
               {DEMO_MODE_MESSAGE}
             </div>
           )}
           <textarea
-            className="w-full border border-slate-200 dark:border-midnight-700 rounded px-3 py-2 text-sm bg-slate-50 dark:bg-[#0d1117] text-slate-700 dark:text-slate-300 font-mono placeholder-slate-400 dark:placeholder-slate-600 focus:border-purple-500"
+            className="w-full border border-slate-200 dark:border-midnight-700 rounded-sm px-3 py-2 text-sm bg-slate-50 dark:bg-[#0d1117] text-slate-700 dark:text-slate-300 font-mono placeholder-slate-400 dark:placeholder-slate-600 focus:border-purple-500"
             rows={4}
             placeholder={
               'Open this group in Quick Flows \u2192 Ctrl+A \u2192 Ctrl+C \u2192 Ctrl+V here\n\nAI will extract the reasoning instructions.'
@@ -99,7 +99,7 @@ export default function GroupInstructionCard({
           <button
             onClick={handleParse}
             disabled={!canExtract}
-            className={`px-4 py-2 rounded text-sm font-medium ${
+            className={`px-4 py-2 rounded-sm text-sm font-medium ${
               canExtract
                 ? 'bg-purple-700 text-white hover:bg-purple-600'
                 : 'bg-slate-200 dark:bg-midnight-700 text-slate-400 dark:text-slate-500'
