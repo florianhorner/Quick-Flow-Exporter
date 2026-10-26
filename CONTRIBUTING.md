@@ -6,7 +6,7 @@ Thanks for your interest in contributing to Quick Flow Exporter.
 
 Prerequisites:
 
-- Node.js 22 or newer
+- Node.js `^22.22.2 || ^24.15.0 || >=26.0.0` (`nvm use` selects Node 22)
 - npm 10 or newer
 
 1. Fork the repo

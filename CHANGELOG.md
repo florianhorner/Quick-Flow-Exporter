@@ -4,11 +4,25 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.4.8] - 2026-10-26
+
+### Changed
+
+- upgrade the DOM testing environment (#73)
+
+## [1.4.7] - 2026-10-26
+
+### Changed
+
+- refresh React types, PostCSS and workflow pins (#72)
+
 ## [Unreleased]
 
 ### Changed
 
 - Migrate to Tailwind CSS 4.3.3 and its PostCSS plugin while preserving the existing colors, spacing, typography and class-based dark theme. The app now requires Chrome/Edge 111+, Safari 16.4+, or Firefox 128+.
+- Upgrade jest-dom to 7.0.1 and jsdom to 30.0.1. Declare the DOM testing peer and the supported Node runtime range.
+- Update PostCSS, React types, setup-node and the PR proof workflow. Align the React manifest range with the already installed React/React DOM 19.2.8 pair.
 
 ## [1.4.6] - 2026-10-05
 
