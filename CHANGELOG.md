@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.4.9] - 2026-10-26
+
+### Changed
+
+- migrate Tailwind CSS to v4 (#74)
+
 ## [1.4.8] - 2026-10-26
 
 ### Changed
