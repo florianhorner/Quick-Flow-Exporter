@@ -36,3 +36,5 @@
 - npm 10 or newer
 
 When runtime repair is needed, nvm installs the exact release in `.nvmrc`; Homebrew installs an available release from that major. Setup checks the resulting runtime before installing the committed lockfile with `npm ci`. npm also enforces the declared engine range through `.npmrc`.
+
+Setup honors `NVM_DIR` when set and otherwise looks in `~/.nvm`. CI exercises both real nvm and Homebrew repair paths on macOS, starting from an unsupported Node release, then checks the selected runtime, unchanged dependency declarations, tests and builds.

@@ -22,11 +22,12 @@ info "Checking Node.js version..."
 REQUIRED_NODE=$(cat .nvmrc)
 REQUIRED_NODE_MAJOR=${REQUIRED_NODE#v}
 REQUIRED_NODE_MAJOR=${REQUIRED_NODE_MAJOR%%.*}
+NVM_SCRIPT="${NVM_DIR:-$HOME/.nvm}/nvm.sh"
 
 if ! command -v node &>/dev/null || ! node scripts/check-node-version.mjs; then
   warn "A supported Node version is required. Trying nvm..."
-  if [[ -f "$HOME/.nvm/nvm.sh" ]]; then
-    source "$HOME/.nvm/nvm.sh"
+  if [[ -f "$NVM_SCRIPT" ]]; then
+    source "$NVM_SCRIPT"
     nvm install "$REQUIRED_NODE" || die "nvm install failed"
     nvm use "$REQUIRED_NODE"
   elif command -v brew &>/dev/null; then
