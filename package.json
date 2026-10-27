@@ -16,7 +16,7 @@
     "preview": "vite preview",
     "lint": "eslint .",
     "test": "npm run test:tooling && npm run test:repository && vitest run",
-    "test:tooling": "node --test scripts/check-version.test.mjs",
+    "test:tooling": "node --test scripts/check-version.test.mjs scripts/check-node-version.test.mjs",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "format:check": "prettier --check .",
@@ -26,7 +26,8 @@
     "check:css": "node scripts/check-css.mjs",
     "check:version": "node scripts/check-version.mjs",
     "test:repository": "node --test scripts/check-public-files.test.mjs",
-    "check:public-files": "node scripts/check-public-files.mjs"
+    "check:public-files": "node scripts/check-public-files.mjs",
+    "check:node": "node scripts/check-node-version.mjs"
   },
   "dependencies": {
     "@xyflow/react": "^12.10.2",
