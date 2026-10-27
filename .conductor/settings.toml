@@ -1,0 +1,28 @@
+#:schema https://conductor.build/schemas/settings.repo.schema.json
+
+[scripts]
+setup = "bash scripts/conductor-setup.sh"
+run = "bash scripts/conductor-run.sh"
+run_mode = "concurrent"
+
+[prompts]
+general = """
+Quick Flow Exporter is a TypeScript/React Vite app with a local Node AI proxy and
+an optional Chrome/Edge extension. Read AGENTS.md and CONTRIBUTING.md before
+editing. Keep changes focused and preserve existing export formats.
+"""
+code_review = """
+Server-configured provider keys must not reach the client. UI-entered keys use
+sessionStorage and the local proxy. Check React hooks and graph rendering,
+deterministic exports, minimal extension permissions, and safe provider switching.
+Formatting is checked by the repository's linters and CI.
+"""
+create_pr = """
+Use an imperative Conventional Commit title and keep it concise. Describe the
+concrete change, why it is needed, and its validation. Follow the repository's
+proof requirements and omit empty boilerplate sections.
+"""
+rename_branch = """
+Use a conventional prefix and a short lowercase-hyphenated description, such as
+feat/add-provider, fix/parse-error, or chore/update-deps.
+"""

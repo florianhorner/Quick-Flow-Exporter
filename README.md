@@ -56,6 +56,8 @@ Open `http://localhost:5173`. Bring an API key from [Anthropic](https://console.
 
 > Under [Conductor](https://conductor.build), the **Run** button starts both processes via `scripts/conductor-run.sh` on `$CONDUCTOR_PORT`-derived ports (UI = `CONDUCTOR_PORT`, proxy = `+1`), so parallel workspaces never collide.
 
+Shared Conductor lifecycle hooks and repository prompts live in `.conductor/settings.toml`. Setup runs `scripts/conductor-setup.sh`; Run starts the UI and proxy through `scripts/conductor-run.sh`. Machine-specific overrides belong in the ignored `.conductor/settings.local.toml`.
+
 ## Browser compatibility
 
 The web app requires Chrome/Edge 111+, Safari 16.4+, or Firefox 128+ for

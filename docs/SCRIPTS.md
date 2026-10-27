@@ -33,3 +33,12 @@
 
 - Node.js `^22.22.2 || ^24.15.0 || >=26.0.0` (`nvm use` selects Node 22)
 - npm 10 or newer
+
+## Conductor configuration checks
+
+CI validates the shared TOML settings, tracked configuration, ignored local overrides and lifecycle script paths on Linux and Windows. To run these checks locally, use Python 3.11 or newer:
+
+```bash
+python scripts/check_conductor_settings.py
+python -m unittest discover -s scripts -p test_conductor_settings.py
+```

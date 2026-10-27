@@ -31,3 +31,7 @@ npm-debug.log*
 
 # Cross-project workspace artifacts
 .steamroll/
+
+# Machine-local Conductor overrides and configuration-test cache
+.conductor/settings.local.toml
+__pycache__/
