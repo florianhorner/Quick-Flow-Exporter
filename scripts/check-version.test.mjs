@@ -84,17 +84,26 @@ test('release workflow updates and stages all package versions without dependenc
     writeFileSync(join(directory, 'package.json'), JSON.stringify(manifest));
     writeFileSync(join(directory, 'package-lock.json'), JSON.stringify(lock));
     writeFileSync(join(directory, 'CHANGELOG.md'), '# Changelog\n');
-    for (const line of updateCommand.split('\n')) {
-      const [command, ...args] = line.trim().split(/\s+/);
-      assert.equal(command, 'npm');
-      execFileSync(
-        process.execPath,
-        [
-          process.env.npm_execpath,
-          ...args.map((argument) => (argument === '"$NEW_VERSION"' ? '1.0.1' : argument)),
-        ],
-        { cwd: directory, stdio: 'pipe' }
+    // The target can already be in the manifest before its release tag exists.
+    for (const currentVersion of ['1.0.0', '1.0.1']) {
+      assert.equal(
+        JSON.parse(readFileSync(join(directory, 'package.json'), 'utf8')).version,
+        currentVersion
       );
+      for (const line of updateCommand.split('\n')) {
+        const [command, ...args] = line.trim().split(/\s+/);
+        assert.equal(command, 'npm');
+        execFileSync(
+          process.execPath,
+          [
+            process.env.npm_execpath,
+            ...args.map((argument) =>
+              argument === '"$NEW_VERSION"' ? '1.0.1' : argument
+            ),
+          ],
+          { cwd: directory, stdio: 'pipe' }
+        );
+      }
     }
     checkVersion(directory);
     const updated = JSON.parse(

@@ -87,7 +87,7 @@ jobs:
         env:
           NEW_VERSION: ${{ steps.version.outputs.version }}
         run: |
-          npm version "$NEW_VERSION" --no-git-tag-version --ignore-scripts
+          npm version "$NEW_VERSION" --no-git-tag-version --ignore-scripts --allow-same-version
           npm run check:version
 
       - name: Update CHANGELOG
