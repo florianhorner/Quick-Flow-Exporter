@@ -35,3 +35,17 @@ npm-debug.log*
 # Machine-local Conductor overrides and configuration-test cache
 .conductor/settings.local.toml
 __pycache__/
+
+# Private working material (never part of the product)
+.context/
+proof/
+**/[Tt][Oo][Dd][Oo]*.md
+**/[Tt][Oo][Dd][Oo]*.markdown
+**/[Tt][Oo][Dd][Oo]
+**/[Tt][Oo][Dd][Oo][Ss]
+**/[Pp][Ll][Aa][Nn].md
+**/[Pp][Ll][Aa][Nn].markdown
+**/*-[Pp][Ll][Aa][Nn].md
+**/[Pp][Ll][Aa][Nn]/
+**/[Pp][Ll][Aa][Nn][Ss]/
+**/[Rr][Ee][Tt][Rr][Oo]*.md

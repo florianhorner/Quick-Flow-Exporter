@@ -239,9 +239,6 @@ describe('provider error mapping', () => {
 
 describe('extractTrustedIp', () => {
   // Regression: ISSUE-001 — rate-limit bypass via forged X-Forwarded-For
-  // Found by /qa on 2026-04-14
-  // Report: .gstack/qa-reports/qa-report-localhost-2026-04-14.md
-  //
   // Bug: the server was reading split(',')[0] (client-controlled first segment).
   // An attacker could send "attacker-ip, real-proxy-ip" and get a fresh rate-limit
   // bucket each request by rotating the first segment.

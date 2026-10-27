@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.4.11] - 2026-10-27
+
+### Changed
+
+- enforce repository content rules (#70)
+
 ## [1.4.10] - 2026-10-27
 
 ### Fixed
@@ -124,7 +130,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
-- All cyan/teal accent colors replaced with blue (#2563EB / `blue-600`) across every component for red-green colorblind accessibility
+- Blue (#2563EB / `blue-600`) replaces cyan/teal accent colors across every component
 - Red-only and green-only status signals in DiffPhase replaced with amber (removed) and blue (added) so states are distinguishable without color
 - "NO CHANGES" state and success badges now include shape indicators (✓ checkmark) paired with color
 - Nav buttons, Compare Flows button, bookmarklet link, and CTA buttons updated from cyan to blue

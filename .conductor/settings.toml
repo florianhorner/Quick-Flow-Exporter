@@ -10,11 +10,6 @@ general = """
 Quick Flow Exporter is a TypeScript/React Vite app with a local Node AI proxy and
 an optional Chrome/Edge extension. Read AGENTS.md and CONTRIBUTING.md before
 editing. Keep changes focused and preserve existing export formats.
-Use Markdown with headers, bullets, bold emphasis and comparison tables where
-useful. Lead responses with a single TL;DR line. Present multi-option decisions
-with explicit tradeoffs in a table or list. Keep paragraphs to three sentences.
-Fence code with a language hint; keep inline code to one expression. Cite files
-as relative paths in inline code and link external documentation.
 """
 code_review = """
 Server-configured provider keys must not reach the client. UI-entered keys use
