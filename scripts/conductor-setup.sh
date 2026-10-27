@@ -27,7 +27,7 @@ NVM_SCRIPT="${NVM_DIR:-$HOME/.nvm}/nvm.sh"
 if ! command -v node &>/dev/null || ! node scripts/check-node-version.mjs; then
   warn "A supported Node version is required. Trying nvm..."
   if [[ -f "$NVM_SCRIPT" ]]; then
-    source "$NVM_SCRIPT"
+    source "$NVM_SCRIPT" --no-use
     nvm install "$REQUIRED_NODE" || die "nvm install failed"
     nvm use "$REQUIRED_NODE"
   elif command -v brew &>/dev/null; then
