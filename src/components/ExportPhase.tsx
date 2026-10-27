@@ -78,7 +78,7 @@ export default function ExportPhase({ flow, onDownload, onBack }: ExportPhasePro
 
   return (
     <div className="space-y-3">
-      <div className="bg-white dark:bg-midnight-800 border border-slate-200 dark:border-midnight-700 rounded-lg shadow-sm p-4 flex flex-wrap gap-3 items-center">
+      <div className="bg-white dark:bg-midnight-800 border border-slate-200 dark:border-midnight-700 rounded-lg shadow-xs p-4 flex flex-wrap gap-3 items-center">
         {/* Format selector */}
         <div className="flex gap-1 bg-slate-100 dark:bg-midnight-900 rounded-lg p-1">
           {formats.map((f) => {
@@ -89,7 +89,7 @@ export default function ExportPhase({ flow, onDownload, onBack }: ExportPhasePro
                 onClick={() => setFormat(f.key)}
                 className={`inline-flex items-center gap-1.5 px-3 py-2 text-sm rounded-md transition-all ${
                   format === f.key
-                    ? 'bg-white dark:bg-midnight-700 shadow font-semibold text-slate-900 dark:text-white'
+                    ? 'bg-white dark:bg-midnight-700 shadow-sm font-semibold text-slate-900 dark:text-white'
                     : 'text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
                 }`}
                 title={f.desc}
@@ -105,7 +105,7 @@ export default function ExportPhase({ flow, onDownload, onBack }: ExportPhasePro
 
         <button
           onClick={copyContent}
-          className={`inline-flex items-center gap-2 px-4 py-2 rounded-md text-sm font-semibold shadow ${
+          className={`inline-flex items-center gap-2 px-4 py-2 rounded-md text-sm font-semibold shadow-sm ${
             formatCopied
               ? 'bg-blue-600 text-white'
               : copyError
@@ -119,14 +119,14 @@ export default function ExportPhase({ flow, onDownload, onBack }: ExportPhasePro
         </button>
         <button
           onClick={downloadContent}
-          className="inline-flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-semibold hover:bg-blue-700 shadow"
+          className="inline-flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-semibold hover:bg-blue-700 shadow-sm"
         >
           <Download aria-hidden="true" className="h-4 w-4" />
           Download
         </button>
         <button
           onClick={onBack}
-          className="inline-flex items-center gap-1.5 text-sm text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:rounded"
+          className="inline-flex items-center gap-1.5 text-sm text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-100 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:rounded-sm"
         >
           <ArrowLeft aria-hidden="true" className="h-4 w-4" />
           Back
@@ -141,7 +141,7 @@ export default function ExportPhase({ flow, onDownload, onBack }: ExportPhasePro
         </div>
       )}
 
-      <pre className="bg-slate-50 dark:bg-[#0d1117] border border-slate-200 dark:border-midnight-700 rounded-lg shadow-sm p-5 text-sm font-mono whitespace-pre-wrap overflow-auto max-h-[70vh] text-slate-700 dark:text-slate-300 select-all cursor-text">
+      <pre className="bg-slate-50 dark:bg-[#0d1117] border border-slate-200 dark:border-midnight-700 rounded-lg shadow-xs p-5 text-sm font-mono whitespace-pre-wrap overflow-auto max-h-[70vh] text-slate-700 dark:text-slate-300 select-all cursor-text">
         {content}
       </pre>
     </div>

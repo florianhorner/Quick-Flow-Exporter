@@ -21,8 +21,11 @@
 | `npm run build:extension`    | Bundle browser extension to `extension/dist`                    |
 | `npm run preview`            | Preview production build                                        |
 | `npm run lint`               | Run ESLint                                                      |
-| `npm run check:public-files` | Reject private working files from the publication tree          |
-| `npm run test`               | Run repository guards and the Vitest suite                      |
+| `npm run test`               | Run tooling, repository checks and Vitest once                  |
+| `npm run test:tooling`       | Check version drift detection and release version updates       |
+| `npm run check:version`      | Verify manifest and both lockfile versions match                |
+| `npm run test:repository`    | Run repository content and commit-policy regression tests       |
+| `npm run check:public-files` | Check for private working files before publication              |
 | `npm run test:watch`         | Run Vitest in watch mode (re-runs on file changes)              |
 | `npm run test:coverage`      | Run Vitest with coverage report                                 |
 | `npm run format:check`       | Check formatting with Prettier                                  |
@@ -30,5 +33,5 @@
 
 ## Prerequisites
 
-- Node.js 22 or newer
+- Node.js `^22.22.2 || ^24.15.0 || >=26.0.0` (`nvm use` selects Node 22)
 - npm 10 or newer

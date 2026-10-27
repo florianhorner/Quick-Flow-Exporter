@@ -121,7 +121,7 @@ export default function App() {
   return (
     <div className="min-h-screen">
       {/* Header */}
-      <div className="bg-white/95 dark:bg-midnight-800/95 backdrop-blur border-b border-slate-200 dark:border-midnight-700 sticky top-0 z-10">
+      <div className="bg-white/95 dark:bg-midnight-800/95 backdrop-blur-sm border-b border-slate-200 dark:border-midnight-700 sticky top-0 z-10">
         <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between flex-wrap gap-2">
           <div className="flex items-center gap-3">
             <span className="text-lg font-bold font-mono text-blue-600 dark:text-blue-400">
@@ -182,7 +182,7 @@ export default function App() {
             </button>
             <button
               onClick={resetToNew}
-              className="inline-flex items-center gap-1.5 px-3 py-2 text-sm rounded-md font-medium bg-blue-600 text-white hover:bg-blue-500 shadow-sm shadow-blue-500/20 transition-colors"
+              className="inline-flex items-center gap-1.5 px-3 py-2 text-sm rounded-md font-medium bg-blue-600 text-white hover:bg-blue-500 shadow-xs shadow-blue-500/20 transition-colors"
             >
               {phase === 'paste' ? (
                 <ClipboardPaste aria-hidden="true" className="h-4 w-4" />

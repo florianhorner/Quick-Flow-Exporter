@@ -38,7 +38,7 @@ export default function IconButton({
       type={type}
       aria-label={label}
       title={label}
-      className={`inline-flex shrink-0 items-center justify-center rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${toneClasses[tone]} ${sizeClasses[size]} ${className}`}
+      className={`inline-flex shrink-0 items-center justify-center rounded-md transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500 ${toneClasses[tone]} ${sizeClasses[size]} ${className}`}
       {...props}
     >
       <Icon aria-hidden="true" className="h-4 w-4" />

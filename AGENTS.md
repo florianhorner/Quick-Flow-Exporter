@@ -18,7 +18,7 @@
 
 Quick Flow Exporter is a single npm product (React 19 + Vite SPA) with a companion local
 Node AI proxy and an optional Chrome/Edge extension. There is no database and no Docker.
-Node 22+ / npm 10+ are required and already present on the cloud VM. Standard commands live
+Node `^22.22.2 || ^24.15.0 || >=26.0.0` / npm 10+ are required and already present on the cloud VM. Standard commands live
 in `package.json` scripts and `README.md`; only the non-obvious caveats are captured here.
 
 ### Running the app
