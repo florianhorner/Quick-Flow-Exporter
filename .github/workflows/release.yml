@@ -28,6 +28,7 @@ jobs:
           node-version: 22
           cache: npm
 
+      - run: npm run check:version
       - run: npm ci
 
       - name: Determine version bump
@@ -81,17 +82,13 @@ jobs:
             echo "exists=false" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Update package.json
+      - name: Update package versions
         if: steps.bump.outputs.type != 'none' && steps.version.outputs.exists == 'false'
         env:
           NEW_VERSION: ${{ steps.version.outputs.version }}
         run: |
-          node -e "
-            const fs = require('fs');
-            const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
-            pkg.version = process.env.NEW_VERSION;
-            fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
-          "
+          npm version "$NEW_VERSION" --no-git-tag-version --ignore-scripts --allow-same-version
+          npm run check:version
 
       - name: Update CHANGELOG
         if: steps.bump.outputs.type != 'none' && steps.version.outputs.exists == 'false'
@@ -131,7 +128,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add package.json CHANGELOG.md
+          git add package.json package-lock.json CHANGELOG.md
           git commit -m "release: v${NEW_VERSION}"
           git tag "v${NEW_VERSION}"
           git push origin main --tags

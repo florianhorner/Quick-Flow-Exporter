@@ -21,7 +21,9 @@
 | `npm run build:extension` | Bundle browser extension to `extension/dist`                    |
 | `npm run preview`         | Preview production build                                        |
 | `npm run lint`            | Run ESLint                                                      |
-| `npm run test`            | Run Vitest test suite once                                      |
+| `npm run test`            | Run tooling regression tests and Vitest once                    |
+| `npm run test:tooling`    | Check version drift detection and release version updates       |
+| `npm run check:version`   | Verify manifest and both lockfile versions match                |
 | `npm run test:watch`      | Run Vitest in watch mode (re-runs on file changes)              |
 | `npm run test:coverage`   | Run Vitest with coverage report                                 |
 | `npm run format:check`    | Check formatting with Prettier                                  |
