@@ -20,6 +20,7 @@ jobs:
 
       - run: npm run check:version
       - run: npm ci
+      - run: npm run check:public-files
       - run: npm run lint
       - run: npm run format:check
       - run: npm run typecheck
@@ -37,3 +38,4 @@ jobs:
           node-version: 22
       - run: npm run check:version
       - run: npm run test:tooling
+      - run: npm run test:repository

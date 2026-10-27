@@ -42,6 +42,12 @@ Prerequisites:
 > `git commit`. They apply `eslint --fix` and `prettier --write` to staged
 > files, so most formatting issues are caught before you push.
 
+The pre-commit hook also checks the index for working notes, including ignored
+files added with `git add --force`. Run `npm run check:public-files` to check the
+working tree. Task lists, working plans, retrospectives, and execution receipts
+belong in ignored local storage. Public documentation should describe product
+behavior and reproducible contributor procedures.
+
 ## Guidelines
 
 - Keep PRs focused — one feature or fix per PR
@@ -109,7 +115,7 @@ Open an issue with:
 - Steps to reproduce
 - Browser/OS info if relevant
 
-<!-- BEGIN: commit-message-standards (managed by bootstrap-repo.sh — do not hand-edit) -->
+<!-- BEGIN: commit-message-standards -->
 
 ## Commit messages
 
@@ -125,7 +131,8 @@ not fail without it.
 
 CI checks every commit of a pull request and the pull request title with
 `.config/commit-lint/validate-pr.sh`. To check a message before pushing, run
-`bash .config/commit-lint/commit-msg <message-file>`. Both files are generated;
-do not edit them by hand.
+`bash .config/commit-lint/commit-msg <message-file>`. These validators are vendored;
+their source revision, local adaptations and file hashes are recorded in
+`.config/commit-lint/MANIFEST.json`. Update the manifest when changing a validator.
 
 <!-- END: commit-message-standards -->

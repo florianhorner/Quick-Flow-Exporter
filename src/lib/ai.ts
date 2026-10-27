@@ -1,9 +1,11 @@
 /**
  * AI parsing abstraction.
  *
- * Calls a local proxy at /api/parse so the API key never touches the browser.
+ * Calls a local proxy at /api/parse. Server-configured keys are not returned to
+ * the browser.
  * Optionally, the user can provide an API key via the UI which gets sent
- * to the proxy as a fallback when no server-side env var is set.
+ * to the proxy as a fallback when no server-side env var is set. UI-entered keys
+ * are stored in sessionStorage for the current tab.
  * See README.md for setup instructions.
  */
 

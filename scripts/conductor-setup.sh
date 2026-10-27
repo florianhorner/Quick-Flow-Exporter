@@ -6,7 +6,7 @@
 set -euo pipefail
 
 BOLD='\033[1m'
-GREEN='\033[0;34m'   # Using blue — Florian is red-green colorblind
+GREEN='\033[0;34m'   # Blue success messages remain distinct from red errors.
 YELLOW='\033[0;33m'
 RED='\033[0;31m'
 RESET='\033[0m'
@@ -77,26 +77,6 @@ ok "Husky hooks ready"
 # ─── 6. Quick health check ─────────────────────────────────────────────────────
 info "Running quick type-check..."
 npm run typecheck 2>&1 | tail -10 && ok "TypeScript clean" || warn "Type errors detected — run: npm run typecheck"
-
-# ─── 7. Wishlist check ─────────────────────────────────────────────────────────
-echo ""
-echo "${BOLD}── Tool wishlist status ─────────────────────────────────────${RESET}"
-
-check_tool() {
-  local name=$1; local cmd=$2
-  if command -v "$cmd" &>/dev/null; then
-    ok "$name ($(command -v "$cmd"))"
-  else
-    warn "$name not found — install with: $3"
-  fi
-}
-
-check_tool "gh (GitHub CLI)"   gh       "brew install gh"
-check_tool "jq"                jq       "brew install jq"
-check_tool "ripgrep (rg)"      rg       "brew install ripgrep"
-check_tool "fd"                fd       "brew install fd"
-check_tool "bat"               bat      "brew install bat"
-check_tool "delta (git-delta)" delta    "brew install git-delta"
 
 echo ""
 echo "${BOLD}── Workspace ready ──────────────────────────────────────────${RESET}"
