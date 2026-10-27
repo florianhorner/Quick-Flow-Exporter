@@ -1,5 +1,5 @@
 {
-  "_comment": "Per-repo commitlint config. Canonical spec + machine-readable rules live at https://github.com/florianhorner/engineering-standards. The vendored SHA-pinned copy of the rules is at .config/commit-rules.json \u2014 do not hand-edit either file; re-run bootstrap-repo.sh to refresh.",
+  "_comment": "Commitlint configuration. Contributor rules are documented in CONTRIBUTING.md. The vendored rules in .config/commit-rules.json include local adaptations recorded in .config/commit-rules.meta.json.",
   "extends": ["@commitlint/config-conventional"],
   "rules": {
     "type-enum": [

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2016,SC2034
-# AUTO-GENERATED — DO NOT EDIT BY HAND.
+# Vendored validator with local operator-attribution wording.
 #
 # Managed by commit-lint-kit-v1 (rules schema_version 1.2.0).
 # Checks one commit message file:  commit-msg <message-file>
@@ -122,9 +122,10 @@ esac
 if [ -n "$BODY" ]; then
 
     # Body-only banned pattern: OPERATOR_ATTRIBUTION
-    if printf '%s' "$BODY" | grep -E -i -q 'florian asked|as requested|per request|per my request'; then
-        OFFENDING_LINE="$(printf '%s' "$BODY" | grep -E -i -m 1 'florian asked|as requested|per request|per my request')"
-        emit_block 'OPERATOR_ATTRIBUTION' 'Don'"'"'t attribute the commit to the operator/prompter; explain WHY the change is needed instead.' 'Replace '"'"'florian asked me to fix X'"'"' with '"'"'fix X because Y'"'"'.' "$OFFENDING_LINE"
+    OPERATOR_ATTRIBUTION_RE='[[:alpha:]][[:alnum:]_-]* asked (me|us) to|as requested|per request|per my request'
+    if printf '%s' "$BODY" | grep -E -i -q "$OPERATOR_ATTRIBUTION_RE"; then
+        OFFENDING_LINE="$(printf '%s' "$BODY" | grep -E -i -m 1 "$OPERATOR_ATTRIBUTION_RE")"
+        emit_block 'OPERATOR_ATTRIBUTION' 'Don'"'"'t attribute the commit to the operator/prompter; explain WHY the change is needed instead.' 'Replace operator attribution with the engineering reason: '"'"'fix X because Y'"'"'.' "$OFFENDING_LINE"
     fi
 
     # Body-only banned pattern: AGENT_SELF_TALK

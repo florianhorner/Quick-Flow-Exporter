@@ -10,7 +10,7 @@
     "version_prefix": {
       "allowed": true,
       "pattern": "v[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+ ",
-      "rationale": "Optional 4-component ship-version prefix (vMAJOR.MINOR.PATCH.MICRO). gstack workspace-aware /ship puts it at the front of PR titles / squash subjects as a landing-queue claim. Direct commits omit it; short version prefixes (v2, v1.2.3) stay banned via VERSION_IN_SUBJECT."
+      "rationale": "An optional four-component version prefix is accepted for release-related titles; ordinary commits omit it."
     }
   },
   "types": {
@@ -56,11 +56,11 @@
     "body_only": [
       {
         "rule_id": "OPERATOR_ATTRIBUTION",
-        "pattern": "florian asked|as requested|per request|per my request",
+        "pattern": "[[:alpha:]][[:alnum:]_-]* asked (me|us) to|as requested|per request|per my request",
         "flags": "i",
         "severity": "block",
         "message": "Don't attribute the commit to the operator/prompter; explain WHY the change is needed instead.",
-        "fix_hint": "Replace 'florian asked me to fix X' with 'fix X because Y'.",
+        "fix_hint": "Replace operator attribution with the engineering reason: 'fix X because Y'.",
         "spec_anchor": "specs/commit-message-spec.md#banned-patterns"
       },
       {
@@ -87,43 +87,10 @@
         "pattern": "^v[0-9]+(\\.[0-9]+){0,2}([ :]|$)",
         "severity": "block",
         "message": "Short version prefixes (v2, v1.2.3) don't belong in commit subjects; let CHANGELOG do that. The 4-component ship-version prefix (v1.2.3.4) is allowed.",
-        "fix_hint": "Drop the short version prefix. Use 'chore(release): 1.2.3', or the 4-component 'v1.2.3.4 type: subject' form for a gstack /ship PR title.",
+        "fix_hint": "Drop the short version prefix. Use 'chore(release): 1.2.3' for a release commit.",
         "spec_anchor": "specs/commit-message-spec.md#subjects"
       }
     ]
-  },
-  "trailers": {
-    "metadata": {
-      "Skill-Run": {
-        "description": "Which gstack skill triggered the commit (e.g., 'ship', 'investigate'). OMIT if not in a skill session \u2014 never fabricate.",
-        "env_source": "COMMIT_SKILL_RUN"
-      },
-      "Test-Suite": {
-        "description": "<pass>/<total> if test results known (e.g., '247/247'). OMIT if unknown.",
-        "env_source": "COMMIT_TEST_SUITE"
-      },
-      "Reviewed-By": {
-        "description": "codex|subagent|none if /review or /codex ran since last commit on this branch. OMIT if unknown.",
-        "env_source": "COMMIT_REVIEWED_BY"
-      },
-      "Tool": {
-        "description": "claude-code|codex|conductor|cloud \u2014 tool that created the commit. OMIT if undetectable.",
-        "env_source": "COMMIT_TOOL"
-      }
-    },
-    "policy": {
-      "fork_strip": ["Skill-Run", "Reviewed-By", "Tool"],
-      "fork_strip_rationale": "Strip agent telemetry trailers when committing to a fork branch destined upstream. Different audience (upstream maintainer vs portfolio recruiter). Preserves Co-Authored-By and Tested.",
-      "fork_detection_command": "gh repo view --json isFork --jq .isFork",
-      "preserved_on_fork": ["Co-Authored-By", "Tested", "Refs", "Signed-off-by"]
-    },
-    "override": {
-      "trailer": "Policy-Override",
-      "format": "Policy-Override: <reason>",
-      "audit_log": "~/.commit-bypass.log",
-      "ci_behavior": "record exception, do not block",
-      "valid_when": "subject matches exemption pattern OR --no-verify used with this trailer"
-    }
   },
   "validator": {
     "locale": "C.UTF-8",
@@ -134,6 +101,6 @@
   },
   "error_format": {
     "template": "BLOCK: <rule_id> <message>\nFIX: <fix_hint>\nSPEC: <spec_url>#<rule_id>\nOFFENDING: <literal failing line>",
-    "rationale": "Uniform across local hook + CI so agents have deterministic output to act on. Per DX D2."
+    "rationale": "Use the same diagnostic format for local and CI validation."
   }
 }

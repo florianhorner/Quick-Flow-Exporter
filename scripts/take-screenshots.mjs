@@ -181,7 +181,6 @@ const MOCK_FLOW_MODIFIED = {
 async function takeScreenshots() {
   const browser = await chromium.launch({
     headless: true,
-    executablePath: '/root/.cache/ms-playwright/chromium-1194/chrome-linux/chrome',
     args: ['--no-sandbox', '--disable-setuid-sandbox'],
   });
   const context = await browser.newContext({

@@ -1,0 +1,4 @@
+# Preserve the exact bytes recorded in the vendored validator manifest.
+.config/commit-lint/commit-msg text eol=lf
+.config/commit-lint/validate-pr.sh text eol=lf
+.github/workflows/commit-lint.yml text eol=lf

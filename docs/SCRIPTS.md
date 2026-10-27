@@ -12,23 +12,25 @@
 
 ## npm scripts
 
-| Command                   | Description                                                     |
-| ------------------------- | --------------------------------------------------------------- |
-| `npm start`               | Start the frontend and local AI proxy together                  |
-| `npm run dev`             | Start Vite frontend at localhost:5173                           |
-| `npm run dev:all`         | Start Vite and `server/proxy.ts` with `concurrently`            |
-| `npm run build`           | Type-check and build for production                             |
-| `npm run build:extension` | Bundle browser extension to `extension/dist`                    |
-| `npm run preview`         | Preview production build                                        |
-| `npm run lint`            | Run ESLint                                                      |
-| `npm run test`            | Run tooling regression tests and Vitest once                    |
-| `npm run test:tooling`    | Check runtime boundaries and release version updates            |
-| `npm run check:version`   | Verify manifest and both lockfile versions match                |
-| `npm run check:node`      | Verify the current Node release matches the supported range     |
-| `npm run test:watch`      | Run Vitest in watch mode (re-runs on file changes)              |
-| `npm run test:coverage`   | Run Vitest with coverage report                                 |
-| `npm run format:check`    | Check formatting with Prettier                                  |
-| `npm run typecheck`       | Type-check client and server (`tsc --noEmit` + server tsconfig) |
+| Command                      | Description                                                     |
+| ---------------------------- | --------------------------------------------------------------- |
+| `npm start`                  | Start the frontend and local AI proxy together                  |
+| `npm run dev`                | Start Vite frontend at localhost:5173                           |
+| `npm run dev:all`            | Start Vite and `server/proxy.ts` with `concurrently`            |
+| `npm run build`              | Type-check and build for production                             |
+| `npm run build:extension`    | Bundle browser extension to `extension/dist`                    |
+| `npm run preview`            | Preview production build                                        |
+| `npm run lint`               | Run ESLint                                                      |
+| `npm run test`               | Run tooling, repository checks and Vitest once                  |
+| `npm run test:tooling`       | Check runtime boundaries and release version updates            |
+| `npm run check:version`      | Verify manifest and both lockfile versions match                |
+| `npm run check:node`         | Verify the current Node release matches the supported range     |
+| `npm run test:repository`    | Run repository content and commit-policy regression tests       |
+| `npm run check:public-files` | Check for private working files before publication              |
+| `npm run test:watch`         | Run Vitest in watch mode (re-runs on file changes)              |
+| `npm run test:coverage`      | Run Vitest with coverage report                                 |
+| `npm run format:check`       | Check formatting with Prettier                                  |
+| `npm run typecheck`          | Type-check client and server (`tsc --noEmit` + server tsconfig) |
 
 ## Prerequisites
 
