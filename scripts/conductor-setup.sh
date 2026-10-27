@@ -17,28 +17,25 @@ warn()  { echo "${YELLOW}[setup] ⚠${RESET} $*"; }
 die()   { echo "${RED}[setup] ✗${RESET} $*" >&2; exit 1; }
 
 # ─── 1. Node version ───────────────────────────────────────────────────────────
-info "Checking Node.js version (need >= 22)..."
+info "Checking Node.js version..."
 
-REQUIRED_NODE=22
-CURRENT_NODE=$(node --version 2>/dev/null | sed 's/v//' | cut -d. -f1 || echo 0)
+REQUIRED_NODE=$(cat .nvmrc)
 
-if (( CURRENT_NODE < REQUIRED_NODE )); then
-  warn "Node $CURRENT_NODE found — need $REQUIRED_NODE+. Trying nvm..."
+if ! command -v node &>/dev/null || ! node scripts/check-node-version.mjs; then
+  warn "A supported Node version is required. Trying nvm..."
   if [[ -f "$HOME/.nvm/nvm.sh" ]]; then
     source "$HOME/.nvm/nvm.sh"
-    nvm install $REQUIRED_NODE --reinstall-packages-from=default || die "nvm install failed"
-    nvm use $REQUIRED_NODE
-    ok "Switched to Node $(node --version) via nvm"
+    nvm install "$REQUIRED_NODE" || die "nvm install failed"
+    nvm use "$REQUIRED_NODE"
   elif command -v brew &>/dev/null; then
-    brew install node@$REQUIRED_NODE || die "brew install node failed"
-    export PATH="$(brew --prefix node@$REQUIRED_NODE)/bin:$PATH"
-    ok "Installed Node $(node --version) via Homebrew"
+    brew install node@22 || die "brew install node failed"
+    export PATH="$(brew --prefix node@22)/bin:$PATH"
   else
-    die "Node $REQUIRED_NODE+ required. Install via https://nodejs.org or brew install node@22"
+    die "Install Node $REQUIRED_NODE or another version supported by package.json"
   fi
-else
-  ok "Node $(node --version)"
 fi
+node scripts/check-node-version.mjs || die "Unsupported Node version after setup"
+ok "Node $(node --version)"
 
 # ─── 2. npm version ────────────────────────────────────────────────────────────
 REQUIRED_NPM=10
@@ -51,8 +48,8 @@ ok "npm $(npm --version)"
 
 # ─── 3. Dependencies ───────────────────────────────────────────────────────────
 info "Installing npm dependencies..."
-npm install --prefer-offline || die "npm install failed"
-ok "npm install done"
+npm ci || die "npm ci failed"
+ok "npm ci done"
 
 # ─── 4. .env file ──────────────────────────────────────────────────────────────
 info "Setting up .env..."

@@ -16,7 +16,7 @@
     "preview": "vite preview",
     "lint": "eslint .",
     "test": "npm run test:tooling && vitest run",
-    "test:tooling": "node --test scripts/check-version.test.mjs",
+    "test:tooling": "node --test scripts/check-version.test.mjs scripts/check-node-version.test.mjs",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "format:check": "prettier --check .",
@@ -24,7 +24,8 @@
     "build:extension": "node scripts/build-extension.mjs",
     "prepare": "husky",
     "check:css": "node scripts/check-css.mjs",
-    "check:version": "node scripts/check-version.mjs"
+    "check:version": "node scripts/check-version.mjs",
+    "check:node": "node scripts/check-node-version.mjs"
   },
   "dependencies": {
     "@xyflow/react": "^12.10.2",
