@@ -15,14 +15,16 @@
     "build": "tsc -b && vite build",
     "preview": "vite preview",
     "lint": "eslint .",
-    "test": "vitest run",
+    "test": "npm run test:tooling && vitest run",
+    "test:tooling": "node --test scripts/check-version.test.mjs",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "format:check": "prettier --check .",
     "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.server.json",
     "build:extension": "node scripts/build-extension.mjs",
     "prepare": "husky",
-    "check:css": "node scripts/check-css.mjs"
+    "check:css": "node scripts/check-css.mjs",
+    "check:version": "node scripts/check-version.mjs"
   },
   "dependencies": {
     "@xyflow/react": "^12.10.2",
@@ -45,8 +47,8 @@
     "@vitejs/plugin-react": "^6.0.2",
     "autoprefixer": "^10.5.0",
     "chrome-types": "^0.1.429",
-    "concurrently": "^10.0.3",
-    "esbuild": "^0.28.0",
+    "concurrently": "^10.0.6",
+    "esbuild": "^0.28.1",
     "eslint": "^10.4.0",
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.2",
@@ -60,8 +62,8 @@
     "tsx": "^4.22.4",
     "typescript": "~6.0.3",
     "typescript-eslint": "^8.58.1",
-    "vite": "^8.0.14",
-    "vitest": "^4.1.11"
+    "vite": "^8.1.6",
+    "vitest": "^4.1.12"
   },
   "lint-staged": {
     "*.{js,ts,jsx,tsx,mjs}": [
