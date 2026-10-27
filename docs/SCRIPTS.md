@@ -22,8 +22,9 @@
 | `npm run preview`            | Preview production build                                        |
 | `npm run lint`               | Run ESLint                                                      |
 | `npm run test`               | Run tooling, repository checks and Vitest once                  |
-| `npm run test:tooling`       | Check version drift detection and release version updates       |
+| `npm run test:tooling`       | Check runtime boundaries and release version updates            |
 | `npm run check:version`      | Verify manifest and both lockfile versions match                |
+| `npm run check:node`         | Verify the current Node release matches the supported range     |
 | `npm run test:repository`    | Run repository content and commit-policy regression tests       |
 | `npm run check:public-files` | Check for private working files before publication              |
 | `npm run test:watch`         | Run Vitest in watch mode (re-runs on file changes)              |
@@ -35,6 +36,10 @@
 
 - Node.js `^22.22.2 || ^24.15.0 || >=26.0.0` (`nvm use` selects Node 22)
 - npm 10 or newer
+
+When runtime repair is needed, nvm installs the exact release in `.nvmrc`; Homebrew installs an available release from that major. Setup checks the resulting runtime before installing the committed lockfile with `npm ci`. npm also enforces the declared engine range through `.npmrc`.
+
+Setup honors `NVM_DIR` when set and otherwise looks in `~/.nvm`. CI exercises both real nvm and Homebrew repair paths on macOS, starting from an unsupported Node release, then checks the selected runtime, unchanged dependency declarations, tests and builds.
 
 ## Conductor configuration checks
 
