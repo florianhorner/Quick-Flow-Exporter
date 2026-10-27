@@ -20,6 +20,8 @@ die()   { echo "${RED}[setup] ✗${RESET} $*" >&2; exit 1; }
 info "Checking Node.js version..."
 
 REQUIRED_NODE=$(cat .nvmrc)
+REQUIRED_NODE_MAJOR=${REQUIRED_NODE#v}
+REQUIRED_NODE_MAJOR=${REQUIRED_NODE_MAJOR%%.*}
 
 if ! command -v node &>/dev/null || ! node scripts/check-node-version.mjs; then
   warn "A supported Node version is required. Trying nvm..."
@@ -28,8 +30,8 @@ if ! command -v node &>/dev/null || ! node scripts/check-node-version.mjs; then
     nvm install "$REQUIRED_NODE" || die "nvm install failed"
     nvm use "$REQUIRED_NODE"
   elif command -v brew &>/dev/null; then
-    brew install node@22 || die "brew install node failed"
-    export PATH="$(brew --prefix node@22)/bin:$PATH"
+    brew install "node@$REQUIRED_NODE_MAJOR" || die "brew install node failed"
+    export PATH="$(brew --prefix "node@$REQUIRED_NODE_MAJOR")/bin:$PATH"
   else
     die "Install Node $REQUIRED_NODE or another version supported by package.json"
   fi

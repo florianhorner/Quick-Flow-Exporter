@@ -35,4 +35,4 @@
 - Node.js `^22.22.2 || ^24.15.0 || >=26.0.0` (`nvm use` selects Node 22)
 - npm 10 or newer
 
-Workspace setup selects `.nvmrc` when repair is needed and installs the committed lockfile with `npm ci`. npm enforces the declared engine range through `.npmrc`.
+When runtime repair is needed, nvm installs the exact release in `.nvmrc`; Homebrew installs an available release from that major. Setup checks the resulting runtime before installing the committed lockfile with `npm ci`. npm also enforces the declared engine range through `.npmrc`.

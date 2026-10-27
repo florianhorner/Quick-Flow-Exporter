@@ -43,6 +43,7 @@ jobs:
   runtime-compatibility:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         node: ['24.15.0', '26']
     steps:
