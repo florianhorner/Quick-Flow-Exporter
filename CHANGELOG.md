@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.4.10] - 2026-10-27
+
+### Fixed
+
+- resolve tooling advisories and synchronize release versions (#75)
+
 ## [1.4.9] - 2026-10-26
 
 ### Changed
