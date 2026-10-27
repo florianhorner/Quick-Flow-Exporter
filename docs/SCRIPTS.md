@@ -40,3 +40,12 @@
 When runtime repair is needed, nvm installs the exact release in `.nvmrc`; Homebrew installs an available release from that major. Setup checks the resulting runtime before installing the committed lockfile with `npm ci`. npm also enforces the declared engine range through `.npmrc`.
 
 Setup honors `NVM_DIR` when set and otherwise looks in `~/.nvm`. CI exercises both real nvm and Homebrew repair paths on macOS, starting from an unsupported Node release, then checks the selected runtime, unchanged dependency declarations, tests and builds.
+
+## Conductor configuration checks
+
+CI validates the shared TOML settings, tracked configuration, ignored local overrides and lifecycle script paths on Linux and Windows. To run these checks locally, use Python 3.11 or newer:
+
+```bash
+python scripts/check_conductor_settings.py
+python -m unittest discover -s scripts -p test_conductor_settings.py
+```
