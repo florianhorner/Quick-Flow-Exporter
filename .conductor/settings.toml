@@ -10,6 +10,11 @@ general = """
 Quick Flow Exporter is a TypeScript/React Vite app with a local Node AI proxy and
 an optional Chrome/Edge extension. Read AGENTS.md and CONTRIBUTING.md before
 editing. Keep changes focused and preserve existing export formats.
+Use Markdown with headers, bullets, bold emphasis and comparison tables where
+useful. Lead responses with a single TL;DR line. Present multi-option decisions
+with explicit tradeoffs in a table or list. Keep paragraphs to three sentences.
+Fence code with a language hint; keep inline code to one expression. Cite files
+as relative paths in inline code and link external documentation.
 """
 code_review = """
 Server-configured provider keys must not reach the client. UI-entered keys use
@@ -18,11 +23,12 @@ deterministic exports, minimal extension permissions, and safe provider switchin
 Formatting is checked by the repository's linters and CI.
 """
 create_pr = """
-Use an imperative Conventional Commit title and keep it concise. Describe the
+Use an imperative Conventional Commit title of at most 60 characters. Describe the
 concrete change, why it is needed, and its validation. Follow the repository's
 proof requirements and omit empty boilerplate sections.
 """
 rename_branch = """
-Use a conventional prefix and a short lowercase-hyphenated description, such as
-feat/add-provider, fix/parse-error, or chore/update-deps.
+Use prefix/short-description with one of feat, fix, chore, docs, or refactor.
+Use a lowercase-hyphenated description of at most four words after the prefix,
+such as feat/add-provider, fix/parse-error, or chore/update-deps.
 """

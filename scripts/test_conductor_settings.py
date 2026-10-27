@@ -52,6 +52,23 @@ class ConductorSettingsTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             validate_settings(settings)
 
+    def test_force_added_machine_local_settings_are_rejected(self):
+        with TemporaryDirectory() as directory:
+            root = Path(directory)
+            subprocess.run(["git", "init", "--quiet", directory], check=True)
+            (root / ".conductor").mkdir()
+            (root / ".gitignore").write_text(".conductor/settings.local.toml\n")
+            for filename in ["settings.toml", "settings.local.toml"]:
+                (root / ".conductor" / filename).write_text("# fixture\n")
+            subprocess.run(["git", "-C", directory, "add", ".conductor/settings.toml"], check=True)
+            check_index(root)
+            subprocess.run(
+                ["git", "-C", directory, "add", "--force", ".conductor/settings.local.toml"],
+                check=True,
+            )
+            with self.assertRaisesRegex(ValueError, "must not be tracked"):
+                check_index(root)
+
     def test_legacy_prompt_names_and_empty_prompts_are_rejected(self):
         settings = self.settings()
         settings["prompts"]["codeReview"] = settings["prompts"].pop("code_review")

@@ -35,8 +35,9 @@ def check_repository(root):
         settings = tomllib.load(source)
     validate_settings(settings)
     for command in (SCRIPTS["setup"], SCRIPTS["run"]):
-        if not (root / command.removeprefix("bash ")).is_file():
-            raise ValueError("A configured Conductor lifecycle script is missing")
+        script = command.removeprefix("bash ")
+        if not (root / script).is_file():
+            raise ValueError(f"Configured Conductor lifecycle script is missing: {script}")
     return settings
 
 
@@ -46,12 +47,22 @@ def check_index(root):
         check=True,
         capture_output=True,
     )
+    local_settings = subprocess.run(
+        ["git", "-C", str(root), "ls-files", "--error-unmatch", ".conductor/settings.local.toml"],
+        check=False,
+        capture_output=True,
+    )
+    if local_settings.returncode == 0:
+        raise ValueError("Machine-local Conductor settings must not be tracked")
+    if local_settings.returncode != 1:
+        local_settings.check_returncode()
     for filename, expected in [
         (".conductor/settings.toml", 1),
         (".conductor/settings.local.toml", 0),
     ]:
         result = subprocess.run(
             ["git", "-C", str(root), "check-ignore", "--no-index", "--quiet", filename],
+            check=False,
             capture_output=True,
         )
         if result.returncode != expected:
