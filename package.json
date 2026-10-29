@@ -60,7 +60,7 @@
     "jsdom": "^30.0.1",
     "lint-staged": "^16.4.0",
     "postcss": "^8.5.28",
-    "prettier": "^3.8.4",
+    "prettier": "^3.9.10",
     "tailwindcss": "^4.3.3",
     "tsx": "^4.22.4",
     "typescript": "~6.0.3",
