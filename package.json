@@ -30,6 +30,7 @@
     "check:node": "node scripts/check-node-version.mjs"
   },
   "dependencies": {
+    "@vercel/analytics": "^2.0.1",
     "@xyflow/react": "^12.10.2",
     "diff-match-patch": "^1.0.5",
     "lucide-react": "^1.21.0",
