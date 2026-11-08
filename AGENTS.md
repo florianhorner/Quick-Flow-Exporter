@@ -24,8 +24,9 @@ in `package.json` scripts and `README.md`; only the non-obvious caveats are capt
 ### Running the app
 
 - `npm start` (alias for `npm run dev:all`) runs both processes concurrently: the Vite UI on
-  `http://localhost:5173` and the AI proxy on `http://localhost:3001`. Vite proxies `/api/*`
-  to the proxy. Proxy health check: `curl http://localhost:3001/health`.
+  `http://localhost:5173` and the AI proxy on `http://127.0.0.1:3001` (loopback only; set
+  `PROXY_HOST=0.0.0.0` to expose it). Vite proxies `/api/*` to the proxy. Proxy health
+  check: `curl http://127.0.0.1:3001/health`.
 - To run only one side: `npm run dev` (UI) or `npx tsx server/proxy.ts` (proxy).
 
 ### Testing without an AI provider key (important)

@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import { getProxyPort } from './server/proxy-utils';
+import { getProxyTarget } from './server/proxy-utils';
 
 export default defineConfig({
   plugins: [react()],
@@ -10,7 +10,7 @@ export default defineConfig({
       // Resolve the target with the same precedence the proxy binds with
       // (PORT, then PROXY_PORT, then 3001) so `npm start` can't split the UI
       // and proxy across two ports when PORT is set in the shell.
-      '/api': `http://localhost:${getProxyPort()}`,
+      '/api': getProxyTarget(),
     },
   },
   test: {

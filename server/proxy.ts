@@ -24,6 +24,7 @@ import {
   createClientConfigError,
   createProviderHttpError,
   createRateLimiter,
+  getProxyHost,
   getProxyPort,
   getRateLimitIp,
   ProxyHttpError,
@@ -35,6 +36,7 @@ import {
 } from './proxy-utils';
 
 const PORT = getProxyPort();
+const HOST = getProxyHost();
 const DEFAULT_PROVIDER: Provider = VALID_PROVIDERS.includes(
   process.env.PROVIDER as Provider
 )
@@ -441,9 +443,9 @@ const server = http.createServer(async (req, res) => {
   }
 });
 
-server.listen(PORT, () => {
+server.listen(PORT, HOST, () => {
   console.log(
-    `AI proxy (default: ${DEFAULT_PROVIDER}) listening on http://localhost:${PORT}`
+    `AI proxy (default: ${DEFAULT_PROVIDER}) listening on http://${HOST}:${PORT}`
   );
   console.log(`Available providers: ${VALID_PROVIDERS.join(', ')}`);
   console.log(`Rate limit: ${RATE_LIMIT} requests per ${RATE_WINDOW_MS / 1000}s`);

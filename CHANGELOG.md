@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased]
+
+### Security
+
+- The AI proxy now binds to `127.0.0.1` by default instead of all interfaces, so server-configured provider keys are no longer reachable from the network (`getProxyHost` tests in `server/__tests__/proxy.test.ts`). Set `PROXY_HOST=0.0.0.0` to expose it deliberately.
+
 ## [1.4.13] - 2026-10-27
 
 ### Fixed

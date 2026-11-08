@@ -74,6 +74,7 @@ ANTHROPIC_API_KEY=sk-... OPENAI_API_KEY=sk-... PERPLEXITY_API_KEY=pplx-... npm s
 | `BEDROCK_MODEL_ID`   | `anthropic.claude-3-5-sonnet-20241022-v2:0` | Bedrock model ID                                                                                                    |
 | `PORT`               | `3001`                                      | Port the proxy listens on; the Vite dev server targets the same value. Takes precedence over `PROXY_PORT`.          |
 | `PROXY_PORT`         | `3001`                                      | Fallback port for both proxy and Vite when `PORT` is unset (Conductor sets this per workspace to avoid collisions). |
+| `PROXY_HOST`         | `127.0.0.1`                                 | Interface to bind. Set `0.0.0.0` only behind auth or a reverse proxy                                                |
 | `RATE_LIMIT`         | `20`                                        | Requests per 60s per IP                                                                                             |
 | `TRUST_PROXY`        | `false`                                     | Trust X-Forwarded-For header                                                                                        |
 | `TRUST_PROXY_HOPS`   | `1`                                         | Trusted proxy hops from right                                                                                       |
