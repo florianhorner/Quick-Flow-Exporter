@@ -3,9 +3,10 @@ import { spawn, type ChildProcess } from 'node:child_process';
 import net from 'node:net';
 import os from 'node:os';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { afterEach, describe, expect, it } from 'vitest';
 
-const ROOT = path.resolve(__dirname, '../..');
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const TSX = path.join(ROOT, 'node_modules', '.bin', 'tsx');
 
 let child: ChildProcess | undefined;
@@ -28,9 +29,11 @@ function freePort(): Promise<number> {
 
 function startProxy(port: number, env: Record<string, string> = {}): Promise<void> {
   return new Promise((resolve, reject) => {
+    const baseEnv = { ...process.env };
+    delete baseEnv.PROXY_HOST;
     child = spawn(TSX, ['server/proxy.ts'], {
       cwd: ROOT,
-      env: { ...process.env, PORT: String(port), ...env },
+      env: { ...baseEnv, PORT: String(port), ...env },
     });
     const timer = setTimeout(() => reject(new Error('proxy did not start')), 15_000);
     child.stdout?.on('data', (d: Buffer) => {

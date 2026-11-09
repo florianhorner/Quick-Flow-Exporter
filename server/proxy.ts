@@ -444,7 +444,7 @@ const server = http.createServer(async (req, res) => {
 
 server.listen(PORT, HOST, () => {
   console.log(
-    `AI proxy (default: ${DEFAULT_PROVIDER}) listening on http://${HOST}:${PORT}`
+    `AI proxy (default: ${DEFAULT_PROVIDER}) listening on http://${HOST.includes(':') ? `[${HOST}]` : HOST}:${PORT}`
   );
   console.log(`Available providers: ${VALID_PROVIDERS.join(', ')}`);
   console.log(`Rate limit: ${RATE_LIMIT} requests per ${RATE_WINDOW_MS / 1000}s`);
