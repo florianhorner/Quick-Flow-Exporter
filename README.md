@@ -76,7 +76,7 @@ Use `nvm use` to select the Node 22 version in `.nvmrc` before installing.
 | **`429 Too Many Requests`**            | Rate limit — 20 requests / 60s per IP by default                    | Wait for the `Retry-After` window, or raise `RATE_LIMIT` on the proxy (see [AI Proxy Setup](docs/AI_PROXY_SETUP.md)) |
 | **`401` / auth error**                 | Wrong or expired key, or key for a different provider               | Replace the UI key when switching providers; the tab stores a single key value                                       |
 | **Paste rejected as too large**        | Flow exceeds the 500 KB request cap                                 | Trim the pasted flow, or export fewer steps from the editor                                                          |
-| **CORS error on a self-hosted deploy** | Proxy `CORS_ORIGIN` defaults to `http://localhost:5173`             | Set `CORS_ORIGIN` to your deployed frontend origin                                                                   |
+| **CORS error on a self-hosted deploy** | Proxy `CORS_ORIGIN` defaults to `http://localhost:5173`             | Set `CORS_ORIGIN` to your frontend origin and `PROXY_HOST=0.0.0.0` behind auth or a reverse proxy                    |
 | **Extension doesn't capture**          | Not on a Quick Flows editor tab, or installed before the tab loaded | Open the Quick Flows editor, reload the tab, then click the extension                                                |
 
 ## Features

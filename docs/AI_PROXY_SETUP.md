@@ -59,25 +59,26 @@ ANTHROPIC_API_KEY=sk-... OPENAI_API_KEY=sk-... PERPLEXITY_API_KEY=pplx-... npm s
 
 ## Environment variables
 
-| Variable             | Default                                     | Description                                                                                                         |
-| -------------------- | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| `PROVIDER`           | `anthropic`                                 | Default AI provider                                                                                                 |
-| `ANTHROPIC_API_KEY`  | —                                           | Anthropic API key                                                                                                   |
-| `ANTHROPIC_MODEL`    | `claude-sonnet-4-20250514`                  | Anthropic model ID                                                                                                  |
-| `OPENAI_API_KEY`     | —                                           | OpenAI API key                                                                                                      |
-| `OPENAI_MODEL`       | `gpt-4o`                                    | OpenAI model ID                                                                                                     |
-| `GEMINI_API_KEY`     | —                                           | Google Gemini API key                                                                                               |
-| `GEMINI_MODEL`       | `gemini-2.5-flash`                          | Gemini model ID                                                                                                     |
-| `PERPLEXITY_API_KEY` | —                                           | Perplexity API key                                                                                                  |
-| `PERPLEXITY_MODEL`   | `sonar-pro`                                 | Perplexity model ID                                                                                                 |
-| `AWS_REGION`         | `us-east-1`                                 | AWS region for Bedrock                                                                                              |
-| `BEDROCK_MODEL_ID`   | `anthropic.claude-3-5-sonnet-20241022-v2:0` | Bedrock model ID                                                                                                    |
-| `PORT`               | `3001`                                      | Port the proxy listens on; the Vite dev server targets the same value. Takes precedence over `PROXY_PORT`.          |
-| `PROXY_PORT`         | `3001`                                      | Fallback port for both proxy and Vite when `PORT` is unset (Conductor sets this per workspace to avoid collisions). |
-| `RATE_LIMIT`         | `20`                                        | Requests per 60s per IP                                                                                             |
-| `TRUST_PROXY`        | `false`                                     | Trust X-Forwarded-For header                                                                                        |
-| `TRUST_PROXY_HOPS`   | `1`                                         | Trusted proxy hops from right                                                                                       |
-| `CORS_ORIGIN`        | `http://localhost:5173`                     | Allowed CORS origin                                                                                                 |
+| Variable             | Default                              | Description                                                                                                         |
+| -------------------- | ------------------------------------ | ------------------------------------------------------------------------------------------------------------------- |
+| `PROVIDER`           | `anthropic`                          | Default AI provider                                                                                                 |
+| `ANTHROPIC_API_KEY`  | —                                    | Anthropic API key                                                                                                   |
+| `ANTHROPIC_MODEL`    | `claude-sonnet-5-5`                  | Anthropic model ID                                                                                                  |
+| `OPENAI_API_KEY`     | —                                    | OpenAI API key                                                                                                      |
+| `OPENAI_MODEL`       | `gpt-6.1-sol`                        | OpenAI model ID                                                                                                     |
+| `GEMINI_API_KEY`     | —                                    | Google Gemini API key                                                                                               |
+| `GEMINI_MODEL`       | `gemini-3.8-flash`                   | Gemini model ID                                                                                                     |
+| `PERPLEXITY_API_KEY` | —                                    | Perplexity API key                                                                                                  |
+| `PERPLEXITY_MODEL`   | `sonar-pro`                          | Perplexity model ID                                                                                                 |
+| `AWS_REGION`         | `us-east-1`                          | AWS region for Bedrock                                                                                              |
+| `BEDROCK_MODEL_ID`   | `global.anthropic.claude-sonnet-5-5` | Bedrock model ID                                                                                                    |
+| `PORT`               | `3001`                               | Port the proxy listens on; the Vite dev server targets the same value. Takes precedence over `PROXY_PORT`.          |
+| `PROXY_PORT`         | `3001`                               | Fallback port for both proxy and Vite when `PORT` is unset (Conductor sets this per workspace to avoid collisions). |
+| `PROXY_HOST`         | `127.0.0.1`                          | Interface to bind. Set `0.0.0.0` only behind auth or a reverse proxy                                                |
+| `RATE_LIMIT`         | `20`                                 | Requests per 60s per IP                                                                                             |
+| `TRUST_PROXY`        | `false`                              | Trust X-Forwarded-For header                                                                                        |
+| `TRUST_PROXY_HOPS`   | `1`                                  | Trusted proxy hops from right                                                                                       |
+| `CORS_ORIGIN`        | `http://localhost:5173`              | Allowed CORS origin                                                                                                 |
 
 > The Vite dev server proxies `/api` to the same port the proxy binds — `PORT`, else `PROXY_PORT`, else `3001` — so the UI and proxy always agree.
 >

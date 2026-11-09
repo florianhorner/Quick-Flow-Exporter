@@ -14,7 +14,7 @@ fi
 # server/proxy.ts reads process.env.PORT; vite.config.ts reads PROXY_PORT/VITE_PORT.
 export PORT="$PROXY_PORT"
 
-echo "[run] proxy → http://localhost:${PROXY_PORT}"
+echo "[run] proxy → http://127.0.0.1:${PROXY_PORT}"
 echo "[run] vite  → http://localhost:${VITE_PORT}"
 
 # Proxy in the background; Vite in the foreground. Trap tears the proxy down

@@ -3,7 +3,9 @@ import {
   createProviderHttpError,
   createRateLimiter,
   extractTrustedIp,
+  getProxyHost,
   getProxyPort,
+  getProxyTarget,
   getRateLimitIp,
   ProxyHttpError,
   validateGeminiModel,
@@ -14,6 +16,31 @@ import {
   DEFAULT_EXPORTER_BASE_URL,
   normalizeExporterBaseUrl,
 } from '../../extension/background/config';
+
+describe('proxy host config', () => {
+  it('binds to loopback by default', () => {
+    expect(getProxyHost({})).toBe('127.0.0.1');
+    expect(getProxyHost({ PROXY_HOST: '   ' })).toBe('127.0.0.1');
+  });
+
+  it('ignores an ambient HOST and honors an explicit PROXY_HOST opt-in', () => {
+    expect(getProxyHost({ HOST: 'mymac.local' } as never)).toBe('127.0.0.1');
+    expect(getProxyHost({ PROXY_HOST: ' 0.0.0.0 ' })).toBe('0.0.0.0');
+  });
+});
+
+describe('proxy target for the Vite dev server', () => {
+  it('dials loopback by default and follows PORT', () => {
+    expect(getProxyTarget({})).toBe('http://127.0.0.1:3001');
+    expect(getProxyTarget({ PORT: '4500' })).toBe('http://127.0.0.1:4500');
+  });
+
+  it('dials loopback for wildcard binds and brackets IPv6', () => {
+    expect(getProxyTarget({ PROXY_HOST: '0.0.0.0' })).toBe('http://127.0.0.1:3001');
+    expect(getProxyTarget({ PROXY_HOST: '::' })).toBe('http://127.0.0.1:3001');
+    expect(getProxyTarget({ PROXY_HOST: '::1' })).toBe('http://[::1]:3001');
+  });
+});
 
 describe('proxy port config', () => {
   it('uses PORT when explicitly set', () => {

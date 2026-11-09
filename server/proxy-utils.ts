@@ -29,6 +29,30 @@ export function getProxyPort(
   return parsePort(env.PORT) ?? parsePort(env.PROXY_PORT) ?? 3001;
 }
 
+/**
+ * Interface the proxy binds to. Loopback by default so server-configured
+ * provider keys are not reachable from the network; set PROXY_HOST=0.0.0.0 to
+ * expose. Namespaced (like PROXY_PORT) because HOST is often set ambiently.
+ */
+export function getProxyHost(
+  env: Partial<Record<'PROXY_HOST', string | undefined>> = process.env
+): string {
+  return env.PROXY_HOST?.trim() || '127.0.0.1';
+}
+
+/** URL the local Vite dev server uses to reach the proxy it was started with. */
+export function getProxyTarget(
+  env: Partial<
+    Record<'PORT' | 'PROXY_PORT' | 'PROXY_HOST', string | undefined>
+  > = process.env
+): string {
+  const host = getProxyHost(env);
+  // A wildcard bind is reachable via loopback; IPv6 literals need brackets in URLs.
+  const dialHost = host === '0.0.0.0' || host === '::' ? '127.0.0.1' : host;
+  const urlHost = dialHost.includes(':') ? `[${dialHost}]` : dialHost;
+  return `http://${urlHost}:${getProxyPort(env)}`;
+}
+
 export class ProxyHttpError extends Error {
   readonly status: number;
 
