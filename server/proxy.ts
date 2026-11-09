@@ -77,7 +77,7 @@ async function callAnthropic(req: ProxyRequest, clientKey?: string): Promise<str
       'anthropic-version': '2023-06-01',
     },
     body: JSON.stringify({
-      model: process.env.ANTHROPIC_MODEL ?? 'claude-sonnet-4-20250514',
+      model: process.env.ANTHROPIC_MODEL ?? 'claude-sonnet-5-5',
       max_tokens: req.maxTokens,
       system: req.system,
       messages: [{ role: 'user', content: req.userMessage }],
@@ -130,8 +130,7 @@ async function callBedrock(req: ProxyRequest, _clientKey?: string): Promise<stri
     region: process.env.AWS_REGION ?? 'us-east-1',
   });
 
-  const modelId =
-    process.env.BEDROCK_MODEL_ID ?? 'anthropic.claude-3-5-sonnet-20241022-v2:0';
+  const modelId = process.env.BEDROCK_MODEL_ID ?? 'global.anthropic.claude-sonnet-5-5';
 
   const body = JSON.stringify({
     anthropic_version: 'bedrock-2023-05-31',
@@ -230,7 +229,7 @@ async function callOpenAI(req: ProxyRequest, clientKey?: string): Promise<string
     {
       baseUrl: 'https://api.openai.com/v1',
       envKey: 'OPENAI_API_KEY',
-      defaultModel: 'gpt-4o',
+      defaultModel: 'gpt-6.1-sol',
       envModel: 'OPENAI_MODEL',
       provider: 'openai',
     },
@@ -265,7 +264,7 @@ async function callGemini(req: ProxyRequest, clientKey?: string): Promise<string
     );
   }
 
-  const model = validateGeminiModel(process.env.GEMINI_MODEL ?? 'gemini-2.5-flash');
+  const model = validateGeminiModel(process.env.GEMINI_MODEL ?? 'gemini-3.8-flash');
 
   // The Generative Language API requires the key as a URL query param (?key=).
   // This is Google's documented authentication pattern for this API — it cannot
