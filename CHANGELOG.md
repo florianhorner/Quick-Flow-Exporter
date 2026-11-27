@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.4.14] - 2026-11-27
+
+### Changed
+
+- group minor and patch lint tooling updates (#87)
+
 ## [1.4.13] - 2026-10-27
 
 ### Fixed
