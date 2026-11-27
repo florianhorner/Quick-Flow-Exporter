@@ -17,9 +17,7 @@ export interface StepTypeOption {
 }
 
 export type OutputPref =
-  | 'Fast'
-  | 'Versatility and performance'
-  | 'Advanced reasoning (beta)';
+  'Fast' | 'Versatility and performance' | 'Advanced reasoning (beta)';
 
 export type Source = 'General knowledge' | 'Web search' | 'Quick Suite data';
 
